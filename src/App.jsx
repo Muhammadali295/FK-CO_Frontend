@@ -1,122 +1,139 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useState, useMemo } from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import PropertySearch from './components/PropertySearch';
+import FeaturedProperties from './components/FeaturedProperties';
+import PropertyModal from './components/PropertyModal';
+import WhyChooseUs from './components/WhyChooseUs';
+import LandlordSection from './components/LandlordSection';
+import StatsSection from './components/StatsSection';
+import Testimonials from './components/Testimonials';
+import ValuationCTA from './components/ValuationCTA';
+import ValuationModal from './components/ValuationModal';
+import Footer from './components/Footer';
 
-function App() {
-  const [count, setCount] = useState(0)
+import { PROPERTIES_DATA } from './data/properties';
+
+export default function App() {
+  const [valuationModalOpen, setValuationModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+
+  // Property Filter State
+  const [filterState, setFilterState] = useState({
+    location: '',
+    type: '',
+    status: '',
+    minPrice: '',
+    maxPrice: '',
+    bedrooms: ''
+  });
+
+  const handleResetFilters = () => {
+    setFilterState({
+      location: '',
+      type: '',
+      status: '',
+      minPrice: '',
+      maxPrice: '',
+      bedrooms: ''
+    });
+  };
+
+  // Filtered Properties Computation
+  const filteredProperties = useMemo(() => {
+    return PROPERTIES_DATA.filter((item) => {
+      if (filterState.location && !item.location.toLowerCase().includes(filterState.location.toLowerCase())) {
+        return false;
+      }
+      if (filterState.type && item.type !== filterState.type) {
+        return false;
+      }
+      if (filterState.status && item.status.toLowerCase() !== filterState.status.toLowerCase()) {
+        return false;
+      }
+      if (filterState.bedrooms && item.bedrooms < parseInt(filterState.bedrooms, 10)) {
+        return false;
+      }
+      if (filterState.minPrice && item.price < parseInt(filterState.minPrice, 10)) {
+        return false;
+      }
+      if (filterState.maxPrice && item.price > parseInt(filterState.maxPrice, 10)) {
+        return false;
+      }
+      return true;
+    });
+  }, [filterState]);
+
+  const isFilterActive = Object.values(filterState).some((val) => val !== '');
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="min-h-screen bg-[#051329] text-slate-100 font-sans-luxury selection:bg-[#D4A44A] selection:text-[#071B35] relative">
+      
+      {/* Navigation Header */}
+      <Navbar onOpenValuationModal={() => setValuationModalOpen(true)} />
 
-      <div className="ticks"></div>
+      {/* Main Content */}
+      <main>
+        {/* Hero Section */}
+        <Hero
+          onOpenValuationModal={() => setValuationModalOpen(true)}
+          onExploreClick={() => {
+            const el = document.getElementById('properties');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+        />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {/* Property Search Filter Component */}
+        <PropertySearch
+          filterState={filterState}
+          setFilterState={setFilterState}
+          onResetFilters={handleResetFilters}
+        />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {/* Featured Properties Grid */}
+        <FeaturedProperties
+          properties={filteredProperties}
+          onSelectProperty={(property) => setSelectedProperty(property)}
+          filterActive={isFilterActive}
+        />
+
+        {/* Why Choose Us */}
+        <WhyChooseUs onOpenValuationModal={() => setValuationModalOpen(true)} />
+
+        {/* Landlord to Landlord Section */}
+        <LandlordSection onOpenValuationModal={() => setValuationModalOpen(true)} />
+
+        {/* Key Statistics Bar */}
+        <StatsSection />
+
+        {/* Client Testimonials Slider */}
+        <Testimonials />
+
+        {/* Valuation Call to Action */}
+        <ValuationCTA onOpenValuationModal={() => setValuationModalOpen(true)} />
+      </main>
+
+      {/* Footer */}
+      <Footer onOpenValuationModal={() => setValuationModalOpen(true)} />
+
+      {/* Property Details Dialog Modal */}
+      {selectedProperty && (
+        <PropertyModal
+          property={selectedProperty}
+          onClose={() => setSelectedProperty(null)}
+          onOpenValuationModal={() => {
+            setSelectedProperty(null);
+            setValuationModalOpen(true);
+          }}
+        />
+      )}
+
+      {/* Book Valuation Multi-Step Modal */}
+      <ValuationModal
+        isOpen={valuationModalOpen}
+        onClose={() => setValuationModalOpen(false)}
+      />
+
+    </div>
+  );
 }
-
-export default App
