@@ -55,9 +55,9 @@ export default function Testimonials() {
               animate={{ opacity: 1, scale: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.96, x: -20 }}
               transition={{ duration: 0.4 }}
-              className="glass-card p-8 sm:p-12 rounded-3xl border border-[#D4A44A]/30 shadow-2xl relative"
+              className="glass-card p-6 sm:p-12 rounded-3xl border border-[#D4A44A]/30 shadow-2xl relative"
             >
-              <Quote className="w-16 h-16 text-[#D4A44A]/15 absolute top-6 right-8 pointer-events-none" />
+              <Quote className="w-10 h-10 sm:w-16 sm:h-16 text-[#D4A44A]/15 absolute top-4 right-4 sm:top-6 sm:right-8 pointer-events-none" />
 
               {/* Star Rating */}
               <div className="flex items-center gap-1.5 mb-6">
@@ -72,11 +72,11 @@ export default function Testimonials() {
               </p>
 
               {/* Client Info */}
-              <div className="flex items-center gap-4 pt-6 border-t border-white/10">
+              <div className="flex items-center gap-3 sm:gap-4 pt-6 border-t border-white/10">
                 <img
                   src={current.image}
                   alt={current.name}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-[#D4A44A]"
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-[#D4A44A] shrink-0"
                 />
                 <div>
                   <h4 className="font-serif-luxury font-bold text-white text-lg">

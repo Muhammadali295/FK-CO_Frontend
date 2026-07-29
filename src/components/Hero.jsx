@@ -30,13 +30,13 @@ export default function Hero({ onOpenValuationModal, onExploreClick }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-[#D4A44A]/40 mb-8"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full glass-panel border border-[#D4A44A]/40 mb-8 max-w-full overflow-hidden"
         >
-          <Sparkles className="w-4 h-4 text-[#D4A44A]" />
-          <span className="text-xs uppercase tracking-[0.2em] font-medium text-[#F3E7C4]">
+          <Sparkles className="w-3.5 h-3.5 text-[#D4A44A]" />
+          <span className="text-[9px] sm:text-xs uppercase tracking-wider sm:tracking-[0.2em] font-medium text-[#F3E7C4] truncate">
             Birmingham's Premier Estate Agency
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#D4A44A] animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#D4A44A] animate-pulse shrink-0" />
         </motion.div>
 
         {/* Main Heading */}
@@ -44,7 +44,7 @@ export default function Hero({ onOpenValuationModal, onExploreClick }) {
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-[1.15] max-w-5xl mx-auto"
+          className="font-serif-luxury text-[32px] min-[375px]:text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-[1.15] max-w-5xl mx-auto"
         >
           Trusted to Sell. <br />
           <span className="gold-text italic font-normal">Trusted to Let.</span>
@@ -90,7 +90,7 @@ export default function Hero({ onOpenValuationModal, onExploreClick }) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
+          className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto"
         >
           <div className="glass-panel p-4 rounded-2xl flex items-center gap-3 text-left">
             <div className="w-10 h-10 rounded-xl bg-[#D4A44A]/10 border border-[#D4A44A]/30 flex items-center justify-center shrink-0">

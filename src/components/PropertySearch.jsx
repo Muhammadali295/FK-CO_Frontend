@@ -22,29 +22,29 @@ export default function PropertySearch({ filterState, setFilterState, onResetFil
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border border-[#D4A44A]/30"
+        className="glass-panel p-4 sm:p-8 rounded-3xl shadow-2xl border border-[#D4A44A]/30"
       >
         {/* Status Tabs: Buy / Let / Rent / All */}
-        <div className="flex items-center justify-between flex-wrap gap-4 mb-6 pb-6 border-b border-white/10">
-          <div className="flex items-center gap-2 p-1.5 rounded-full bg-[#051329]/80 border border-white/10">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 pb-6 border-b border-white/10">
+          <div className="grid grid-cols-4 gap-1 w-full sm:flex sm:items-center sm:gap-2 sm:w-auto p-1 rounded-2xl sm:rounded-full bg-[#051329]/80 border border-white/10">
             {['All', 'Buy', 'Let', 'Rent'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => handleTabChange(tab)}
-                className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+                className={`px-2 sm:px-5 py-2 rounded-xl sm:rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer text-center whitespace-nowrap ${
                   activeTab === tab
                     ? 'gold-bg text-[#071B35] shadow-lg shadow-[#D4A44A]/20'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                {tab === 'All' ? 'All Properties' : tab}
+                {tab === 'All' ? 'All' : tab}
               </button>
             ))}
           </div>
 
           <button
             onClick={onResetFilters}
-            className="flex items-center gap-2 text-xs font-semibold text-[#D4A44A] hover:text-[#E5B85C] transition-colors py-1.5 px-3 rounded-lg hover:bg-white/5 cursor-pointer"
+            className="flex items-center justify-center gap-2 text-xs font-semibold text-[#D4A44A] hover:text-[#E5B85C] transition-colors py-1.5 px-3 rounded-lg hover:bg-white/5 cursor-pointer w-full sm:w-auto"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Reset Filters</span>
@@ -162,7 +162,7 @@ export default function PropertySearch({ filterState, setFilterState, onResetFil
         </div>
 
         {/* Search Submit Action Button */}
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex justify-end w-full">
           <a
             href="#properties"
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl gold-bg gold-bg-hover text-[#071B35] font-bold text-sm shadow-lg shadow-[#D4A44A]/20 flex items-center justify-center gap-2 cursor-pointer"

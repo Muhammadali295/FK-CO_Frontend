@@ -220,7 +220,7 @@ export default function ValuationModal({ isOpen, onClose }) {
                         <label className="block text-xs font-semibold text-slate-300 mb-2">
                           What is your primary intent?
                         </label>
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-3">
                           {['Selling', 'Letting / Lettings', 'Curiosity / Portfolio Check', 'Probate / Legal'].map((svc) => (
                             <button
                               type="button"

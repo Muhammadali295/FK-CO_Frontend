@@ -107,18 +107,18 @@ export default function FeaturedProperties({ properties, onSelectProperty, filte
 
                 {/* Specs Row */}
                 <div>
-                  <div className="grid grid-cols-3 gap-2 py-3 border-y border-white/10 text-slate-300 text-xs mb-6">
-                    <div className="flex items-center gap-1.5">
-                      <Bed className="w-4 h-4 text-[#D4A44A]" />
+                  <div className="grid grid-cols-3 gap-1 py-3 border-y border-white/10 text-slate-300 text-[10px] min-[375px]:text-xs mb-6">
+                    <div className="flex items-center gap-1">
+                      <Bed className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
                       <span>{property.bedrooms} Beds</span>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <Bath className="w-4 h-4 text-[#D4A44A]" />
+                    <div className="flex items-center gap-1">
+                      <Bath className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
                       <span>{property.bathrooms} Baths</span>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <Maximize className="w-4 h-4 text-[#D4A44A]" />
-                      <span>{property.areaSqFt} sq ft</span>
+                    <div className="flex items-center gap-1">
+                      <Maximize className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
+                      <span className="truncate">{property.areaSqFt} sq ft</span>
                     </div>
                   </div>
 

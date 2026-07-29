@@ -47,7 +47,7 @@ export default function WhyChooseUs({ onOpenValuationModal }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`glass-card p-8 rounded-3xl relative group flex flex-col justify-between ${
+              className={`glass-card p-6 sm:p-8 rounded-3xl relative group flex flex-col justify-between ${
                 index === 4 ? 'md:col-span-2 lg:col-span-1' : ''
               }`}
             >
@@ -78,7 +78,7 @@ export default function WhyChooseUs({ onOpenValuationModal }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="glass-panel p-8 rounded-3xl border border-[#D4A44A]/40 flex flex-col justify-between bg-gradient-to-br from-[#071B35] to-[#0D2548]"
+            className="glass-panel p-6 sm:p-8 rounded-3xl border border-[#D4A44A]/40 flex flex-col justify-between bg-gradient-to-br from-[#071B35] to-[#0D2548]"
           >
             <div>
               <div className="inline-block px-3 py-1 rounded-full gold-bg text-[#071B35] text-[10px] font-extrabold uppercase tracking-widest mb-4">

@@ -60,13 +60,13 @@ export default function PropertyModal({ property, onClose, onOpenValuationModal 
             
             {/* Gallery Section */}
             <div className="space-y-4">
-              <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden border border-white/10">
+              <div className="relative h-64 sm:h-96 rounded-2xl overflow-hidden border border-white/10">
                 <img
                   src={selectedImg || property.image}
                   alt={property.title}
                   className="w-full h-full object-cover transition-all duration-500"
                 />
-                <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md px-4 py-2 rounded-xl text-xl font-serif-luxury font-bold text-[#D4A44A] border border-[#D4A44A]/30">
+                <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md px-4 py-2 rounded-xl text-lg sm:text-xl font-serif-luxury font-bold text-[#D4A44A] border border-[#D4A44A]/30">
                   {property.priceFormatted}
                 </div>
               </div>
@@ -91,43 +91,43 @@ export default function PropertyModal({ property, onClose, onOpenValuationModal 
 
             {/* Quick Specs Bar */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 glass-panel p-4 rounded-2xl">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#D4A44A]/10 border border-[#D4A44A]/30 flex items-center justify-center">
-                  <Bed className="w-5 h-5 text-[#D4A44A]" />
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#D4A44A]/10 border border-[#D4A44A]/30 flex items-center justify-center shrink-0">
+                  <Bed className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4A44A]" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Bedrooms</p>
-                  <p className="text-sm font-bold text-white">{property.bedrooms} Beds</p>
+                  <p className="text-[10px] sm:text-xs text-slate-400">Bedrooms</p>
+                  <p className="text-xs sm:text-sm font-bold text-white">{property.bedrooms} Beds</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#D4A44A]/10 border border-[#D4A44A]/30 flex items-center justify-center">
-                  <Bath className="w-5 h-5 text-[#D4A44A]" />
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#D4A44A]/10 border border-[#D4A44A]/30 flex items-center justify-center shrink-0">
+                  <Bath className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4A44A]" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Bathrooms</p>
-                  <p className="text-sm font-bold text-white">{property.bathrooms} Baths</p>
+                  <p className="text-[10px] sm:text-xs text-slate-400">Bathrooms</p>
+                  <p className="text-xs sm:text-sm font-bold text-white">{property.bathrooms} Baths</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#D4A44A]/10 border border-[#D4A44A]/30 flex items-center justify-center">
-                  <Maximize className="w-5 h-5 text-[#D4A44A]" />
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#D4A44A]/10 border border-[#D4A44A]/30 flex items-center justify-center shrink-0">
+                  <Maximize className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4A44A]" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Internal Area</p>
-                  <p className="text-sm font-bold text-white">{property.areaSqFt} sq ft</p>
+                  <p className="text-[10px] sm:text-xs text-slate-400">Internal Area</p>
+                  <p className="text-xs sm:text-sm font-bold text-white">{property.areaSqFt} sq ft</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#D4A44A]/10 border border-[#D4A44A]/30 flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-[#D4A44A]" />
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#D4A44A]/10 border border-[#D4A44A]/30 flex items-center justify-center shrink-0">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4A44A]" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Location</p>
-                  <p className="text-sm font-bold text-white truncate max-w-[120px]">{property.location}</p>
+                  <p className="text-[10px] sm:text-xs text-slate-400">Location</p>
+                  <p className="text-xs sm:text-sm font-bold text-white truncate max-w-[80px] sm:max-w-[120px]">{property.location}</p>
                 </div>
               </div>
             </div>

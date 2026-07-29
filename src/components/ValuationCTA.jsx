@@ -13,7 +13,7 @@ export default function ValuationCTA({ onOpenValuationModal }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="relative rounded-3xl overflow-hidden p-8 sm:p-16 border border-[#D4A44A]/50 shadow-2xl bg-gradient-to-r from-[#071B35] via-[#0D2548] to-[#071B35] text-center"
+          className="relative rounded-3xl overflow-hidden p-6 sm:p-16 border border-[#D4A44A]/50 shadow-2xl bg-gradient-to-r from-[#071B35] via-[#0D2548] to-[#071B35] text-center"
         >
           {/* Background Decorative Pattern & Glow */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#D4A44A]/15 via-transparent to-transparent pointer-events-none" />
@@ -26,7 +26,7 @@ export default function ValuationCTA({ onOpenValuationModal }) {
               Instant & No-Obligation Service
             </div>
 
-            <h2 className="font-serif-luxury text-3xl sm:text-5xl md:text-6xl font-bold text-white leading-tight">
+            <h2 className="font-serif-luxury text-[26px] min-[375px]:text-3xl sm:text-5xl md:text-6xl font-bold text-white leading-tight">
               Book Your Free Property <span className="gold-text">Valuation Today</span>
             </h2>
 
@@ -51,10 +51,10 @@ export default function ValuationCTA({ onOpenValuationModal }) {
             <div className="pt-4">
               <button
                 onClick={onOpenValuationModal}
-                className="px-10 py-5 rounded-full gold-bg gold-bg-hover text-[#071B35] font-extrabold text-base tracking-wide shadow-2xl shadow-[#D4A44A]/30 hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center justify-center gap-3 cursor-pointer group"
+                className="w-full sm:w-auto px-6 py-4 sm:px-10 sm:py-5 rounded-full gold-bg gold-bg-hover text-[#071B35] font-extrabold text-sm sm:text-base tracking-wide shadow-2xl shadow-[#D4A44A]/30 hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center justify-center gap-3 cursor-pointer group"
               >
                 <span>Schedule Now</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
 

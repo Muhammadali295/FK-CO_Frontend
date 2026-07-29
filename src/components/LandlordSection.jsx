@@ -32,19 +32,19 @@ export default function LandlordSection({ onOpenValuationModal }) {
               <img
                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80"
                 alt="Landlord Property Management"
-                className="w-full h-[520px] object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-90"
+                className="w-full h-[300px] sm:h-[400px] lg:h-[520px] object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-90"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#051329] via-transparent to-transparent" />
 
               {/* Floating Stat Overlay */}
-              <div className="absolute bottom-6 left-6 right-6 glass-panel p-5 rounded-2xl border border-white/20">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl gold-bg flex items-center justify-center shrink-0 shadow-lg">
-                    <Building2 className="w-6 h-6 text-[#071B35]" />
+              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 glass-panel p-4 sm:p-5 rounded-2xl border border-white/20">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl gold-bg flex items-center justify-center shrink-0 shadow-lg">
+                    <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#071B35]" />
                   </div>
                   <div>
-                    <h4 className="text-white font-serif-luxury font-bold text-lg">Active Portfolio Owners</h4>
-                    <p className="text-slate-300 text-xs font-light">Managing over £85M in residential assets</p>
+                    <h4 className="text-white font-serif-luxury font-bold text-sm sm:text-lg">Active Portfolio Owners</h4>
+                    <p className="text-slate-300 text-[10px] sm:text-xs font-light">Managing over £85M in residential assets</p>
                   </div>
                 </div>
               </div>

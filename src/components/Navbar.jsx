@@ -44,10 +44,10 @@ export default function Navbar({ onOpenValuationModal }) {
               <span className="font-serif-luxury font-bold text-xl text-[#071B35]">FK</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-serif-luxury text-xl font-bold tracking-wider text-white flex items-center gap-1">
+              <span className="font-serif-luxury text-lg sm:text-xl font-bold tracking-wider text-white flex items-center gap-1">
                 FK&CO <span className="gold-text font-light">ESTATE</span>
               </span>
-              <span className="text-[10px] tracking-[0.25em] text-[#D4A44A] uppercase font-sans-luxury">
+              <span className="text-[9px] sm:text-[10px] tracking-[0.25em] text-[#D4A44A] uppercase font-sans-luxury">
                 Luxury Real Estate
               </span>
             </div>
@@ -94,7 +94,7 @@ export default function Navbar({ onOpenValuationModal }) {
           <div className="flex lg:hidden items-center gap-3">
             <button
               onClick={onOpenValuationModal}
-              className="gold-bg text-[#071B35] px-3 py-1.5 rounded-full text-xs font-bold sm:hidden"
+              className="gold-bg text-[#071B35] px-3 py-1.5 rounded-full text-xs font-bold hidden sm:block lg:hidden"
             >
               Valuation
             </button>
