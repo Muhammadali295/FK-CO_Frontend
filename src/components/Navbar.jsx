@@ -1,45 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Phone, Building2, ChevronRight, Award } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, Phone, ChevronRight, Award } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar({ onOpenValuationModal }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeNav, setActiveNav] = useState('Home');
+  const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 30);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'Buy', href: '#properties' },
-    { name: 'Sell', href: '#valuation' },
-    { name: 'Let', href: '#landlord' },
-    { name: 'Rent', href: '#properties' },
-    { name: 'Services', href: '#why-us' },
-    { name: 'About', href: '#landlord' },
-    { name: 'Contact', href: '#footer' },
+    { name: 'Home', href: '/', isRoute: true },
+    { name: 'Buy', href: '/buy', isRoute: true },
+    { name: 'Sell', href: '/#valuation', isRoute: false },
+    { name: 'Let', href: '/#landlord', isRoute: false },
+    { name: 'Rent', href: '/#properties', isRoute: false },
+    { name: 'Services', href: '/#why-us', isRoute: false },
+    { name: 'About', href: '/#landlord', isRoute: false },
+    { name: 'Contact', href: '/#footer', isRoute: false },
   ];
 
+  const isActive = (item) => {
+    if (item.name === 'Home') return location.pathname === '/';
+    if (item.name === 'Buy') return location.pathname === '/buy';
+    return false;
+  };
+
+  const NavLink = ({ item, className, children, onClick }) => {
+    const content = children ?? item.name;
+
+    if (item.isRoute) {
+      return (
+        <Link to={item.href} className={className} onClick={onClick}>
+          {content}
+        </Link>
+      );
+    }
+    return (
+      <a href={item.href} className={className} onClick={onClick}>
+        {content}
+      </a>
+    );
+  };
+
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      scrolled 
-        ? 'bg-[#071B35]/90 backdrop-blur-xl border-b border-[#D4A44A]/20 py-3 shadow-2xl' 
-        : 'bg-gradient-to-b from-[#051329]/90 to-transparent py-5'
-    }`}>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? 'bg-[#071B35]/90 backdrop-blur-xl border-b border-[#D4A44A]/20 py-3 shadow-2xl'
+          : 'bg-gradient-to-b from-[#051329]/90 to-transparent py-5'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          
-          {/* Brand Logo */}
-          <a 
-            href="#home" 
-            className="flex items-center gap-3 group focus:outline-none"
-          >
+          <Link to="/" className="flex items-center gap-3 group focus:outline-none">
             <div className="w-10 h-10 rounded-lg gold-bg flex items-center justify-center shadow-lg shadow-[#D4A44A]/20 group-hover:scale-105 transition-transform duration-300">
               <span className="font-serif-luxury font-bold text-xl text-[#071B35]">FK</span>
             </div>
@@ -51,30 +74,25 @@ export default function Navbar({ onOpenValuationModal }) {
                 Luxury Real Estate
               </span>
             </div>
-          </a>
+          </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1 glass-panel-light px-4 py-1.5 rounded-full border border-white/10">
             {navItems.map((item) => (
-              <a
+              <NavLink
                 key={item.name}
-                href={item.href}
-                onClick={() => setActiveNav(item.name)}
+                item={item}
                 className={`px-3.5 py-1.5 text-sm font-medium rounded-full transition-all duration-300 ${
-                  activeNav === item.name
+                  isActive(item)
                     ? 'text-white bg-[#D4A44A]/20 border border-[#D4A44A]/40 shadow-sm'
                     : 'text-slate-300 hover:text-[#D4A44A] hover:bg-white/5'
                 }`}
-              >
-                {item.name}
-              </a>
+              />
             ))}
           </nav>
 
-          {/* Desktop Right CTA */}
           <div className="hidden lg:flex items-center gap-4">
-            <a 
-              href="tel:+441212345678" 
+            <a
+              href="tel:+441212345678"
               className="flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-[#D4A44A] transition-colors py-2 px-3 rounded-lg hover:bg-white/5"
             >
               <Phone className="w-3.5 h-3.5 text-[#D4A44A]" />
@@ -90,7 +108,6 @@ export default function Navbar({ onOpenValuationModal }) {
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="flex lg:hidden items-center gap-3">
             <button
               onClick={onOpenValuationModal}
@@ -104,14 +121,16 @@ export default function Navbar({ onOpenValuationModal }) {
               className="p-2 rounded-lg text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6 text-[#D4A44A]" /> : <Menu className="w-6 h-6 text-white" />}
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6 text-[#D4A44A]" />
+              ) : (
+                <Menu className="w-6 h-6 text-white" />
+              )}
             </button>
           </div>
-
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -124,18 +143,15 @@ export default function Navbar({ onOpenValuationModal }) {
             <div className="px-6 pt-4 pb-6 space-y-3">
               <div className="grid grid-cols-2 gap-2">
                 {navItems.map((item) => (
-                  <a
+                  <NavLink
                     key={item.name}
-                    href={item.href}
-                    onClick={() => {
-                      setActiveNav(item.name);
-                      setMobileMenuOpen(false);
-                    }}
+                    item={item}
+                    onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center justify-between px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-[#D4A44A]/10 hover:border hover:border-[#D4A44A]/30 text-sm font-medium transition-all"
                   >
                     <span>{item.name}</span>
                     <ChevronRight className="w-4 h-4 text-[#D4A44A]/60" />
-                  </a>
+                  </NavLink>
                 ))}
               </div>
 

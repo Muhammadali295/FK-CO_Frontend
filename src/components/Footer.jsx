@@ -147,7 +147,7 @@ export default function Footer({ onOpenValuationModal }) {
             <h4 className="font-serif-luxury font-bold text-white text-base">Quick Links</h4>
             <ul className="space-y-2 text-xs font-light text-slate-400">
               <li><a href="#home" className="hover:text-[#D4A44A] transition-colors">Home</a></li>
-              <li><a href="#properties" className="hover:text-[#D4A44A] transition-colors">Buy Property</a></li>
+              <li><a href="/buy" className="hover:text-[#D4A44A] transition-colors">Buy Property</a></li>
               <li><a href="#valuation" className="hover:text-[#D4A44A] transition-colors">Sell Property</a></li>
               <li><a href="#landlord" className="hover:text-[#D4A44A] transition-colors">Landlord Services</a></li>
               <li><a href="#properties" className="hover:text-[#D4A44A] transition-colors">Lettings & Renting</a></li>
