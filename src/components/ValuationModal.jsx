@@ -1,9 +1,14 @@
+// src/components/ValuationModal.jsx
 import React, { useState } from 'react';
-import { X, Award, CheckCircle2, ArrowRight, ArrowLeft, Building, Calendar, Phone, Mail, User } from 'lucide-react';
+import { X, Award, CheckCircle2, ArrowRight, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ValuationModal({ isOpen, onClose }) {
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
   const [formData, setFormData] = useState({
     postcode: '',
     address: '',
@@ -16,7 +21,6 @@ export default function ValuationModal({ isOpen, onClose }) {
     phone: '',
     notes: ''
   });
-  const [submitted, setSubmitted] = useState(false);
 
   if (!isOpen) return null;
 
@@ -26,23 +30,68 @@ export default function ValuationModal({ isOpen, onClose }) {
 
   const handleNext = (e) => {
     e.preventDefault();
-    if (step < 3) setStep(step + 1);
-    else handleSubmit();
+    if (step < 3) {
+      setStep(step + 1);
+    } else {
+      submitToBackend(); // Submit to Express server on Step 3
+    }
   };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
+  // --- BACKEND API SUBMISSION ---
+  const submitToBackend = async () => {
+    setLoading(true);
+    setErrorMsg('');
+
+    const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000';
+
+    // Map form service to backend intent ('sell', 'let', 'buy', 'rent')
+    let intentCategory = 'sell';
+    if (formData.service.toLowerCase().includes('let')) intentCategory = 'let';
+
+    // Combine notes and extra details into message string
+    const fullMessage = `Service: ${formData.service} | Timeline: ${formData.timeline} | Type: ${formData.propertyType} (${formData.bedrooms} Beds) | Postcode: ${formData.postcode} | Notes: ${formData.notes || 'None'}`;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          intent: intentCategory,
+          lead_type: 'valuation', // Identifies lead in Admin Dashboard
+          property_address: `${formData.address}, ${formData.postcode}`,
+          message: fullMessage,
+        }),
+      });
+
+      const result = await response.json();
+      setLoading(false);
+
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMsg(result.error || 'Failed to submit valuation request.');
+      }
+    } catch (err) {
+      setLoading(false);
+      setErrorMsg('Server connection failed. Ensure Node.js server is running on port 5000.');
+    }
   };
 
   const resetAndClose = () => {
     setSubmitted(false);
     setStep(1);
+    setErrorMsg('');
     onClose();
   };
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto font-sans">
         
         {/* Backdrop */}
         <motion.div
@@ -108,7 +157,7 @@ export default function ValuationModal({ isOpen, onClose }) {
                 <div className="pt-4">
                   <button
                     onClick={resetAndClose}
-                    className="px-8 py-3 rounded-full gold-bg text-[#071B35] font-bold text-xs uppercase tracking-wider cursor-pointer"
+                    className="px-8 py-3 rounded-full gold-bg text-[#071B35] font-bold text-xs uppercase tracking-wider cursor-pointer hover:bg-[#c5a059] transition"
                   >
                     Done
                   </button>
@@ -138,6 +187,13 @@ export default function ValuationModal({ isOpen, onClose }) {
                     </div>
                   ))}
                 </div>
+
+                {errorMsg && (
+                  <div className="bg-red-500/15 border border-red-500/30 text-red-300 p-3 rounded-xl text-xs flex items-center gap-2 mb-4">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{errorMsg}</span>
+                  </div>
+                )}
 
                 <form onSubmit={handleNext} className="space-y-6">
                   {/* Step 1: Property Details */}
@@ -338,10 +394,20 @@ export default function ValuationModal({ isOpen, onClose }) {
 
                     <button
                       type="submit"
-                      className="gold-bg gold-bg-hover text-[#071B35] px-8 py-3 rounded-full font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-[#D4A44A]/20 cursor-pointer"
+                      disabled={loading}
+                      className="gold-bg gold-bg-hover text-[#071B35] px-8 py-3 rounded-full font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-[#D4A44A]/20 cursor-pointer disabled:opacity-50"
                     >
-                      <span>{step === 3 ? 'Confirm Booking' : 'Continue'}</span>
-                      <ArrowRight className="w-4 h-4" />
+                      {loading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Submitting...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>{step === 3 ? 'Confirm Booking' : 'Continue'}</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>

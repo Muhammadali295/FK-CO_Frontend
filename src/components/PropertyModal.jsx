@@ -1,25 +1,61 @@
+// src/components/PropertyModal.jsx
 import React, { useState } from 'react';
-import { X, Bed, Bath, Maximize, MapPin, CheckCircle2, Phone, Mail, Send, Award, ShieldCheck } from 'lucide-react';
+import { X, Bed, Bath, Maximize, MapPin, CheckCircle2, Phone, Mail, Send, Award, ShieldCheck, Loader2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function PropertyModal({ property, onClose, onOpenValuationModal }) {
   const [selectedImg, setSelectedImg] = useState(property?.image);
   const [enquirySent, setEnquirySent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
 
   if (!property) return null;
 
-  const handleSubmit = (e) => {
+  // --- BACKEND API SUBMISSION ---
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setEnquirySent(true);
-    setTimeout(() => {
-      setEnquirySent(false);
-    }, 4000);
+    setLoading(true);
+    setErrorMsg('');
+
+    const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000';
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          full_name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          intent: property.type?.toLowerCase() || 'buy', // 'buy', 'rent', or 'let'
+          lead_type: 'property_enquiry',                 // Marks lead as a viewing enquiry
+          property_id: property.id || null,               // Links lead to property ID
+          property_address: `${property.title} - ${property.location || 'Birmingham'}`,
+          message: formData.message || `Requesting a private viewing for ${property.title}`,
+        }),
+      });
+
+      const result = await response.json();
+      setLoading(false);
+
+      if (result.success) {
+        setEnquirySent(true);
+        setFormData({ name: '', email: '', phone: '', message: '' });
+      } else {
+        setErrorMsg(result.error || 'Failed to submit viewing enquiry.');
+      }
+    } catch (err) {
+      setLoading(false);
+      setErrorMsg('Server connection failed. Ensure your Node.js API is running on port 5000.');
+    }
   };
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto font-sans">
         
         {/* Backdrop */}
         <motion.div
@@ -67,7 +103,7 @@ export default function PropertyModal({ property, onClose, onOpenValuationModal 
                   className="w-full h-full object-cover transition-all duration-500"
                 />
                 <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md px-4 py-2 rounded-xl text-lg sm:text-xl font-serif-luxury font-bold text-[#D4A44A] border border-[#D4A44A]/30">
-                  {property.priceFormatted}
+                  {property.priceFormatted || `£${Number(property.price).toLocaleString()}`}
                 </div>
               </div>
 
@@ -166,12 +202,25 @@ export default function PropertyModal({ property, onClose, onOpenValuationModal 
                     <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
                     <p className="font-bold">Enquiry Received!</p>
                     <p>Our senior agent will contact you within 2 business hours.</p>
+                    <button
+                      onClick={() => setEnquirySent(false)}
+                      className="text-[#D4A44A] underline text-[11px] font-semibold mt-2 inline-block cursor-pointer"
+                    >
+                      Send another message
+                    </button>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-3">
+                    {errorMsg && (
+                      <div className="bg-red-500/15 border border-red-500/30 text-red-300 p-2.5 rounded-xl text-xs flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        <span>{errorMsg}</span>
+                      </div>
+                    )}
+
                     <input
                       type="text"
-                      placeholder="Your Full Name"
+                      placeholder="Your Full Name *"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -179,7 +228,7 @@ export default function PropertyModal({ property, onClose, onOpenValuationModal 
                     />
                     <input
                       type="email"
-                      placeholder="Email Address"
+                      placeholder="Email Address *"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -187,7 +236,7 @@ export default function PropertyModal({ property, onClose, onOpenValuationModal 
                     />
                     <input
                       type="tel"
-                      placeholder="Phone Number"
+                      placeholder="Phone Number *"
                       required
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -198,14 +247,24 @@ export default function PropertyModal({ property, onClose, onOpenValuationModal 
                       placeholder="Message (Optional)"
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full bg-[#051329]/90 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#D4A44A]"
+                      className="w-full bg-[#051329]/90 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#D4A44A] resize-none"
                     />
                     <button
                       type="submit"
-                      className="w-full py-3 rounded-xl gold-bg gold-bg-hover text-[#071B35] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                      disabled={loading}
+                      className="w-full py-3 rounded-xl gold-bg gold-bg-hover text-[#071B35] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg disabled:opacity-50"
                     >
-                      <Send className="w-3.5 h-3.5" />
-                      <span>Request Viewing</span>
+                      {loading ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          <span>Sending Request...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-3.5 h-3.5" />
+                          <span>Request Viewing</span>
+                        </>
+                      )}
                     </button>
                   </form>
                 )}
