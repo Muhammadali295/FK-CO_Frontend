@@ -21,8 +21,8 @@ export default function Navbar({ onOpenValuationModal }) {
   const navItems = [
     { name: 'Home', href: '/', isRoute: true },
     { name: 'Buy', href: '/buy', isRoute: true },
-    { name: 'Sell', href: '/#valuation', isRoute: false },
-    { name: 'Let', href: '/#landlord', isRoute: false },
+    { name: 'Sell', href: '/sell', isRoute: true },
+    { name: 'Let', href: '/let', isRoute: true },
     { name: 'Rent', href: '/#properties', isRoute: false },
     { name: 'Services', href: '/#why-us', isRoute: false },
     { name: 'About', href: '/#landlord', isRoute: false },
@@ -32,8 +32,11 @@ export default function Navbar({ onOpenValuationModal }) {
   const isActive = (item) => {
     if (item.name === 'Home') return location.pathname === '/';
     if (item.name === 'Buy') return location.pathname === '/buy';
+    if (item.name === 'Sell') return location.pathname === '/sell';
+    if (item.name === 'Let') return location.pathname === '/let';
     return false;
   };
+
 
   const NavLink = ({ item, className, children, onClick }) => {
     const content = children ?? item.name;

@@ -5,8 +5,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './pages/Home';
 import BuyProperties from './pages/BuyProperties';
-// import SellProperties from './pages/SellProperties';
-// import LetProperties from './pages/LetProperties';
+import SellProperties from './pages/SellProperties';
+import LetProperties from './pages/LetProperties';
 // import RentProperties from './pages/RentProperties';
 
 import AdminLogin from './pages/AdminLogin';
@@ -20,9 +20,9 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/buy" element={<BuyProperties />} />
-          {/* <Route path="/sell" element={<SellProperties />} />
+          <Route path="/sell" element={<SellProperties />} />
           <Route path="/let" element={<LetProperties />} />
-          <Route path="/rent" element={<RentProperties />} /> */}
+          {/* <Route path="/rent" element={<RentProperties />} /> */}
         </Route>
 
         <Route path="/admin/login" element={<AdminLogin />} />
