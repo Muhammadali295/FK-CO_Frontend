@@ -63,6 +63,8 @@ export const PROPERTIES_DATA = [
     bathrooms: 4,
     areaSqFt: 3800,
     epcRating: 'B',
+    furnished: 'Unfurnished',
+    availableDate: '15th Sept',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
     gallery: [
       'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
@@ -88,6 +90,8 @@ export const PROPERTIES_DATA = [
     bathrooms: 2,
     areaSqFt: 1400,
     epcRating: 'C',
+    furnished: 'Furnished',
+    availableDate: 'Immediately',
     image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80',
     gallery: [
       'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80',

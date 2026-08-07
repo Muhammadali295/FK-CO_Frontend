@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Home, PoundSterling, Bed, SlidersHorizontal, RefreshCw } from 'lucide-react';
+import { Search, MapPin, Home, PoundSterling, Bed, Bath, Sofa, Car, PawPrint, Calendar, SlidersHorizontal, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function PropertySearch({ filterState, setFilterState, onResetFilters }) {
+export default function PropertySearch({ filterState, setFilterState, onResetFilters, isRental = false }) {
   const [activeTab, setActiveTab] = useState(filterState.status || 'All');
 
   const handleTabChange = (status) => {
@@ -161,6 +161,103 @@ export default function PropertySearch({ filterState, setFilterState, onResetFil
 
         </div>
 
+        {/* Rental Specific Filters */}
+        {isRental && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-4 pt-4 border-t border-white/10">
+            {/* Bathrooms */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <Bath className="w-3.5 h-3.5 text-[#D4A44A]" />
+                Bathrooms
+              </label>
+              <select
+                name="bathrooms"
+                value={filterState.bathrooms || ''}
+                onChange={handleSelectChange}
+                className="w-full bg-[#051329]/90 border border-white/15 rounded-xl px-3.5 py-3 text-sm text-slate-200 focus:outline-none focus:border-[#D4A44A] transition-colors cursor-pointer"
+              >
+                <option value="">Any Bathrooms</option>
+                <option value="1">1+ Baths</option>
+                <option value="2">2+ Baths</option>
+                <option value="3">3+ Baths</option>
+                <option value="4">4+ Baths</option>
+              </select>
+            </div>
+
+            {/* Furnished Status */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <Sofa className="w-3.5 h-3.5 text-[#D4A44A]" />
+                Furnished
+              </label>
+              <select
+                name="furnished"
+                value={filterState.furnished || ''}
+                onChange={handleSelectChange}
+                className="w-full bg-[#051329]/90 border border-white/15 rounded-xl px-3.5 py-3 text-sm text-slate-200 focus:outline-none focus:border-[#D4A44A] transition-colors cursor-pointer"
+              >
+                <option value="">Any Status</option>
+                <option value="Furnished">Furnished</option>
+                <option value="Unfurnished">Unfurnished</option>
+                <option value="Part Furnished">Part Furnished</option>
+              </select>
+            </div>
+
+            {/* Parking */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <Car className="w-3.5 h-3.5 text-[#D4A44A]" />
+                Parking
+              </label>
+              <select
+                name="parking"
+                value={filterState.parking || ''}
+                onChange={handleSelectChange}
+                className="w-full bg-[#051329]/90 border border-white/15 rounded-xl px-3.5 py-3 text-sm text-slate-200 focus:outline-none focus:border-[#D4A44A] transition-colors cursor-pointer"
+              >
+                <option value="">Any</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+
+            {/* Pets Allowed */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <PawPrint className="w-3.5 h-3.5 text-[#D4A44A]" />
+                Pets Allowed
+              </label>
+              <select
+                name="petsAllowed"
+                value={filterState.petsAllowed || ''}
+                onChange={handleSelectChange}
+                className="w-full bg-[#051329]/90 border border-white/15 rounded-xl px-3.5 py-3 text-sm text-slate-200 focus:outline-none focus:border-[#D4A44A] transition-colors cursor-pointer"
+              >
+                <option value="">Any</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+
+            {/* Available From */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#D4A44A]" />
+                Available From
+              </label>
+              <select
+                name="availableFrom"
+                value={filterState.availableFrom || ''}
+                onChange={handleSelectChange}
+                className="w-full bg-[#051329]/90 border border-white/15 rounded-xl px-3.5 py-3 text-sm text-slate-200 focus:outline-none focus:border-[#D4A44A] transition-colors cursor-pointer"
+              >
+                <option value="">Any Date</option>
+                <option value="Immediately">Immediately</option>
+                <option value="Within 1 Month">Within 1 Month</option>
+                <option value="Within 3 Months">Within 3 Months</option>
+              </select>
+            </div>
+
+          </div>
+        )}
         {/* Search Submit Action Button */}
         <div className="mt-6 flex justify-end w-full">
           <a

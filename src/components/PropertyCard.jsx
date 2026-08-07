@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bed, Bath, Maximize, MapPin, Eye, Heart, Sparkles } from 'lucide-react';
+import { Bed, Bath, Maximize, MapPin, Eye, Heart, Sparkles, Sofa, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function PropertyCard({ property, viewType = 'grid', onSelect, isSaved, onToggleSave }) {
@@ -121,6 +121,24 @@ export default function PropertyCard({ property, viewType = 'grid', onSelect, is
               <span className="truncate">{property.areaSqFt} sq ft</span>
             </div>
           </div>
+
+          {/* Rental Specific Row (if applicable) */}
+          {(property.furnished || property.availableDate) && (
+            <div className="grid grid-cols-2 gap-1 py-1 text-slate-300 text-[10px] min-[375px]:text-xs">
+              {property.furnished && (
+                <div className="flex items-center gap-1">
+                  <Sofa className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
+                  <span>{property.furnished}</span>
+                </div>
+              )}
+              {property.availableDate && (
+                <div className="flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
+                  <span className="truncate">Avail: {property.availableDate}</span>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Action Row */}
           <div className="flex items-center gap-3">

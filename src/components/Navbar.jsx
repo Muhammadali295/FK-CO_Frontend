@@ -23,10 +23,10 @@ export default function Navbar({ onOpenValuationModal }) {
     { name: 'Buy', href: '/buy', isRoute: true },
     { name: 'Sell', href: '/sell', isRoute: true },
     { name: 'Let', href: '/let', isRoute: true },
-    { name: 'Rent', href: '/#properties', isRoute: false },
-    { name: 'Services', href: '/#why-us', isRoute: false },
-    { name: 'About', href: '/#landlord', isRoute: false },
-    { name: 'Contact', href: '/#footer', isRoute: false },
+    { name: 'Rent', href: '/rent', isRoute: true },
+    { name: 'Services', href: '/services', isRoute: true },
+    { name: 'About', href: '/about', isRoute: true },
+    { name: 'Contact', href: '/contact', isRoute: true },
   ];
 
   const isActive = (item) => {
@@ -34,6 +34,10 @@ export default function Navbar({ onOpenValuationModal }) {
     if (item.name === 'Buy') return location.pathname === '/buy';
     if (item.name === 'Sell') return location.pathname === '/sell';
     if (item.name === 'Let') return location.pathname === '/let';
+    if (item.name === 'Rent') return location.pathname === '/rent';
+    if (item.name === 'Services') return location.pathname === '/services';
+    if (item.name === 'About') return location.pathname === '/about';
+    if (item.name === 'Contact') return location.pathname === '/contact';
     return false;
   };
 

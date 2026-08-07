@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { STATS_DATA } from '../data/properties';
 import { Award, Users, Calendar, ThumbsUp } from 'lucide-react';
 
-export default function StatsSection() {
+export default function StatsSection({ stats = STATS_DATA }) {
   const getStatIcon = (index) => {
     switch (index) {
       case 0: return <Award className="w-8 h-8 text-[#D4A44A]" />;
@@ -25,7 +25,7 @@ export default function StatsSection() {
           <div className="absolute top-0 right-1/4 w-72 h-72 bg-[#D4A44A]/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-            {STATS_DATA.map((stat, index) => (
+            {stats.map((stat, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.9 }}
