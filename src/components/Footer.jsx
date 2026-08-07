@@ -80,13 +80,13 @@ export default function Footer({ onOpenValuationModal }) {
                   FK&CO <span className="gold-text font-light">ESTATE</span>
                 </span>
                 <span className="text-[10px] tracking-[0.25em] text-[#D4A44A] uppercase font-sans">
-                  Luxury Real Estate Agency
+                  {/* Luxury Real Estate Agency */}
                 </span>
               </div>
             </div>
 
             <p className="text-slate-400 text-xs font-light leading-relaxed max-w-sm">
-              FK&CO Estate is a boutique luxury real estate agency built on transparency, deep Birmingham market intelligence, and uncompromised client dedication.
+              FK&CO Estate is a  real estate agency built on transparency, deep Birmingham market intelligence, and uncompromised client dedication.
             </p>
 
             {/* Social Icons */}
