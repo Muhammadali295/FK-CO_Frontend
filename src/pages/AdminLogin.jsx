@@ -43,7 +43,7 @@ export default function AdminLogin() {
               FK&CO ESTATE
             </h1>
             <p className="text-[#D4AF37] text-[9px] tracking-wider leading-none mt-1">
-              LUXURY REAL ESTATE
+              {/* LUXURY REAL ESTATE */}
             </p>
           </div>
         </div>
