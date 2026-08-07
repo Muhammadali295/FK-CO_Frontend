@@ -1,3 +1,4 @@
+// src/components/Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone, ChevronRight, Award } from 'lucide-react';
@@ -41,7 +42,6 @@ export default function Navbar({ onOpenValuationModal }) {
     return false;
   };
 
-
   const NavLink = ({ item, className, children, onClick }) => {
     const content = children ?? item.name;
 
@@ -76,9 +76,6 @@ export default function Navbar({ onOpenValuationModal }) {
             <div className="flex flex-col">
               <span className="font-serif-luxury text-lg sm:text-xl font-bold tracking-wider text-white flex items-center gap-1">
                 FK&CO <span className="gold-text font-light">ESTATE</span>
-              </span>
-              <span className="text-[9px] sm:text-[10px] tracking-[0.25em] text-[#D4A44A] uppercase font-sans-luxury">
-                Luxury Real Estate
               </span>
             </div>
           </Link>

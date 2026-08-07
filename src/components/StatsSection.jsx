@@ -1,3 +1,4 @@
+// src/components/StatsSection.jsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { STATS_DATA } from '../data/properties';
@@ -6,22 +7,18 @@ import { Award, Users, Calendar, ThumbsUp } from 'lucide-react';
 export default function StatsSection({ stats = STATS_DATA }) {
   const getStatIcon = (index) => {
     switch (index) {
-      case 0: return <Award className="w-8 h-8 text-[#D4A44A]" />;
-      case 1: return <Users className="w-8 h-8 text-[#D4A44A]" />;
-      case 2: return <Calendar className="w-8 h-8 text-[#D4A44A]" />;
-      case 3: return <ThumbsUp className="w-8 h-8 text-[#D4A44A]" />;
-      default: return <Award className="w-8 h-8 text-[#D4A44A]" />;
+      case 0: return <Award className="w-6 h-6 text-[#D4A44A]" />;
+      case 1: return <Users className="w-6 h-6 text-[#D4A44A]" />;
+      case 2: return <Calendar className="w-6 h-6 text-[#D4A44A]" />;
+      case 3: return <ThumbsUp className="w-6 h-6 text-[#D4A44A]" />;
+      default: return <Award className="w-6 h-6 text-[#D4A44A]" />;
     }
   };
 
   return (
     <section className="py-20 relative bg-[#051329]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Glassmorphic Container Grid */}
         <div className="glass-panel p-6 sm:p-12 rounded-3xl border border-[#D4A44A]/30 shadow-2xl relative overflow-hidden">
-          
-          {/* Subtle Background Glow */}
           <div className="absolute top-0 right-1/4 w-72 h-72 bg-[#D4A44A]/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
@@ -52,9 +49,7 @@ export default function StatsSection({ stats = STATS_DATA }) {
               </motion.div>
             ))}
           </div>
-
         </div>
-
       </div>
     </section>
   );

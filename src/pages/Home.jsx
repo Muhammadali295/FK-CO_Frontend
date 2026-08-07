@@ -1,3 +1,4 @@
+// src/pages/Home.jsx
 import React, { useState, useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -5,7 +6,6 @@ import PropertySearch from '../components/PropertySearch';
 import FeaturedProperties from '../components/FeaturedProperties';
 import WhyChooseUs from '../components/WhyChooseUs';
 import LandlordSection from '../components/LandlordSection';
-import StatsSection from '../components/StatsSection';
 import Testimonials from '../components/Testimonials';
 import ValuationCTA from '../components/ValuationCTA';
 
@@ -13,6 +13,7 @@ import { PROPERTIES_DATA } from '../data/properties';
 
 export default function Home() {
   const { onOpenValuationModal, onSelectProperty } = useOutletContext();
+  
   // Property Filter State
   const [filterState, setFilterState] = useState({
     location: '',
@@ -86,14 +87,11 @@ export default function Home() {
         filterActive={isFilterActive}
       />
 
-      {/* Why Choose Us */}
+      {/* Why Choose Us & Integrated About Us / Contact / Stats */}
       <WhyChooseUs onOpenValuationModal={onOpenValuationModal} />
 
       {/* Landlord to Landlord Section */}
       <LandlordSection onOpenValuationModal={onOpenValuationModal} />
-
-      {/* Key Statistics Bar */}
-      <StatsSection />
 
       {/* Client Testimonials Slider */}
       <Testimonials />
