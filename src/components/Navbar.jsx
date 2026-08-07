@@ -74,7 +74,7 @@ export default function Navbar({ onOpenValuationModal }) {
                 FK&CO <span className="gold-text font-light">ESTATE</span>
               </span>
               <span className="text-[9px] sm:text-[10px] tracking-[0.25em] text-[#D4A44A] uppercase font-sans-luxury">
-                Luxury Real Estate
+                
               </span>
             </div>
           </Link>
