@@ -201,13 +201,13 @@ export default function ValuationModal({ isOpen, onClose }) {
                     <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
                       <div>
                         <label className="block text-xs font-semibold text-slate-300 mb-1">
-                          Postcode / Area in Birmingham
+                          Postcode 
                         </label>
                         <input
                           type="text"
                           name="postcode"
                           required
-                          placeholder="e.g. B15, B91, B74 or Colmore Row"
+                          placeholder="e.g. B15, B91, B74"
                           value={formData.postcode}
                           onChange={handleChange}
                           className="w-full bg-[#051329]/90 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#D4A44A]"

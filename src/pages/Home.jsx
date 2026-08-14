@@ -73,7 +73,11 @@ export default function Home() {
         }}
       />
 
-      {/* Property Search Filter Component */}
+   
+      {/* Landlord to Landlord Section */}
+      <LandlordSection onOpenValuationModal={onOpenValuationModal} />
+
+         {/* Property Search Filter Component */}
       <PropertySearch
         filterState={filterState}
         setFilterState={setFilterState}
@@ -90,14 +94,11 @@ export default function Home() {
       {/* Why Choose Us & Integrated About Us / Contact / Stats */}
       <WhyChooseUs onOpenValuationModal={onOpenValuationModal} />
 
-      {/* Landlord to Landlord Section */}
-      <LandlordSection onOpenValuationModal={onOpenValuationModal} />
-
-      {/* Client Testimonials Slider */}
-      <Testimonials />
-
       {/* Valuation Call to Action */}
       <ValuationCTA onOpenValuationModal={onOpenValuationModal} />
+
+            {/* Client Testimonials Slider */}
+      <Testimonials />
     </>
   );
 }

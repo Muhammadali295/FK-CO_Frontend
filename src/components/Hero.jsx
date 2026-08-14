@@ -34,7 +34,7 @@ export default function Hero({ onOpenValuationModal, onExploreClick }) {
         >
           <Sparkles className="w-3.5 h-3.5 text-[#D4A44A]" />
           <span className="text-[9px] sm:text-xs uppercase tracking-wider sm:tracking-[0.2em] font-medium text-[#F3E7C4] truncate">
-            Birmingham's Premier Estate Agency
+            Birmingham's Real Estate Agency
           </span>
           <span className="w-1.5 h-1.5 rounded-full bg-[#D4A44A] animate-pulse shrink-0" />
         </motion.div>

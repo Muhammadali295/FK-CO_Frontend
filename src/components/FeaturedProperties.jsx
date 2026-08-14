@@ -18,7 +18,7 @@ export default function FeaturedProperties({ properties, onSelectProperty, filte
               Featured <span className="gold-text">Properties</span>
             </h2>
             <p className="mt-3 text-slate-300 text-base max-w-xl font-light">
-              Explore our hand-picked selection of luxury residences, penthouses, and period manors across Birmingham & West Midlands.
+              Explore our hand-picked selection of residences, penthouses, and period manors across Birmingham & West Midlands.
             </p>
           </div>
 
@@ -70,7 +70,7 @@ export default function FeaturedProperties({ properties, onSelectProperty, filte
                   <span className="px-3 py-1 rounded-full gold-bg text-[#071B35] text-xs font-bold uppercase tracking-wider shadow-lg">
                     {property.status}
                   </span>
-                  {property.tag && (
+                  {property.tag && (    
                     <span className="px-3 py-1 rounded-full bg-[#051329]/80 backdrop-blur-md text-slate-200 border border-white/20 text-xs font-medium">
                       {property.tag}
                     </span>

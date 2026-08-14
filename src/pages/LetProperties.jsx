@@ -662,6 +662,33 @@ export default function LetProperties() {
         </div>
       </section>
 
+{/* ── RENTAL VALUATION FORM ─────────────────────────────────────────── */}
+      <section id="rental-valuation-form" className="py-24 bg-[#051329]/50 border-y border-[#D4A44A]/10 relative overflow-hidden">
+        <div className="absolute top-1/3 right-0 w-80 h-80 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FadeInUp className="text-center mb-12">
+            <SectionLabel>Free Rental Valuation</SectionLabel>
+            <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
+              Request a <span className="gold-text">Rental Valuation</span>
+            </h2>
+            <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
+              Complete the form and our lettings team will be in touch within 24 hours with a precise rental estimate.
+            </p>
+          </FadeInUp>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="glass-card rounded-3xl p-6 sm:p-10 border border-[#D4A44A]/20"
+          >
+            <RentalValuationForm />
+          </motion.div>
+        </div>
+      </section>
+
+
       {/* ── LANDLORD BENEFITS ─────────────────────────────────────────────── */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
@@ -810,31 +837,7 @@ export default function LetProperties() {
         </div>
       </section>
 
-      {/* ── RENTAL VALUATION FORM ─────────────────────────────────────────── */}
-      <section id="rental-valuation-form" className="py-24 bg-[#051329]/50 border-y border-[#D4A44A]/10 relative overflow-hidden">
-        <div className="absolute top-1/3 right-0 w-80 h-80 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeInUp className="text-center mb-12">
-            <SectionLabel>Free Rental Valuation</SectionLabel>
-            <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
-              Request a <span className="gold-text">Rental Valuation</span>
-            </h2>
-            <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-              Complete the form and our lettings team will be in touch within 24 hours with a precise rental estimate.
-            </p>
-          </FadeInUp>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="glass-card rounded-3xl p-6 sm:p-10 border border-[#D4A44A]/20"
-          >
-            <RentalValuationForm />
-          </motion.div>
-        </div>
-      </section>
+      
 
       {/* ── STATS ─────────────────────────────────────────────────────────── */}
       <section className="py-20 bg-[#071B35]">

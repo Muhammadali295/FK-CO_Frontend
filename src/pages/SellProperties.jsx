@@ -569,7 +569,31 @@ export default function SellProperties() {
           </motion.div>
         </div>
       </section>
+      {/* ── VALUATION FORM ── */}
+      <section id="valuation-form" className="py-24 relative overflow-hidden">
+        <div className="absolute top-1/3 right-0 w-80 h-80 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FadeInUp className="text-center mb-12">
+            <SectionLabel>Book Your Valuation</SectionLabel>
+            <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
+              Request a <span className="gold-text">Free Valuation</span>
+            </h2>
+            <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
+              Complete the form below and one of our local property experts will be in touch within 24 hours.
+            </p>
+          </FadeInUp>
 
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="glass-card rounded-3xl p-6 sm:p-10 border border-[#D4A44A]/20"
+          >
+            <ValuationForm />
+          </motion.div>
+        </div>
+      </section>
       {/* ── WHY SELL WITH FK&CO ── */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
@@ -668,31 +692,7 @@ export default function SellProperties() {
         </div>
       </section>
 
-      {/* ── VALUATION FORM ── */}
-      <section id="valuation-form" className="py-24 relative overflow-hidden">
-        <div className="absolute top-1/3 right-0 w-80 h-80 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeInUp className="text-center mb-12">
-            <SectionLabel>Book Your Valuation</SectionLabel>
-            <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
-              Request a <span className="gold-text">Free Valuation</span>
-            </h2>
-            <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-              Complete the form below and one of our local property experts will be in touch within 24 hours.
-            </p>
-          </FadeInUp>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="glass-card rounded-3xl p-6 sm:p-10 border border-[#D4A44A]/20"
-          >
-            <ValuationForm />
-          </motion.div>
-        </div>
-      </section>
 
       {/* ── STATS ── */}
       <section className="py-20 bg-[#051329]/60 border-y border-[#D4A44A]/10">

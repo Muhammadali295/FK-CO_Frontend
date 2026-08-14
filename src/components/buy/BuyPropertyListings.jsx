@@ -36,7 +36,7 @@ export default function BuyPropertyListings({
               Featured Listings
             </div>
             <h2 className="font-serif-luxury text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight">
-              Premium <span className="gold-text">Properties</span>
+               <span className="gold-text">Properties</span>
             </h2>
             <p className="mt-3 text-slate-300 text-sm sm:text-base max-w-xl font-light">
               Hand-selected residences across Birmingham and the West Midlands, ready for your next chapter.
