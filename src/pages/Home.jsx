@@ -8,6 +8,10 @@ import WhyChooseUs from '../components/WhyChooseUs';
 import LandlordSection from '../components/LandlordSection';
 import Testimonials from '../components/Testimonials';
 import ValuationCTA from '../components/ValuationCTA';
+import rightmoveLogo from '../assets/rightmove.png';
+import zooplaLogo from '../assets/onthemarket.png';
+
+
 
 import { PROPERTIES_DATA } from '../data/properties';
 

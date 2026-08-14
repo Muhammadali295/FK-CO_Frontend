@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Phone, Mail, Clock } from 'lucide-react';
+import rightmoveLogo from '../assets/rightmove.png';
+import onthemarketLogo from '../assets/onthemarket.png';
 
 export default function Footer({ onOpenValuationModal }) {
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -17,15 +19,9 @@ export default function Footer({ onOpenValuationModal }) {
   };
 
   return (
-    <footer id="footer" className="bg-[#051329] border-t border-[#D4A44A]/30 text-slate-300 text-sm relative z-10">
-      
-     
-
-      {/* Main Footer Links */}
+    <footer id="footer" className="bg-[#0A1B3D] border-t border-[#D4A44A]/30 text-slate-300 text-sm relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
-          
-          {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg gold-bg flex items-center justify-center font-serif-luxury font-bold text-xl text-[#071B35]">
@@ -35,56 +31,17 @@ export default function Footer({ onOpenValuationModal }) {
                 <span className="font-serif-luxury text-xl font-bold tracking-wider text-white">
                   FK&CO <span className="gold-text font-light">ESTATE</span>
                 </span>
-                <span className="text-[10px] tracking-[0.25em] text-[#D4A44A] uppercase font-sans">
-                  {/* Luxury Real Estate Agency */}
-                </span>
               </div>
             </div>
-
             <p className="text-slate-400 text-xs font-light leading-relaxed max-w-sm">
-              FK&CO Estate is a  real estate agency built on transparency, deep Birmingham market intelligence, and uncompromised client dedication.
+              FK&CO Estate is a real estate agency built on transparency, deep Birmingham market intelligence, and uncompromised client dedication.
             </p>
-
-            {/* Social Icons */}
             <div className="flex items-center gap-3 pt-2">
               {[
-                { 
-                  icon: (
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
-                    </svg>
-                  ), 
-                  label: 'Instagram' 
-                },
-                { 
-                  icon: (
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-                      <rect width="4" height="12" x="2" y="9"/>
-                      <circle cx="4" cy="4" r="2"/>
-                    </svg>
-                  ), 
-                  label: 'LinkedIn' 
-                },
-                { 
-                  icon: (
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-                    </svg>
-                  ), 
-                  label: 'Facebook' 
-                },
-                { 
-                  icon: (
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/>
-                      <path d="m10 15 5-3-5-3z"/>
-                    </svg>
-                  ), 
-                  label: 'YouTube' 
-                }
+                { icon: <InstagramIcon />, label: 'Instagram' },
+                { icon: <LinkedInIcon />, label: 'LinkedIn' },
+                { icon: <FacebookIcon />, label: 'Facebook' },
+                { icon: <YouTubeIcon />, label: 'YouTube' }
               ].map((soc, i) => (
                 <a
                   key={i}
@@ -98,7 +55,6 @@ export default function Footer({ onOpenValuationModal }) {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div className="space-y-3">
             <h4 className="font-serif-luxury font-bold text-white text-base">Quick Links</h4>
             <ul className="space-y-2 text-xs font-light text-slate-400">
@@ -111,27 +67,9 @@ export default function Footer({ onOpenValuationModal }) {
             </ul>
           </div>
 
-          {/* Key Locations
-          <div className="space-y-3">
-            <h4 className="font-serif-luxury font-bold text-white text-base">Prime Locations</h4>
-            <ul className="space-y-2 text-xs font-light text-slate-400">
-              <li><a href="#properties" className="hover:text-[#D4A44A] transition-colors">Edgbaston Luxury Villas</a></li>
-              <li><a href="#properties" className="hover:text-[#D4A44A] transition-colors">Solihull Country Estates</a></li>
-              <li><a href="#properties" className="hover:text-[#D4A44A] transition-colors">Sutton Coldfield Manors</a></li>
-              <li><a href="#properties" className="hover:text-[#D4A44A] transition-colors">City Centre Penthouses</a></li>
-              <li><a href="#properties" className="hover:text-[#D4A44A] transition-colors">Jewellery Quarter Lofts</a></li>
-              <li><a href="#properties" className="hover:text-[#D4A44A] transition-colors">Harborne Period Homes</a></li>
-            </ul>
-          </div> */}
-
-          {/* Contact Details */}
           <div className="space-y-3">
             <h4 className="font-serif-luxury font-bold text-white text-base">Contact Us</h4>
             <div className="space-y-3 text-xs font-light text-slate-400">
-              <div className="flex items-start gap-2.5">
-                {/* <MapPin className="w-4 h-4 text-[#D4A44A] shrink-0 mt-0.5" /> */}
-                {/* <span>125 Colmore Row, Birmingham, B3 3SD, United Kingdom</span> */}
-              </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#D4A44A] shrink-0" />
                 <a href="tel:+441212345678" className="hover:text-white">0121 234 5678</a>
@@ -145,7 +83,6 @@ export default function Footer({ onOpenValuationModal }) {
                 <span>Mon - Sat: 8:30am - 7:00pm</span>
               </div>
             </div>
-
             <div className="pt-2">
               <button
                 onClick={onOpenValuationModal}
@@ -155,14 +92,31 @@ export default function Footer({ onOpenValuationModal }) {
               </button>
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* Copyright Bar */}
-      <div className="border-t border-white/10 py-6 bg-[#030D1C]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-light">
+      {/* Copyright Bar - 🚀 SIRF ONTHEMARKET BADA KIYA HAI, RIGHTMOVE FIX RAKHA */}
+      <div className="border-t border-white/10 py-8 bg-[#060E20]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-slate-500 font-light">
           <p>© {new Date().getFullYear()} FK&CO Estate Ltd. All rights reserved.</p>
+          
+          {/* 
+             Rightmove ko h-12 (fix) rakha hai. 
+             OnTheMarket ko h-20 (super big) kar diya hai taake wo size mein match kare!
+          */}
+          <div className="flex items-center gap-6">
+            <img 
+              src={rightmoveLogo} 
+              alt="Rightmove" 
+              className="h-12 w-auto object-contain flex-shrink-0 opacity-80 hover:opacity-100 transition-opacity"
+            />
+            <img 
+              src={onthemarketLogo} 
+              alt="OnTheMarket / Zoopla" 
+              className="h-20 w-auto object-contain flex-shrink-0 opacity-80 hover:opacity-100 transition-opacity"
+            />
+          </div>
+
           <div className="flex items-center gap-6">
             <a href="#footer" className="hover:text-slate-300 transition-colors">Privacy Policy</a>
             <a href="#footer" className="hover:text-slate-300 transition-colors">Terms of Business</a>
@@ -171,7 +125,33 @@ export default function Footer({ onOpenValuationModal }) {
           </div>
         </div>
       </div>
-
     </footer>
   );
 }
+
+// SVG Icons
+const InstagramIcon = () => (
+  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+  </svg>
+);
+const LinkedInIcon = () => (
+  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+    <rect width="4" height="12" x="2" y="9"/>
+    <circle cx="4" cy="4" r="2"/>
+  </svg>
+);
+const FacebookIcon = () => (
+  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+);
+const YouTubeIcon = () => (
+  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/>
+    <path d="m10 15 5-3-5-3z"/>
+  </svg>
+);
