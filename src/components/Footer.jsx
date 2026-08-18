@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Phone, Mail, Clock } from 'lucide-react';
-import rightmoveLogo from '../assets/rightmove.png';
-import onthemarketLogo from '../assets/onthemarket.png';
+import rightmoveLogo from '../assets/Rightmove.png';
+import onthemarketLogo from '../assets/Onthemarket.png';
 
 export default function Footer({ onOpenValuationModal }) {
   const [newsletterEmail, setNewsletterEmail] = useState('');
