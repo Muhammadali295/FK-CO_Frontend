@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import React, { useState, useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Hero from '../components/Hero';
