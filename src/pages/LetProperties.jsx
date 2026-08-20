@@ -11,10 +11,8 @@ import { Link } from 'react-router-dom';
 import PropertyCard from '../components/PropertyCard';
 import { Star as StarIcon, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 
-// 1. Import the custom hook instead of dummy data
 import { useProperties } from '../hooks/useProperties';
 
-// ─── Data ──────────────────────────────────────────────────────────────────────
 
 const LANDLORD_BENEFITS = [
   {
@@ -215,8 +213,6 @@ const LANDLORD_TESTIMONIALS = [
 
 const PROPERTY_TYPES = ['Detached House', 'Semi-Detached House', 'Terraced House', 'Flat / Apartment', 'Bungalow', 'HMO', 'Studio', 'Other'];
 
-// ─── Shared Sub-Components ─────────────────────────────────────────────────────
-
 const FadeInUp = ({ children, delay = 0, className = '' }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
@@ -235,8 +231,6 @@ const SectionLabel = ({ children }) => (
     {children}
   </div>
 );
-
-// ─── FAQ Item ──────────────────────────────────────────────────────────────────
 
 function FAQItem({ item, index }) {
   const [open, setOpen] = useState(false);
@@ -277,8 +271,6 @@ function FAQItem({ item, index }) {
     </motion.div>
   );
 }
-
-// ─── Testimonials Carousel (landlord-specific) ────────────────────────────────
 
 function LandlordTestimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -364,8 +356,6 @@ function LandlordTestimonials() {
   );
 }
 
-// ─── Rental Valuation Form ────────────────────────────────────────────────────
-
 function RentalValuationForm() {
   const [formData, setFormData] = useState({
     address: '',
@@ -382,6 +372,7 @@ function RentalValuationForm() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(''); // NEW: Error tracking
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -395,16 +386,43 @@ function RentalValuationForm() {
       email: '', additionalInfo: '', agreeContact: false,
     });
     setSubmitted(false);
+    setErrorMsg('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.agreeContact) return;
     setLoading(true);
-    // TODO: POST to /api/rental-valuations
-    await new Promise(r => setTimeout(r, 1500));
-    setLoading(false);
-    setSubmitted(true);
+    setErrorMsg('');
+
+    const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000';
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: formData.ownerName,
+          email: formData.email,
+          phone: formData.phone,
+          intent: 'let',
+          lead_type: 'valuation',
+          property_address: `${formData.address}, ${formData.postcode}`,
+          message: `Service: Letting | Type: ${formData.propertyType} (${formData.bedrooms} Beds, ${formData.bathrooms} Baths) | Postcode: ${formData.postcode} | Est Rent: ${formData.currentRent || 'Not provided'} | Notes: ${formData.additionalInfo || 'None'}`
+        })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMsg(result.error || 'Failed to submit rental valuation request.');
+      }
+    } catch (err) {
+      setErrorMsg('Server connection failed. Please ensure your backend is running.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputClass = "w-full bg-[#051329]/80 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#D4A44A]/60 focus:ring-1 focus:ring-[#D4A44A]/30 transition-all duration-200";
@@ -436,6 +454,11 @@ function RentalValuationForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {errorMsg && (
+        <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-sm font-semibold text-center mb-4">
+          {errorMsg}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
@@ -552,15 +575,11 @@ function RentalValuationForm() {
   );
 }
 
-// ─── Main Page ─────────────────────────────────────────────────────────────────
-
 export default function LetProperties() {
   const [savedProperties, setSavedProperties] = useState([]);
 
-  // 2. Load properties securely from the hook
   const { properties, loading, error } = useProperties();
 
-  // 3. Filter for Rentals and dynamically respond to hook loading state
   const rentalProperties = useMemo(
     () => properties.filter(p => p.status === 'Let' || p.status === 'Rent'),
     [properties]

@@ -130,7 +130,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-
 const FadeInUp = ({ children, delay = 0, className = '' }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
@@ -149,7 +148,6 @@ const SectionLabel = ({ children }) => (
     {children}
   </div>
 );
-
 
 function FAQItem({ item, index }) {
   const [open, setOpen] = useState(false);
@@ -191,10 +189,9 @@ function FAQItem({ item, index }) {
   );
 }
 
-
 export default function RentProperties() {
   const [savedProperties, setSavedProperties] = useState([]);
-  const [viewType, setViewType] = useState('grid'); // 'grid' | 'list'
+  const [viewType, setViewType] = useState('grid');
   const [sortOption, setSortOption] = useState('newest');
 
   const { properties, loading, error } = useProperties();
@@ -236,42 +233,62 @@ export default function RentProperties() {
   };
 
   const filteredProperties = useMemo(() => {
-    // 3. Replace PROPERTIES_DATA with properties
-    let result = properties.filter(p => p.status === 'Rent' || p.status === 'Let');
+    // 1. Base filter: Identify Rental properties safely (handles cases where DB uses 'status' or 'type' column)
+    let result = properties.filter(p => {
+      const pStatus = p.status?.toLowerCase() || '';
+      const pType = p.type?.toLowerCase() || '';
+      return pStatus === 'rent' || pStatus === 'let' || pType === 'rent' || pType === 'let';
+    });
 
+    // 2. Location matching (Checks city, address, or formatted location)
     if (filterState.location) {
-      result = result.filter(p => p.location.includes(filterState.location));
+      const term = filterState.location.toLowerCase();
+      result = result.filter(p => 
+        (p.location || '').toLowerCase().includes(term) ||
+        (p.city || '').toLowerCase().includes(term) ||
+        (p.address || '').toLowerCase().includes(term)
+      );
     }
+    
+    // 3. Property Type
     if (filterState.type) {
-      result = result.filter(p => p.type === filterState.type);
+      result = result.filter(p => {
+        const propType = (p.propertyType || p.type || '').toLowerCase();
+        // If DB type is just 'rent', we ignore this strict filter so we don't accidentally hide it
+        if (['rent', 'let', 'buy'].includes(propType)) return true;
+        return propType === filterState.type.toLowerCase();
+      });
     }
+
+    // 4. Numerical Filters
     if (filterState.minPrice) {
-      result = result.filter(p => p.price >= parseInt(filterState.minPrice, 10));
+      result = result.filter(p => Number(p.price) >= parseInt(filterState.minPrice, 10));
     }
     if (filterState.maxPrice) {
-      result = result.filter(p => p.price <= parseInt(filterState.maxPrice, 10));
+      result = result.filter(p => Number(p.price) <= parseInt(filterState.maxPrice, 10));
     }
     if (filterState.bedrooms) {
-      result = result.filter(p => p.bedrooms >= parseInt(filterState.bedrooms, 10));
+      result = result.filter(p => Number(p.bedrooms || 0) >= parseInt(filterState.bedrooms, 10));
     }
     if (filterState.bathrooms) {
-       result = result.filter(p => p.bathrooms >= parseInt(filterState.bathrooms, 10));
+       result = result.filter(p => Number(p.bathrooms || 0) >= parseInt(filterState.bathrooms, 10));
     }
+    
+    // 5. String Filters
     if (filterState.furnished) {
        result = result.filter(p => p.furnished === filterState.furnished);
     }
-    // Note: parking, pets, availableFrom are omitted for simplicity in this mock data implementation
 
-    // Sorting
+    // 6. Sorting Logic
     switch (sortOption) {
       case 'lowest':
-        result.sort((a, b) => a.price - b.price);
+        result.sort((a, b) => Number(a.price) - Number(b.price));
         break;
       case 'highest':
-        result.sort((a, b) => b.price - a.price);
+        result.sort((a, b) => Number(b.price) - Number(a.price));
         break;
       case 'newest':
-        result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        result.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
         break;
       case 'popular':
         result.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
@@ -413,11 +430,11 @@ export default function RentProperties() {
           </div>
 
           {loading ? (
-            <div className="text-center py-20 text-[#D4A44A] font-serif-luxury text-xl">
+            <div className="py-24 text-center text-[#D4AF37] font-serif-luxury text-xl">
               Loading premium rentals...
             </div>
           ) : error ? (
-            <div className="text-center py-20 text-red-400">
+            <div className="py-24 text-center text-red-400">
               {error}
             </div>
           ) : filteredProperties.length > 0 ? (

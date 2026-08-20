@@ -9,7 +9,6 @@ const parseImages = (data) => {
   if (!data) return [];
   if (Array.isArray(data)) return data;
   if (typeof data === 'string') {
-    // Handle Postgres raw array strings e.g., "{https://url1.com, https://url2.com}"
     if (data.startsWith('{') && data.endsWith('}')) {
       const content = data.slice(1, -1);
       if (!content) return [];
@@ -19,7 +18,7 @@ const parseImages = (data) => {
       const parsed = JSON.parse(data);
       if (Array.isArray(parsed)) return parsed;
     } catch (e) {
-      return [data]; // Fallback to single string in an array
+      return [data];
     }
   }
   return [];
@@ -31,8 +30,9 @@ export default function AdminDashboard() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Modal State for Property Editing
+  // Modal States
   const [editingProperty, setEditingProperty] = useState(null);
+  const [selectedLead, setSelectedLead] = useState(null); 
 
   const navigate = useNavigate();
 
@@ -119,6 +119,9 @@ export default function AdminDashboard() {
       const json = await res.json();
       if (json.success) {
         setLeads(leads.map(l => l.id === id ? { ...l, status: newStatus } : l));
+        if (selectedLead?.id === id) {
+          setSelectedLead({ ...selectedLead, status: newStatus });
+        }
       } else {
         alert('Failed to update lead status: ' + json.error);
       }
@@ -169,6 +172,7 @@ export default function AdminDashboard() {
       const json = await res.json();
       if (json.success) {
         setLeads(leads.filter(item => item.id !== id));
+        if (selectedLead?.id === id) setSelectedLead(null); 
       } else {
         alert('Failed to delete lead: ' + json.error);
       }
@@ -240,7 +244,8 @@ export default function AdminDashboard() {
         <LeadsTable 
           leads={leads} 
           onUpdateStatus={handleUpdateLeadStatus} 
-          onDeleteLead={handleDeleteLead} 
+          onDeleteLead={handleDeleteLead}
+          onViewLead={setSelectedLead} 
         />
       ) : (
         <PropertiesGrid 
@@ -257,11 +262,18 @@ export default function AdminDashboard() {
           onSave={handleUpdateProperty}
         />
       )}
+
+      {selectedLead && (
+        <LeadDetailsModal
+          lead={selectedLead}
+          onClose={() => setSelectedLead(null)}
+        />
+      )}
     </div>
   );
 }
 
-function LeadsTable({ leads, onUpdateStatus, onDeleteLead }) {
+function LeadsTable({ leads, onUpdateStatus, onDeleteLead, onViewLead }) {
   if (!leads.length) {
     return <p className="text-[#8899A6] p-4">No inbound leads captured yet.</p>;
   }
@@ -283,7 +295,11 @@ function LeadsTable({ leads, onUpdateStatus, onDeleteLead }) {
         </thead>
         <tbody className="divide-y divide-white/5 text-sm">
           {leads.map((lead) => (
-            <tr key={lead.id} className="hover:bg-white/[0.02]">
+            <tr 
+              key={lead.id} 
+              onClick={() => onViewLead(lead)} 
+              className="hover:bg-white/[0.04] cursor-pointer transition-colors"
+            >
               <td className="p-4 text-slate-400">
                 {new Date(lead.created_at).toLocaleDateString()}
               </td>
@@ -293,24 +309,25 @@ function LeadsTable({ leads, onUpdateStatus, onDeleteLead }) {
                 <div className="text-xs text-[#D4AF37]">{lead.phone}</div>
               </td>
               <td className="p-4">
-                <span className="bg-[#D4AF37]/15 text-[#D4AF37] px-2.5 py-1 rounded-full text-xs font-semibold">
+                <span className="bg-[#D4AF37]/15 text-[#D4AF37] px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider">
                   {lead.intent?.toUpperCase()}
                 </span>
               </td>
-              <td className="p-4 capitalize">{lead.lead_type}</td>
+              <td className="p-4 capitalize">{lead.lead_type?.replace('_', ' ')}</td>
               <td className="p-4">
                 {lead.property_address && (
-                  <div className="text-[#D4AF37] text-xs mb-1">
+                  <div className="text-[#D4AF37] text-xs mb-1 line-clamp-1">
                     📌 {lead.property_address}
                   </div>
                 )}
-                <div className="text-xs text-slate-400">{lead.message || '-'}</div>
+                <div className="text-xs text-slate-400 line-clamp-1">{lead.message || '-'}</div>
               </td>
               <td className="p-4">
                 <select
                   value={lead.status || 'new'}
+                  onClick={(e) => e.stopPropagation()} 
                   onChange={(e) => onUpdateStatus(lead.id, e.target.value)}
-                  className="bg-[#132238] border border-white/10 text-white text-xs p-1.5 rounded outline-none focus:border-[#D4AF37]"
+                  className="bg-[#132238] border border-white/10 text-white text-xs p-1.5 rounded outline-none focus:border-[#D4AF37] cursor-pointer"
                 >
                   <option value="new">New</option>
                   <option value="contacted">Contacted</option>
@@ -319,7 +336,10 @@ function LeadsTable({ leads, onUpdateStatus, onDeleteLead }) {
               </td>
               <td className="p-4">
                 <button
-                  onClick={() => onDeleteLead(lead.id)}
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                    onDeleteLead(lead.id);
+                  }}
                   className="bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer"
                 >
                   Delete
@@ -333,6 +353,121 @@ function LeadsTable({ leads, onUpdateStatus, onDeleteLead }) {
   );
 }
 
+// ─── UPGRADED LEAD DETAILS MODAL (WITH SMART PARSER) ───
+function LeadDetailsModal({ lead, onClose }) {
+  if (!lead) return null;
+
+  // Smart Parser: Extracts "Key: Value" info packed into the message string
+  let extractedDetails = [];
+  let displayNotes = lead.message || '';
+
+  if (displayNotes.includes(' | ')) {
+    // Handle Valuation Form format: "Service: Selling | Timeline: ASAP | Notes: None"
+    const parts = displayNotes.split(' | ');
+    displayNotes = ''; // Reset notes to only capture the 'Notes' value
+    parts.forEach(part => {
+      const splitIdx = part.indexOf(':');
+      if (splitIdx > -1) {
+        const key = part.substring(0, splitIdx).trim();
+        const value = part.substring(splitIdx + 1).trim();
+        if (key.toLowerCase() === 'notes' || key.toLowerCase() === 'message') {
+          displayNotes = value;
+        } else {
+          extractedDetails.push({ key, value });
+        }
+      } else {
+        displayNotes += (displayNotes ? ' ' : '') + part;
+      }
+    });
+  } else if (displayNotes.includes('Preferred Date:')) {
+    // Handle Viewing Form format: "[Private Viewing Request] Preferred Date: X, Time: Y. Notes: Z"
+    const dateMatch = displayNotes.match(/Preferred Date: (.*?), Time:/);
+    const timeMatch = displayNotes.match(/Time: (.*?)\. Notes:/);
+    const notesMatch = displayNotes.match(/Notes: (.*)/);
+    
+    if (dateMatch) extractedDetails.push({ key: 'Preferred Date', value: dateMatch[1] });
+    if (timeMatch) extractedDetails.push({ key: 'Preferred Time', value: timeMatch[1] });
+    if (notesMatch) displayNotes = notesMatch[1];
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+      <div className="bg-[#0D172A] border border-[#D4AF37]/30 rounded-2xl w-full max-w-2xl p-6 relative my-8 shadow-2xl">
+        <button 
+          onClick={onClose} 
+          className="absolute top-5 right-5 text-slate-400 hover:text-white transition p-2 cursor-pointer bg-white/5 hover:bg-white/10 rounded-full"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        
+        <h3 className="text-[#D4AF37] font-serif text-2xl mb-1">
+          Lead Information
+        </h3>
+        <p className="text-xs text-slate-400 mb-6 pb-4 border-b border-white/10">
+          Received on: {new Date(lead.created_at).toLocaleString()}
+        </p>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4 text-sm mb-6">
+          <div>
+            <strong className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Full Name</strong>
+            <span className="text-white text-lg font-medium">{lead.full_name}</span>
+          </div>
+          <div>
+            <strong className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Contact Details</strong>
+            <a href={`mailto:${lead.email}`} className="text-[#D4AF37] hover:underline block">{lead.email}</a>
+            <a href={`tel:${lead.phone}`} className="text-slate-300 hover:text-white block mt-0.5">{lead.phone || 'No phone provided'}</a>
+          </div>
+          <div>
+            <strong className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Intent</strong>
+            <span className="bg-[#D4AF37]/15 text-[#D4AF37] px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wider inline-block">
+              {lead.intent}
+            </span>
+          </div>
+          <div>
+            <strong className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Lead Type</strong>
+            <span className="text-slate-200 capitalize">{lead.lead_type?.replace('_', ' ')}</span>
+          </div>
+          <div>
+            <strong className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Current Status</strong>
+            <span className={`px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wider inline-block ${
+              lead.status === 'new' ? 'bg-blue-500/20 text-blue-300' :
+              lead.status === 'contacted' ? 'bg-amber-500/20 text-amber-300' :
+              'bg-emerald-500/20 text-emerald-300'
+            }`}>
+              {lead.status || 'new'}
+            </span>
+          </div>
+
+          {/* DYNAMICALLY MAP PARSED DETAILS (Service, Timeline, Type, Postcode, Dates, etc) */}
+          {extractedDetails.map((detail, idx) => (
+            <div key={idx}>
+              <strong className="text-xs text-slate-500 uppercase tracking-widest block mb-1">{detail.key}</strong>
+              <span className="text-slate-200 text-base">{detail.value}</span>
+            </div>
+          ))}
+        </div>
+
+        {lead.property_address && (
+          <div className="mb-6 pt-4 border-t border-white/10">
+            <strong className="text-xs text-slate-500 uppercase tracking-widest block mb-2">Target Property / Address</strong>
+            <p className="text-white flex items-start gap-2">
+              <span className="text-[#D4AF37]">📌</span> {lead.property_address}
+            </p>
+          </div>
+        )}
+
+        <div className="pt-4 border-t border-white/10">
+          <strong className="text-xs text-slate-500 uppercase tracking-widest block mb-3">Client Message / Notes</strong>
+          <div className="bg-[#132238] border border-white/5 p-4 rounded-xl text-slate-300 leading-relaxed whitespace-pre-wrap">
+            {displayNotes || <span className="italic text-slate-500">No additional notes provided.</span>}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
 function PropertiesGrid({ properties, onEditProperty, onDeleteProperty }) {
   if (!properties.length) {
     return <p className="text-[#8899A6] p-4">No property listings found.</p>;
@@ -341,7 +476,6 @@ function PropertiesGrid({ properties, onEditProperty, onDeleteProperty }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {properties.map((prop) => {
-        // Run properties through safety parser
         const imageList = parseImages(prop.images);
         
         return (
@@ -373,7 +507,7 @@ function PropertiesGrid({ properties, onEditProperty, onDeleteProperty }) {
 
             <div className="p-4 pt-0 flex justify-between gap-2 border-t border-white/5 mt-2">
               <button
-                onClick={() => onEditProperty({ ...prop, images: imageList })} // Pass cleanly formatted array
+                onClick={() => onEditProperty({ ...prop, images: imageList })}
                 className="bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/30 hover:bg-[#D4AF37] hover:text-[#080E1E] px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer mt-3"
               >
                 ✏️ Edit Listing
@@ -394,13 +528,18 @@ function PropertiesGrid({ properties, onEditProperty, onDeleteProperty }) {
 
 function EditPropertyModal({ property, onClose, onSave }) {
   const [formData, setFormData] = useState({
-    title: property.title,
-    price: property.price,
+    title: property.title || '',
+    price: property.price || '',
     status: property.status || 'available',
     type: property.type || 'buy',
+    bedrooms: property.bedrooms || '',
+    bathrooms: property.bathrooms || '',
+    area_sqft: property.area_sqft || '',
+    city: property.city || '',
+    address: property.address || '',
+    description: property.description || '',
   });
 
-  // Use the cleanly parsed array passed down from PropertiesGrid
   const [mixedImages, setMixedImages] = useState(
     (property.images || []).map((url, i) => ({
       id: `existing-${i}`,
@@ -481,31 +620,34 @@ function EditPropertyModal({ property, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
-      <div className="bg-[#0D172A] border border-[#D4AF37]/30 rounded-2xl w-full max-w-lg p-6 space-y-4 my-8">
-        <h3 className="text-white font-serif text-xl">Update Property</h3>
+      <div className="bg-[#0D172A] border border-[#D4AF37]/30 rounded-2xl w-full max-w-2xl p-6 space-y-4 my-8">
+        <h3 className="text-white font-serif text-xl">Update Property Details</h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Title</label>
             <input
               type="text"
+              required
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
             />
           </div>
 
-          <div>
-            <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Price (£)</label>
-            <input
-              type="number"
-              value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Listing Type</label>
+              <select
+                value={formData.type}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
+              >
+                <option value="buy">Buy</option>
+                <option value="rent">Rent</option>
+                <option value="let">Let</option>
+              </select>
+            </div>
             <div>
               <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Status</label>
               <select
@@ -519,22 +661,71 @@ function EditPropertyModal({ property, onClose, onSave }) {
                 <option value="rented">Rented</option>
               </select>
             </div>
-
             <div>
-              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Type</label>
-              <select
-                value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Price (£)</label>
+              <input
+                type="number"
+                required
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
-              >
-                <option value="buy">Buy</option>
-                <option value="rent">Rent</option>
-                <option value="let">Let</option>
-              </select>
+              />
             </div>
           </div>
 
-          {/* Edit Images Section */}
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Bedrooms</label>
+              <input
+                type="number"
+                value={formData.bedrooms}
+                onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
+                className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+            <div>
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Bathrooms</label>
+              <input
+                type="number"
+                value={formData.bathrooms}
+                onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
+                className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+            <div>
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Sq Ft</label>
+              <input
+                type="number"
+                value={formData.area_sqft}
+                onChange={(e) => setFormData({ ...formData, area_sqft: e.target.value })}
+                className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">City</label>
+              <input
+                type="text"
+                required
+                value={formData.city}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+            <div>
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Full Address</label>
+              <input
+                type="text"
+                required
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+          </div>
+
           <div className="pt-2 border-t border-white/10">
             <div className="flex items-center justify-between mb-2">
               <label className="text-[#D4AF37] text-xs uppercase font-semibold">
@@ -578,6 +769,16 @@ function EditPropertyModal({ property, onClose, onSave }) {
             ) : (
               <p className="text-xs text-slate-500 italic">No images attached.</p>
             )}
+          </div>
+
+          <div>
+            <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-1">Description</label>
+            <textarea
+              rows="3"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37] resize-y"
+            />
           </div>
 
           <div className="flex justify-end gap-3 pt-4">

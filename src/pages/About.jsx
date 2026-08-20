@@ -85,7 +85,32 @@ export default function About() {
 
       <Testimonials />
 
-      <section className="py-20 bg-[#051329]"><div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div className="relative overflow-hidden rounded-3xl border border-[#D4A44A]/50 bg-gradient-to-r from-[#071B35] via-[#0D2548] to-[#071B35] p-8 sm:p-16 text-center shadow-2xl"><div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#D4A44A]/15 via-transparent to-transparent" /><div className="relative max-w-3xl mx-auto"><p className="text-[#D4A44A] uppercase tracking-[0.2em] text-xs font-bold">Start a conversation</p><h2 className="mt-4 font-serif-luxury text-3xl sm:text-5xl font-bold text-white">Let's Talk About Your <span className="gold-text">Property</span></h2><p className="mt-5 text-slate-300 text-base sm:text-lg">Whether you're buying, selling, letting or renting, our team is here to help.</p><div className="mt-8 flex flex-col sm:flex-row justify-center gap-4"><button onClick={contact} className="px-7 py-4 rounded-full bg-white/10 border border-white/20 text-white font-semibold hover:bg-white/20 transition-all inline-flex items-center justify-center gap-2"><MessageCircle className="w-5 h-5 text-[#D4A44A]" /> Contact Us</button><button onClick={onOpenValuationModal} className="px-7 py-4 rounded-full gold-bg gold-bg-hover text-[#071B35] font-bold inline-flex items-center justify-center gap-2"><Sparkles className="w-5 h-5" /> Get Free Valuation</button></div></div></div></div></section>
+      <section className="py-20 bg-[#051329]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl border border-[#D4A44A]/50 bg-gradient-to-r from-[#071B35] via-[#0D2548] to-[#071B35] p-8 sm:p-16 text-center shadow-2xl">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#D4A44A]/15 via-transparent to-transparent" />
+          <div className="relative max-w-3xl mx-auto">
+            <p className="text-[#D4A44A] uppercase tracking-[0.2em] text-xs font-bold">Start a conversation</p>
+            <h2 className="mt-4 font-serif-luxury text-3xl sm:text-5xl font-bold text-white">Let's Talk About Your 
+              <span className="gold-text">Property</span>
+            </h2>
+            <p className="mt-5 text-slate-300 text-base sm:text-lg">Whether you're buying, selling, letting or renting, our team is here to help.</p>
+            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+              <button onClick={contact} className="px-7 py-4 rounded-full bg-white/10 border border-white/20 text-white font-semibold hover:bg-white/20 transition-all inline-flex items-center justify-center gap-2">
+                <MessageCircle className="w-5 h-5 text-[#D4A44A]" /> 
+                <Link to="/contact">
+                  Contact Us
+                </Link>
+              </button>
+              <button onClick={onOpenValuationModal} className="px-7 py-4 rounded-full gold-bg gold-bg-hover text-[#071B35] font-bold inline-flex items-center justify-center gap-2">
+                <Sparkles className="w-5 h-5" /> 
+                  Get Free Valuation
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     </>
   );
 }

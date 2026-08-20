@@ -35,14 +35,25 @@ function sortProperties(properties, sortBy) {
   }
 }
 
+// UPGRADED: Smarter, fault-tolerant filtering
 function filterBuyProperties(properties, filters) {
   return properties.filter((item) => {
-    if (item.status !== 'Buy') return false;
+    // Safely check if it's a Buy/Sell property (checks both status and type)
+    const isBuy = 
+      item.status?.toLowerCase() === 'buy' || 
+      item.type?.toLowerCase() === 'buy' ||
+      item.status?.toLowerCase() === 'sell' ||
+      item.type?.toLowerCase() === 'sell';
 
-    if (filters.location && !item.location.toLowerCase().includes(filters.location.toLowerCase())) {
+    if (!isBuy) return false;
+
+    if (filters.location && !(item.location || '').toLowerCase().includes(filters.location.toLowerCase())) {
       return false;
     }
-    if (filters.type && item.type !== filters.type) return false;
+    // Only filter by exact type if a filter is actually selected in the dropdown
+    if (filters.type && item.type !== filters.type && item.status !== filters.type) {
+      return false;
+    }
     if (filters.bedrooms && item.bedrooms < parseInt(filters.bedrooms, 10)) return false;
     if (filters.bathrooms && item.bathrooms < parseInt(filters.bathrooms, 10)) return false;
     if (filters.listingStatus && item.listingStatus !== filters.listingStatus) return false;

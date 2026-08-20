@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Award, Camera, Globe, UserCheck, TrendingUp, ShieldCheck, BadgePercent,
@@ -9,6 +9,10 @@ import {
 import { Link } from 'react-router-dom';
 import Testimonials from '../components/Testimonials';
 import ValuationCTA from '../components/ValuationCTA';
+import PropertyCard from '../components/PropertyCard';
+
+// 1. Import the custom hook instead of dummy data
+import { useProperties } from '../hooks/useProperties';
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
 
@@ -310,6 +314,7 @@ function ValuationForm() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(''); // Added error state
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -323,16 +328,44 @@ function ValuationForm() {
       email: '', additionalInfo: '', agreeContact: false
     });
     setSubmitted(false);
+    setErrorMsg('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.agreeContact) return;
     setLoading(true);
-    // TODO: POST to backend API /api/valuations
-    await new Promise(r => setTimeout(r, 1500));
-    setLoading(false);
-    setSubmitted(true);
+    setErrorMsg('');
+
+    const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000';
+
+    try {
+      // 2. Format the message string exactly for the Smart Parser
+      const response = await fetch(`${API_BASE_URL}/api/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: formData.ownerName,
+          email: formData.email,
+          phone: formData.phone,
+          intent: 'sell',
+          lead_type: 'valuation',
+          property_address: `${formData.address}, ${formData.postcode}`,
+          message: `Service: Selling | Type: ${formData.propertyType} (${formData.bedrooms} Beds, ${formData.bathrooms} Baths) | Postcode: ${formData.postcode} | Est Value: ${formData.estimatedValue || 'Not provided'} | Notes: ${formData.additionalInfo || 'None'}`
+        })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMsg(result.error || 'Failed to submit valuation request.');
+      }
+    } catch (err) {
+      setErrorMsg('Server connection failed. Please ensure your backend is running.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputClass = "w-full bg-[#051329]/80 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#D4A44A]/60 focus:ring-1 focus:ring-[#D4A44A]/30 transition-all duration-200";
@@ -364,6 +397,12 @@ function ValuationForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {errorMsg && (
+        <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-sm font-semibold text-center mb-4">
+          {errorMsg}
+        </div>
+      )}
+
       {/* Row 1 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
@@ -435,7 +474,7 @@ function ValuationForm() {
           className="mt-1 w-4 h-4 rounded border-[#D4A44A]/40 bg-[#051329] accent-[#D4A44A] cursor-pointer shrink-0"
           required
         />
-        <label htmlFor="agreeContact" className="text-slate-400 text-xs leading-relaxed cursor-pointer">
+        <label htmlFor="agreeContact" className="text-slate-400 text-xs leading-relaxed cursor-pointer select-none">
           I agree to be contacted by FK&CO Estate regarding my property valuation request. Your data is handled in accordance with our <span className="text-[#D4A44A] underline underline-offset-2">Privacy Policy</span>.
         </label>
       </div>
@@ -476,6 +515,27 @@ function ValuationForm() {
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function SellProperties() {
+  const [savedProperties, setSavedProperties] = useState([]);
+  
+  // 3. Fetch live properties from backend
+  const { properties, loading, error } = useProperties();
+
+  // Filter for properties listed as 'Sell' or 'Buy'
+  const sellProperties = useMemo(() => {
+    return properties.filter(p => 
+      p.status?.toLowerCase() === 'sell' || 
+      p.type?.toLowerCase() === 'sell' ||
+      p.status?.toLowerCase() === 'buy' || 
+      p.type?.toLowerCase() === 'buy'
+    );
+  }, [properties]);
+
+  const handleToggleSave = (id) => {
+    setSavedProperties(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
   return (
     <div className="bg-[#071B35] min-h-screen">
 
@@ -569,6 +629,7 @@ export default function SellProperties() {
           </motion.div>
         </div>
       </section>
+
       {/* ── VALUATION FORM ── */}
       <section id="valuation-form" className="py-24 relative overflow-hidden">
         <div className="absolute top-1/3 right-0 w-80 h-80 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
@@ -594,6 +655,58 @@ export default function SellProperties() {
           </motion.div>
         </div>
       </section>
+
+      {/* ── LIVE PROPERTIES WE ARE SELLING (NEW) ── */}
+      {(loading || error || sellProperties.length > 0) && (
+        <section className="py-24 relative overflow-hidden bg-[#071B35]/40 border-y border-[#D4A44A]/10">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <FadeInUp className="text-center mb-14">
+              <SectionLabel>Available Now</SectionLabel>
+              <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
+                Properties We Are <span className="gold-text">Selling</span>
+              </h2>
+              <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
+                Browse our current portfolio of exclusive properties on the market to see the standard of our marketing and presentation.
+              </p>
+            </FadeInUp>
+
+            {loading ? (
+              <div className="py-12 text-center text-[#D4AF37] font-serif text-xl">
+                Loading exclusive properties...
+              </div>
+            ) : error ? (
+              <div className="py-12 text-center text-red-400">
+                {error}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sellProperties.slice(0, 6).map((property) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    viewType="grid"
+                    onSelect={() => {}}
+                    isSaved={savedProperties.includes(property.id)}
+                    onToggleSave={handleToggleSave}
+                  />
+                ))}
+              </div>
+            )}
+
+            <FadeInUp delay={0.3} className="text-center mt-12">
+              <Link
+                to="/buy"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border border-[#D4A44A]/40 text-[#D4A44A] font-semibold text-sm uppercase tracking-wider hover:bg-[#D4A44A] hover:text-[#071B35] transition-all duration-300"
+              >
+                Browse All Properties
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </FadeInUp>
+          </div>
+        </section>
+      )}
+
       {/* ── WHY SELL WITH FK&CO ── */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
@@ -692,8 +805,6 @@ export default function SellProperties() {
         </div>
       </section>
 
-
-
       {/* ── STATS ── */}
       <section className="py-20 bg-[#051329]/60 border-y border-[#D4A44A]/10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -741,15 +852,6 @@ export default function SellProperties() {
             ))}
           </div>
 
-          <FadeInUp delay={0.3} className="text-center mt-12">
-            <Link
-              to="/buy"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border border-[#D4A44A]/40 text-[#D4A44A] font-semibold text-sm uppercase tracking-wider hover:bg-[#D4A44A] hover:text-[#071B35] transition-all duration-300"
-            >
-              Browse All Properties
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </FadeInUp>
         </div>
       </section>
 
