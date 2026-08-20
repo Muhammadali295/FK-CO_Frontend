@@ -2,6 +2,28 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import { X, ArrowLeft, ArrowRight, Upload } from 'lucide-react';
+
+// --- UTILITY: Safely parse Postgres strings, JSON, or Arrays ---
+const parseImages = (data) => {
+  if (!data) return [];
+  if (Array.isArray(data)) return data;
+  if (typeof data === 'string') {
+    // Handle Postgres raw array strings e.g., "{https://url1.com, https://url2.com}"
+    if (data.startsWith('{') && data.endsWith('}')) {
+      const content = data.slice(1, -1);
+      if (!content) return [];
+      return content.split(',').map(s => s.trim().replace(/^"|"$/g, ''));
+    }
+    try {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed)) return parsed;
+    } catch (e) {
+      return [data]; // Fallback to single string in an array
+    }
+  }
+  return [];
+};
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('leads'); // 'leads' | 'properties'
@@ -45,7 +67,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // --- LOGOUT FUNCTIONALITY ---
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
@@ -55,7 +76,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // --- UPDATE PROPERTY API CALL ---
   const handleUpdateProperty = async (id, updatedFields) => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -82,7 +102,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // --- UPDATE LEAD STATUS API CALL ---
   const handleUpdateLeadStatus = async (id, newStatus) => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -108,7 +127,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // --- DELETE PROPERTY API CALL ---
   const handleDeleteProperty = async (id, title) => {
     if (!window.confirm(`Are you sure you want to delete "${title}"?`)) return;
 
@@ -134,7 +152,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // --- DELETE LEAD API CALL ---
   const handleDeleteLead = async (id) => {
     if (!window.confirm('Are you sure you want to delete this enquiry record?')) return;
 
@@ -162,7 +179,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-[#080E1E] text-slate-200 p-6 md:p-10 font-sans">
-      {/* Header */}
       <header className="flex flex-col md:flex-row justify-between items-center pb-6 border-b border-[#D4AF37]/20 gap-4">
         <div className="flex items-center gap-3">
           <div className="bg-[#D4AF37] text-[#080E1E] font-bold text-xl px-3 py-1.5 rounded font-serif">
@@ -186,7 +202,6 @@ export default function AdminDashboard() {
             + Add Property Listing
           </Link>
 
-          {/* Integrated Logout Button */}
           <button
             onClick={handleLogout}
             className="bg-transparent text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white px-4 py-2.5 rounded-full text-sm font-semibold transition cursor-pointer"
@@ -196,7 +211,6 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      {/* Navigation Tabs */}
       <div className="flex gap-4 my-8">
         <button
           onClick={() => setActiveTab('leads')}
@@ -220,7 +234,6 @@ export default function AdminDashboard() {
         </button>
       </div>
 
-      {/* Main Content View */}
       {loading ? (
         <div className="text-[#D4AF37] py-16 text-center font-serif">Loading luxury database...</div>
       ) : activeTab === 'leads' ? (
@@ -237,7 +250,6 @@ export default function AdminDashboard() {
         />
       )}
 
-      {/* Edit Property Modal */}
       {editingProperty && (
         <EditPropertyModal
           property={editingProperty}
@@ -249,7 +261,6 @@ export default function AdminDashboard() {
   );
 }
 
-// Leads Table with Status Dropdown
 function LeadsTable({ leads, onUpdateStatus, onDeleteLead }) {
   if (!leads.length) {
     return <p className="text-[#8899A6] p-4">No inbound leads captured yet.</p>;
@@ -322,7 +333,6 @@ function LeadsTable({ leads, onUpdateStatus, onDeleteLead }) {
   );
 }
 
-// Properties Grid with Edit Button
 function PropertiesGrid({ properties, onEditProperty, onDeleteProperty }) {
   if (!properties.length) {
     return <p className="text-[#8899A6] p-4">No property listings found.</p>;
@@ -330,55 +340,58 @@ function PropertiesGrid({ properties, onEditProperty, onDeleteProperty }) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {properties.map((prop) => (
-        <div key={prop.id} className="bg-[#0D172A] rounded-xl overflow-hidden border border-white/10 flex flex-col justify-between">
-          <div>
-            <div className="h-44 bg-[#132238] flex items-center justify-center relative">
-              {prop.images && prop.images[0] ? (
-                <img src={prop.images[0]} alt={prop.title} className="w-full h-full object-cover" />
-              ) : (
-                <span className="text-[#D4AF37] font-serif font-bold text-sm tracking-widest">
-                  FK&CO LUXURY
+      {properties.map((prop) => {
+        // Run properties through safety parser
+        const imageList = parseImages(prop.images);
+        
+        return (
+          <div key={prop.id} className="bg-[#0D172A] rounded-xl overflow-hidden border border-white/10 flex flex-col justify-between">
+            <div>
+              <div className="h-44 bg-[#132238] flex items-center justify-center relative">
+                {imageList.length > 0 && imageList[0] ? (
+                  <img src={imageList[0]} alt={prop.title} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-[#D4AF37] font-serif font-bold text-sm tracking-widest">
+                    FK&CO LUXURY
+                  </span>
+                )}
+                <span className="absolute top-3 right-3 bg-[#D4AF37] text-black px-2.5 py-0.5 rounded-full text-xs font-bold uppercase">
+                  {prop.status || 'available'}
                 </span>
-              )}
-              <span className="absolute top-3 right-3 bg-[#D4AF37] text-black px-2.5 py-0.5 rounded-full text-xs font-bold uppercase">
-                {prop.status || 'available'}
-              </span>
+              </div>
+              <div className="p-5">
+                <span className="text-[#D4AF37] text-xs font-bold uppercase tracking-wider block mb-1">
+                  {prop.type}
+                </span>
+                <h3 className="text-white font-serif text-lg mb-1">{prop.title}</h3>
+                <p className="text-[#D4AF37] font-bold text-xl mb-2">
+                  £{Number(prop.price).toLocaleString()}
+                </p>
+                <p className="text-[#8899A6] text-xs">📍 {prop.city}, {prop.address}</p>
+              </div>
             </div>
-            <div className="p-5">
-              <span className="text-[#D4AF37] text-xs font-bold uppercase tracking-wider block mb-1">
-                {prop.type}
-              </span>
-              <h3 className="text-white font-serif text-lg mb-1">{prop.title}</h3>
-              <p className="text-[#D4AF37] font-bold text-xl mb-2">
-                £{Number(prop.price).toLocaleString()}
-              </p>
-              <p className="text-[#8899A6] text-xs">📍 {prop.city}, {prop.address}</p>
-            </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="p-4 pt-0 flex justify-between gap-2 border-t border-white/5 mt-2">
-            <button
-              onClick={() => onEditProperty(prop)}
-              className="bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/30 hover:bg-[#D4AF37] hover:text-[#080E1E] px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer mt-3"
-            >
-              ✏️ Edit Listing
-            </button>
-            <button
-              onClick={() => onDeleteProperty(prop.id, prop.title)}
-              className="bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer mt-3"
-            >
-              🗑 Delete
-            </button>
+            <div className="p-4 pt-0 flex justify-between gap-2 border-t border-white/5 mt-2">
+              <button
+                onClick={() => onEditProperty({ ...prop, images: imageList })} // Pass cleanly formatted array
+                className="bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/30 hover:bg-[#D4AF37] hover:text-[#080E1E] px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer mt-3"
+              >
+                ✏️ Edit Listing
+              </button>
+              <button
+                onClick={() => onDeleteProperty(prop.id, prop.title)}
+                className="bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer mt-3"
+              >
+                🗑 Delete
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
 
-// Edit Property Modal Component
 function EditPropertyModal({ property, onClose, onSave }) {
   const [formData, setFormData] = useState({
     title: property.title,
@@ -387,14 +400,88 @@ function EditPropertyModal({ property, onClose, onSave }) {
     type: property.type || 'buy',
   });
 
-  const handleSubmit = (e) => {
+  // Use the cleanly parsed array passed down from PropertiesGrid
+  const [mixedImages, setMixedImages] = useState(
+    (property.images || []).map((url, i) => ({
+      id: `existing-${i}`,
+      url: url,
+      isNew: false
+    }))
+  );
+  
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleImageSelect = (e) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      if (mixedImages.length + newFiles.length > 5) {
+        alert('Properties can have a maximum of 5 images combined.');
+        e.target.value = null;
+        return;
+      }
+      
+      const newImageObjects = newFiles.map(file => ({
+        id: `new-${Math.random().toString(36).substr(2, 9)}`,
+        file: file,
+        url: URL.createObjectURL(file), 
+        isNew: true
+      }));
+
+      setMixedImages(prev => [...prev, ...newImageObjects]);
+      e.target.value = null;
+    }
+  };
+
+  const moveImage = (index, direction) => {
+    const newArr = [...mixedImages];
+    if (direction === 'left' && index > 0) {
+      [newArr[index - 1], newArr[index]] = [newArr[index], newArr[index - 1]];
+    } else if (direction === 'right' && index < newArr.length - 1) {
+      [newArr[index + 1], newArr[index]] = [newArr[index], newArr[index + 1]];
+    }
+    setMixedImages(newArr);
+  };
+
+  const removeImage = (idToRemove) => {
+    setMixedImages(prev => prev.filter(img => img.id !== idToRemove));
+  };
+
+  const uploadNewImages = async () => {
+    const finalUrls = [];
+    setIsUploading(true);
+
+    for (const img of mixedImages) {
+      if (img.isNew) {
+        const fileExt = img.file.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+        const filePath = `listings/${fileName}`;
+
+        const { error } = await supabase.storage.from('property-images').upload(filePath, img.file);
+        if (error) {
+          console.error("Failed to upload new image:", error);
+          continue;
+        }
+
+        const { data: { publicUrl } } = supabase.storage.from('property-images').getPublicUrl(filePath);
+        finalUrls.push(publicUrl);
+      } else {
+        finalUrls.push(img.url);
+      }
+    }
+
+    setIsUploading(false);
+    return finalUrls;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(property.id, formData);
+    const finalImageUrls = await uploadNewImages();
+    onSave(property.id, { ...formData, images: finalImageUrls });
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-[#0D172A] border border-[#D4AF37]/30 rounded-2xl w-full max-w-md p-6 space-y-4">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+      <div className="bg-[#0D172A] border border-[#D4AF37]/30 rounded-2xl w-full max-w-lg p-6 space-y-4 my-8">
         <h3 className="text-white font-serif text-xl">Update Property</h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -424,7 +511,7 @@ function EditPropertyModal({ property, onClose, onSave }) {
               <select
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none"
+                className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
               >
                 <option value="available">Available</option>
                 <option value="pending">Pending</option>
@@ -438,7 +525,7 @@ function EditPropertyModal({ property, onClose, onSave }) {
               <select
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none"
+                className="w-full bg-[#132238] border border-white/10 text-white p-2.5 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
               >
                 <option value="buy">Buy</option>
                 <option value="rent">Rent</option>
@@ -447,19 +534,67 @@ function EditPropertyModal({ property, onClose, onSave }) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-2">
+          {/* Edit Images Section */}
+          <div className="pt-2 border-t border-white/10">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-[#D4AF37] text-xs uppercase font-semibold">
+                Manage Images ({mixedImages.length}/5)
+              </label>
+              <label className={`text-xs flex items-center gap-1 cursor-pointer transition ${mixedImages.length >= 5 ? 'text-slate-500 opacity-50' : 'text-[#8899A6] hover:text-white'}`}>
+                <Upload className="w-3.5 h-3.5" />
+                Add More
+                <input type="file" multiple accept="image/*" onChange={handleImageSelect} disabled={mixedImages.length >= 5} className="hidden" />
+              </label>
+            </div>
+
+            {mixedImages.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {mixedImages.map((img, index) => (
+                  <div key={img.id} className={`relative group rounded-lg overflow-hidden border-2 ${index === 0 ? 'border-[#D4AF37]' : 'border-white/10'} aspect-video`}>
+                    <img src={img.url} alt="Property" className="w-full h-full object-cover" />
+                    
+                    {index === 0 && (
+                      <span className="absolute top-1 left-1 bg-[#D4AF37] text-black text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">Main</span>
+                    )}
+
+                    {img.isNew && (
+                      <span className="absolute top-1 right-1 bg-emerald-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
+                    )}
+
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+                      <button type="button" onClick={() => moveImage(index, 'left')} disabled={index === 0} className="p-1 bg-white/20 hover:bg-[#D4AF37] hover:text-black rounded text-white disabled:opacity-30 cursor-pointer">
+                        <ArrowLeft className="w-3.5 h-3.5" />
+                      </button>
+                      <button type="button" onClick={() => removeImage(img.id)} className="p-1 bg-red-500/80 hover:bg-red-500 rounded text-white cursor-pointer">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                      <button type="button" onClick={() => moveImage(index, 'right')} disabled={index === mixedImages.length - 1} className="p-1 bg-white/20 hover:bg-[#D4AF37] hover:text-black rounded text-white disabled:opacity-30 cursor-pointer">
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-slate-500 italic">No images attached.</p>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4">
             <button
               type="button"
               onClick={onClose}
-              className="text-[#8899A6] text-xs hover:text-white px-3 py-2"
+              disabled={isUploading}
+              className="text-[#8899A6] text-sm hover:text-white px-3 py-2 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-[#D4AF37] text-[#080E1E] px-5 py-2 rounded-full font-bold text-xs hover:bg-[#c5a059]"
+              disabled={isUploading}
+              className="bg-[#D4AF37] text-[#080E1E] px-5 py-2.5 rounded-full font-bold text-sm hover:bg-[#c5a059] disabled:opacity-60 transition cursor-pointer"
             >
-              Save Changes
+              {isUploading ? 'Saving & Uploading...' : 'Save Changes'}
             </button>
           </div>
         </form>

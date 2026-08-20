@@ -6,12 +6,11 @@ import {
   UserCheck, Clock, ShieldCheck, Zap, Heart, LayoutGrid, List
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { PROPERTIES_DATA } from '../data/properties';
 import PropertyCard from '../components/PropertyCard';
 import PropertySearch from '../components/PropertySearch';
 import Testimonials from '../components/Testimonials';
 
-// ─── Data ──────────────────────────────────────────────────────────────────────
+import { useProperties } from '../hooks/useProperties';
 
 const WHY_RENT_ITEMS = [
   {
@@ -131,7 +130,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-// ─── Shared Sub-Components ─────────────────────────────────────────────────────
 
 const FadeInUp = ({ children, delay = 0, className = '' }) => (
   <motion.div
@@ -152,7 +150,6 @@ const SectionLabel = ({ children }) => (
   </div>
 );
 
-// ─── FAQ Item ──────────────────────────────────────────────────────────────────
 
 function FAQItem({ item, index }) {
   const [open, setOpen] = useState(false);
@@ -195,14 +192,13 @@ function FAQItem({ item, index }) {
 }
 
 
-// ─── Main Page ─────────────────────────────────────────────────────────────────
-
 export default function RentProperties() {
   const [savedProperties, setSavedProperties] = useState([]);
   const [viewType, setViewType] = useState('grid'); // 'grid' | 'list'
   const [sortOption, setSortOption] = useState('newest');
 
-  // Search filter state
+  const { properties, loading, error } = useProperties();
+
   const [filterState, setFilterState] = useState({
     status: 'Rent',
     location: '',
@@ -239,9 +235,9 @@ export default function RentProperties() {
     );
   };
 
-  // Filter properties
   const filteredProperties = useMemo(() => {
-    let result = PROPERTIES_DATA.filter(p => p.status === 'Rent' || p.status === 'Let');
+    // 3. Replace PROPERTIES_DATA with properties
+    let result = properties.filter(p => p.status === 'Rent' || p.status === 'Let');
 
     if (filterState.location) {
       result = result.filter(p => p.location.includes(filterState.location));
@@ -285,11 +281,10 @@ export default function RentProperties() {
     }
 
     return result;
-  }, [filterState, sortOption]);
+  }, [filterState, sortOption, properties]);
 
   return (
     <div className="bg-[#071B35] min-h-screen">
-      {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
@@ -359,7 +354,6 @@ export default function RentProperties() {
         </div>
       </section>
 
-      {/* ── ADVANCED RENTAL SEARCH ────────────────────────────────────────── */}
       <PropertySearch
         filterState={filterState}
         setFilterState={setFilterState}
@@ -367,7 +361,6 @@ export default function RentProperties() {
         isRental={true}
       />
 
-      {/* ── FEATURED RENTAL LISTINGS ────────────────────────────────────── */}
       <section id="properties" className="py-24 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
         
@@ -381,7 +374,6 @@ export default function RentProperties() {
               <p className="mt-3 text-slate-300 text-sm">Showing {filteredProperties.length} results</p>
             </FadeInUp>
 
-            {/* Sorting & View Options */}
             <FadeInUp delay={0.1} className="flex flex-wrap items-center gap-4">
               <div className="glass-panel rounded-xl px-3 py-1.5 flex items-center gap-2 border border-white/10">
                 <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Sort by:</span>
@@ -420,7 +412,15 @@ export default function RentProperties() {
             </FadeInUp>
           </div>
 
-          {filteredProperties.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-20 text-[#D4A44A] font-serif-luxury text-xl">
+              Loading premium rentals...
+            </div>
+          ) : error ? (
+            <div className="text-center py-20 text-red-400">
+              {error}
+            </div>
+          ) : filteredProperties.length > 0 ? (
             <motion.div
               layout
               className={`grid gap-6 ${
@@ -449,7 +449,7 @@ export default function RentProperties() {
               <p className="text-slate-400 text-sm">Try adjusting your search filters to find what you're looking for.</p>
               <button
                 onClick={handleResetFilters}
-                className="mt-6 px-6 py-2 rounded-xl border border-[#D4A44A]/40 text-[#D4A44A] text-sm font-semibold hover:bg-[#D4A44A] hover:text-[#071B35] transition-all"
+                className="mt-6 px-6 py-2 rounded-xl border border-[#D4A44A]/40 text-[#D4A44A] text-sm font-semibold hover:bg-[#D4A44A] hover:text-[#071B35] transition-all cursor-pointer"
               >
                 Reset Filters
               </button>
@@ -458,7 +458,6 @@ export default function RentProperties() {
         </div>
       </section>
 
-      {/* ── RENTAL PROCESS TIMELINE ──────────────────────────────────────── */}
       <section className="py-24 bg-[#051329]/60 border-y border-[#D4A44A]/10 relative overflow-hidden">
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -510,7 +509,6 @@ export default function RentProperties() {
         </div>
       </section>
 
-      {/* ── WHY RENT WITH FK&CO ─────────────────────────────────────────── */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -550,7 +548,6 @@ export default function RentProperties() {
         </div>
       </section>
 
-      {/* ── TENANT RESOURCES ────────────────────────────────────────────── */}
       <section className="py-20 bg-[#051329]/60 border-y border-[#D4A44A]/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInUp className="text-center mb-12">
@@ -582,10 +579,8 @@ export default function RentProperties() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ─────────────────────────────────────────────────── */}
       <Testimonials />
 
-      {/* ── FAQ ───────────────────────────────────────────────────────────── */}
       <section className="py-24 bg-[#051329]/40 border-t border-[#D4A44A]/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInUp className="text-center mb-14">
@@ -603,7 +598,6 @@ export default function RentProperties() {
         </div>
       </section>
 
-      {/* ── CTA BANNER ────────────────────────────────────────────────────── */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0">
           <img

@@ -10,14 +10,13 @@ import ValuationCTA from '../components/ValuationCTA';
 import rightmoveLogo from '../assets/Rightmove.png';
 import zooplaLogo from '../assets/Onthemarket.png';
 
-
-
-import { PROPERTIES_DATA } from '../data/properties';
+import { useProperties } from '../hooks/useProperties';
 
 export default function Home() {
   const { onOpenValuationModal, onSelectProperty } = useOutletContext();
   
-  // Property Filter State
+  const { properties, loading, error } = useProperties();
+  
   const [filterState, setFilterState] = useState({
     location: '',
     type: '',
@@ -38,9 +37,8 @@ export default function Home() {
     });
   };
 
-  // Filtered Properties Computation
   const filteredProperties = useMemo(() => {
-    return PROPERTIES_DATA.filter((item) => {
+    return properties.filter((item) => {
       if (filterState.location && !item.location.toLowerCase().includes(filterState.location.toLowerCase())) {
         return false;
       }
@@ -61,13 +59,12 @@ export default function Home() {
       }
       return true;
     });
-  }, [filterState]);
+  }, [filterState, properties]);
 
   const isFilterActive = Object.values(filterState).some((val) => val !== '');
 
   return (
     <>
-      {/* Hero Section */}
       <Hero
         onOpenValuationModal={onOpenValuationModal}
         onExploreClick={() => {
@@ -76,31 +73,34 @@ export default function Home() {
         }}
       />
 
-   
-      {/* Landlord to Landlord Section */}
       <LandlordSection onOpenValuationModal={onOpenValuationModal} />
 
-         {/* Property Search Filter Component */}
       <PropertySearch
         filterState={filterState}
         setFilterState={setFilterState}
         onResetFilters={handleResetFilters}
       />
 
-      {/* Featured Properties Grid */}
-      <FeaturedProperties
-        properties={filteredProperties}
-        onSelectProperty={onSelectProperty}
-        filterActive={isFilterActive}
-      />
+      {loading ? (
+        <div className="py-24 text-center text-[#D4AF37] font-serif text-xl bg-[#051329]">
+          Loading exclusive portfolio...
+        </div>
+      ) : error ? (
+        <div className="py-24 text-center text-red-400 bg-[#051329]">
+          {error}
+        </div>
+      ) : (
+        <FeaturedProperties
+          properties={filteredProperties}
+          onSelectProperty={onSelectProperty}
+          filterActive={isFilterActive}
+        />
+      )}
 
-      {/* Why Choose Us & Integrated About Us / Contact / Stats */}
       <WhyChooseUs onOpenValuationModal={onOpenValuationModal} />
 
-      {/* Valuation Call to Action */}
       <ValuationCTA onOpenValuationModal={onOpenValuationModal} />
 
-            {/* Client Testimonials Slider */}
       <Testimonials />
     </>
   );

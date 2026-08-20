@@ -8,9 +8,11 @@ import {
   CalendarCheck, Clock, Home, Star, PieChart, Building2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { PROPERTIES_DATA, TESTIMONIALS_DATA } from '../data/properties';
 import PropertyCard from '../components/PropertyCard';
 import { Star as StarIcon, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+
+// 1. Import the custom hook instead of dummy data
+import { useProperties } from '../hooks/useProperties';
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
 
@@ -434,7 +436,7 @@ function RentalValuationForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Row 1 */}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label className={labelClass}>Property Address *</label>
@@ -445,7 +447,7 @@ function RentalValuationForm() {
           <input name="postcode" value={formData.postcode} onChange={handleChange} required placeholder="e.g. B15 3JU" className={inputClass} />
         </div>
       </div>
-      {/* Row 2 */}
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div>
           <label className={labelClass}>Property Type *</label>
@@ -469,12 +471,12 @@ function RentalValuationForm() {
           </select>
         </div>
       </div>
-      {/* Row 3 */}
+
       <div>
         <label className={labelClass}>Current Rental Income (Optional)</label>
         <input name="currentRent" value={formData.currentRent} onChange={handleChange} placeholder="e.g. £1,800 / pcm or 'Currently vacant'" className={inputClass} />
       </div>
-      {/* Row 4 */}
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div>
           <label className={labelClass}>Your Full Name *</label>
@@ -489,7 +491,7 @@ function RentalValuationForm() {
           <input name="email" type="email" value={formData.email} onChange={handleChange} required placeholder="e.g. sarah@email.com" className={inputClass} />
         </div>
       </div>
-      {/* Row 5 */}
+
       <div>
         <label className={labelClass}>Additional Information (Optional)</label>
         <textarea
@@ -501,7 +503,7 @@ function RentalValuationForm() {
           className={`${inputClass} resize-none`}
         />
       </div>
-      {/* Consent */}
+
       <div className="flex items-start gap-3">
         <input
           id="agreeContactLet"
@@ -517,7 +519,6 @@ function RentalValuationForm() {
           <span className="text-[#D4A44A] underline underline-offset-2">Privacy Policy</span>.
         </label>
       </div>
-      {/* Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 pt-2">
         <button
           type="submit"
@@ -556,9 +557,13 @@ function RentalValuationForm() {
 export default function LetProperties() {
   const [savedProperties, setSavedProperties] = useState([]);
 
+  // 2. Load properties securely from the hook
+  const { properties, loading, error } = useProperties();
+
+  // 3. Filter for Rentals and dynamically respond to hook loading state
   const rentalProperties = useMemo(
-    () => PROPERTIES_DATA.filter(p => p.status === 'Let' || p.status === 'Rent'),
-    []
+    () => properties.filter(p => p.status === 'Let' || p.status === 'Rent'),
+    [properties]
   );
 
   const handleToggleSave = (id) => {
@@ -570,7 +575,6 @@ export default function LetProperties() {
   return (
     <div className="bg-[#071B35] min-h-screen">
 
-      {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
@@ -583,7 +587,6 @@ export default function LetProperties() {
           <div className="absolute inset-0 bg-gradient-to-r from-[#071B35]/75 via-transparent to-[#071B35]/35" />
         </div>
 
-        {/* Decorative orbs */}
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#D4A44A]/8 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
 
@@ -640,7 +643,6 @@ export default function LetProperties() {
             </a>
           </motion.div>
 
-          {/* Trust badges */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -662,7 +664,6 @@ export default function LetProperties() {
         </div>
       </section>
 
-{/* ── RENTAL VALUATION FORM ─────────────────────────────────────────── */}
       <section id="rental-valuation-form" className="py-24 bg-[#051329]/50 border-y border-[#D4A44A]/10 relative overflow-hidden">
         <div className="absolute top-1/3 right-0 w-80 h-80 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -689,7 +690,6 @@ export default function LetProperties() {
       </section>
 
 
-      {/* ── LANDLORD BENEFITS ─────────────────────────────────────────────── */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -729,7 +729,6 @@ export default function LetProperties() {
         </div>
       </section>
 
-      {/* ── LETTING PROCESS TIMELINE ──────────────────────────────────────── */}
       <section className="py-24 bg-[#051329]/60 border-y border-[#D4A44A]/10 relative overflow-hidden">
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -743,7 +742,6 @@ export default function LetProperties() {
             </p>
           </FadeInUp>
 
-          {/* Vertical connector line (desktop only) */}
           <div className="relative">
             <div className="hidden sm:block absolute left-[calc(50%-1px)] top-10 bottom-10 w-0.5 bg-gradient-to-b from-[#D4A44A]/40 via-[#D4A44A]/20 to-transparent pointer-events-none" />
 
@@ -782,7 +780,6 @@ export default function LetProperties() {
         </div>
       </section>
 
-      {/* ── LANDLORD SERVICES ─────────────────────────────────────────────── */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -838,8 +835,6 @@ export default function LetProperties() {
       </section>
 
       
-
-      {/* ── STATS ─────────────────────────────────────────────────────────── */}
       <section className="py-20 bg-[#071B35]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -866,8 +861,7 @@ export default function LetProperties() {
         </div>
       </section>
 
-      {/* ── FEATURED RENTAL PROPERTIES ───────────────────────────────────── */}
-      {rentalProperties.length > 0 && (
+      {(loading || error || rentalProperties.length > 0) && (
         <section className="py-24 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -881,18 +875,28 @@ export default function LetProperties() {
               </p>
             </FadeInUp>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {rentalProperties.map((property, i) => (
-                <PropertyCard
-                  key={property.id}
-                  property={property}
-                  viewType="grid"
-                  onSelect={() => {}}
-                  isSaved={savedProperties.includes(property.id)}
-                  onToggleSave={handleToggleSave}
-                />
-              ))}
-            </div>
+            {loading ? (
+              <div className="py-12 text-center text-[#D4AF37] font-serif text-xl">
+                Loading exclusive rentals...
+              </div>
+            ) : error ? (
+              <div className="py-12 text-center text-red-400">
+                {error}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {rentalProperties.map((property, i) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    viewType="grid"
+                    onSelect={() => {}}
+                    isSaved={savedProperties.includes(property.id)}
+                    onToggleSave={handleToggleSave}
+                  />
+                ))}
+              </div>
+            )}
 
             <FadeInUp delay={0.3} className="text-center mt-12">
               <Link
@@ -907,10 +911,7 @@ export default function LetProperties() {
         </section>
       )}
 
-      {/* ── LANDLORD TESTIMONIALS ─────────────────────────────────────────── */}
       <LandlordTestimonials />
-
-      {/* ── FAQ ───────────────────────────────────────────────────────────── */}
       <section className="py-24 bg-[#051329]/40 border-t border-[#D4A44A]/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInUp className="text-center mb-14">
@@ -928,7 +929,6 @@ export default function LetProperties() {
         </div>
       </section>
 
-      {/* ── CTA BANNER ────────────────────────────────────────────────────── */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0">
           <img

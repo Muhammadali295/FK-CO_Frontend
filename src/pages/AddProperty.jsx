@@ -1,13 +1,16 @@
+// src/pages/AddProperty.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 
 export default function AddProperty() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
+  
+  // Store objects { file, previewUrl, id } for sorting and previews
   const [imageFiles, setImageFiles] = useState([]);
-  const [imageUrls, setImageUrls] = useState([]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -26,11 +29,41 @@ export default function AddProperty() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle File Selection
+  // Handle File Selection (Max 5)
   const handleImageChange = (e) => {
     if (e.target.files) {
-      setImageFiles(Array.from(e.target.files));
+      const newFiles = Array.from(e.target.files);
+      
+      if (imageFiles.length + newFiles.length > 5) {
+        alert('You can only upload a maximum of 5 images per property.');
+        e.target.value = null; // reset input
+        return;
+      }
+
+      const newImageObjects = newFiles.map(file => ({
+        file,
+        previewUrl: URL.createObjectURL(file),
+        id: Math.random().toString(36).substring(2, 9)
+      }));
+
+      setImageFiles(prev => [...prev, ...newImageObjects]);
+      e.target.value = null; // reset input to allow selecting same file again if removed
     }
+  };
+
+  // Reordering controls
+  const moveImage = (index, direction) => {
+    const newImages = [...imageFiles];
+    if (direction === 'left' && index > 0) {
+      [newImages[index - 1], newImages[index]] = [newImages[index], newImages[index - 1]];
+    } else if (direction === 'right' && index < newImages.length - 1) {
+      [newImages[index + 1], newImages[index]] = [newImages[index], newImages[index + 1]];
+    }
+    setImageFiles(newImages);
+  };
+
+  const removeImage = (index) => {
+    setImageFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   // Upload Images directly to Supabase Storage Bucket ('property-images')
@@ -40,23 +73,21 @@ export default function AddProperty() {
     setUploadingImages(true);
     const uploadedUrls = [];
 
-    for (const file of imageFiles) {
-      // Create a unique file name
-      const fileExt = file.name.split('.').pop();
+    // Loop maintains the array order defined by the admin
+    for (const imgObj of imageFiles) {
+      const fileExt = imgObj.file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
       const filePath = `listings/${fileName}`;
 
-      // Upload file to 'property-images' bucket
       const { error: uploadError } = await supabase.storage
         .from('property-images')
-        .upload(filePath, file);
+        .upload(filePath, imgObj.file);
 
       if (uploadError) {
         console.error('Image upload failed:', uploadError.message);
         continue;
       }
 
-      // Get Public URL
       const { data: { publicUrl } } = supabase.storage
         .from('property-images')
         .getPublicUrl(filePath);
@@ -73,14 +104,10 @@ export default function AddProperty() {
     setLoading(true);
 
     try {
-      // 1. Upload images first & collect URLs
       const uploadedImages = await uploadImagesToSupabase();
-
-      // 2. Get active admin session token
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      // 3. Post payload to backend Node API
       const response = await fetch('http://localhost:5000/api/properties', {
         method: 'POST',
         headers: {
@@ -89,7 +116,7 @@ export default function AddProperty() {
         },
         body: JSON.stringify({
           ...formData,
-          images: uploadedImages // Send array of uploaded Supabase image URLs
+          images: uploadedImages
         }),
       });
 
@@ -143,120 +170,95 @@ export default function AddProperty() {
               <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
                 Listing Type
               </label>
-              <select
-                name="type"
-                value={formData.type}
-                onChange={handleChange}
-                className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
-              >
+              <select name="type" value={formData.type} onChange={handleChange} className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]">
                 <option value="buy">Buy</option>
                 <option value="rent">Rent</option>
                 <option value="let">Let</option>
               </select>
             </div>
-
             <div>
               <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
                 Price (£)
               </label>
-              <input
-                name="price"
-                type="number"
-                required
-                value={formData.price}
-                onChange={handleChange}
-                placeholder="550000"
-                className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
-              />
+              <input name="price" type="number" required value={formData.price} onChange={handleChange} placeholder="550000" className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]" />
             </div>
           </div>
 
           {/* Specs */}
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
-                Bedrooms
-              </label>
-              <input
-                name="bedrooms"
-                type="number"
-                value={formData.bedrooms}
-                onChange={handleChange}
-                className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
-              />
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-2">Bedrooms</label>
+              <input name="bedrooms" type="number" value={formData.bedrooms} onChange={handleChange} className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]" />
             </div>
             <div>
-              <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
-                Bathrooms
-              </label>
-              <input
-                name="bathrooms"
-                type="number"
-                value={formData.bathrooms}
-                onChange={handleChange}
-                className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
-              />
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-2">Bathrooms</label>
+              <input name="bathrooms" type="number" value={formData.bathrooms} onChange={handleChange} className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]" />
             </div>
             <div>
-              <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
-                Sq Ft
-              </label>
-              <input
-                name="area_sqft"
-                type="number"
-                value={formData.area_sqft}
-                onChange={handleChange}
-                placeholder="1200"
-                className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
-              />
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-2">Sq Ft</label>
+              <input name="area_sqft" type="number" value={formData.area_sqft} onChange={handleChange} placeholder="1200" className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]" />
             </div>
           </div>
 
           {/* Location */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
-                City
-              </label>
-              <input
-                name="city"
-                required
-                value={formData.city}
-                onChange={handleChange}
-                className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
-              />
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-2">City</label>
+              <input name="city" required value={formData.city} onChange={handleChange} className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]" />
             </div>
             <div>
-              <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
-                Full Address
-              </label>
-              <input
-                name="address"
-                required
-                value={formData.address}
-                onChange={handleChange}
-                placeholder="123 Jewellery Quarter, Birmingham"
-                className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]"
-              />
+              <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-2">Full Address</label>
+              <input name="address" required value={formData.address} onChange={handleChange} placeholder="123 Jewellery Quarter, Birmingham" className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37]" />
             </div>
           </div>
 
-          {/* Image Upload Field */}
+          {/* Image Upload & Reorder Field */}
           <div>
             <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
-              Property Images
+              Property Images (Max 5)
             </label>
             <input
               type="file"
               multiple
               accept="image/*"
               onChange={handleImageChange}
-              className="w-full bg-[#132238] border border-white/10 text-slate-300 p-2.5 rounded-lg text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#D4AF37] file:text-[#080E1E] hover:file:bg-[#c5a059] cursor-pointer"
+              disabled={imageFiles.length >= 5}
+              className="w-full bg-[#132238] border border-white/10 text-slate-300 p-2.5 rounded-lg text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#D4AF37] file:text-[#080E1E] hover:file:bg-[#c5a059] cursor-pointer disabled:opacity-50"
             />
+            
+            {/* Image Preview Grid */}
             {imageFiles.length > 0 && (
-              <p className="text-xs text-[#8899A6] mt-2">
-                📷 {imageFiles.length} file(s) selected for upload.
-              </p>
+              <div className="mt-4 space-y-3">
+                <p className="text-xs text-[#8899A6]">
+                  Drag or use arrows to set the main picture (first image). {imageFiles.length}/5 uploaded.
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {imageFiles.map((img, index) => (
+                    <div key={img.id} className={`relative group rounded-xl overflow-hidden border-2 ${index === 0 ? 'border-[#D4AF37]' : 'border-white/10'} aspect-video`}>
+                      <img src={img.previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                      
+                      {index === 0 && (
+                        <span className="absolute top-1 left-1 bg-[#D4AF37] text-black text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">
+                          Main
+                        </span>
+                      )}
+
+                      {/* Hover Controls */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        <button type="button" onClick={() => moveImage(index, 'left')} disabled={index === 0} className="p-1.5 bg-white/20 hover:bg-[#D4AF37] hover:text-black rounded text-white disabled:opacity-30 cursor-pointer transition">
+                          <ArrowLeft className="w-3.5 h-3.5" />
+                        </button>
+                        <button type="button" onClick={() => removeImage(index)} className="p-1.5 bg-red-500/80 hover:bg-red-500 rounded text-white cursor-pointer transition">
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                        <button type="button" onClick={() => moveImage(index, 'right')} disabled={index === imageFiles.length - 1} className="p-1.5 bg-white/20 hover:bg-[#D4AF37] hover:text-black rounded text-white disabled:opacity-30 cursor-pointer transition">
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
 
@@ -280,11 +282,7 @@ export default function AddProperty() {
             disabled={loading || uploadingImages}
             className="w-full bg-[#D4AF37] text-[#080E1E] py-3.5 rounded-full font-bold text-sm hover:bg-[#c5a059] transition cursor-pointer mt-4 disabled:opacity-50"
           >
-            {uploadingImages
-              ? 'Uploading Images to Supabase Storage...'
-              : loading
-              ? 'Publishing Listing...'
-              : 'Publish Listing'}
+            {uploadingImages ? 'Uploading Images...' : loading ? 'Publishing Listing...' : 'Publish Listing'}
           </button>
         </form>
       </div>

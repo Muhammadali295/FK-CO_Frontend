@@ -46,8 +46,9 @@ export default function Contact() {
 
   const updateField = (event) => setForm((current) => ({ ...current, [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value }));
 
-  const submitForm = (event) => {
+  const submitForm = async (event) => {
     event.preventDefault();
+    
     if (!form.fullName.trim() || !form.email.trim() || !form.enquiryType || !form.message.trim() || !form.consent) {
       setError('Please complete all required fields and give consent to be contacted.');
       return;
@@ -60,12 +61,34 @@ export default function Contact() {
       setError('Please enter a valid phone number.');
       return;
     }
+    
     setError('');
     setStatus('loading');
-    window.setTimeout(() => {
-      setStatus('success');
-      setForm(initialForm);
-    }, 700);
+
+    const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000';
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setStatus('success');
+        setForm(initialForm);
+      } else {
+        setStatus('idle');
+        setError(result.error || 'Failed to send enquiry. Please try again.');
+      }
+    } catch (err) {
+      setStatus('idle');
+      setError('Server connection failed. Ensure your Node.js API is running.');
+    }
   };
 
   return (
@@ -89,8 +112,6 @@ export default function Contact() {
       <section className="py-24 bg-[#071B35]/90 border-y border-[#D4A44A]/15"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[0.85fr_1.15fr] gap-10 items-start"><div><p className="text-[#D4A44A] uppercase tracking-[0.2em] text-xs font-bold">Send an enquiry</p><h2 className="mt-3 font-serif-luxury text-3xl sm:text-5xl font-bold text-white">Start a <span className="gold-text">conversation</span></h2><p className="mt-5 text-slate-300 leading-relaxed">Tell us a little about what you need and a member of our team will be in touch. This form is ready to connect to the FK&CO backend when your endpoint is available.</p><div className="mt-8 space-y-4 text-sm text-slate-300"><p className="flex gap-3"><ShieldIcon /> Clear, professional advice</p><p className="flex gap-3"><ShieldIcon /> No obligation, no pressure</p><p className="flex gap-3"><ShieldIcon /> A response within one working day</p></div></div><div className="glass-panel rounded-3xl p-6 sm:p-9 border border-[#D4A44A]/30"><form onSubmit={submitForm} noValidate>{status === 'success' ? <div className="py-12 text-center"><CheckCircle2 className="w-14 h-14 text-[#D4A44A] mx-auto" /><h3 className="mt-5 font-serif-luxury text-2xl font-bold text-white">Enquiry received</h3><p className="mt-3 text-sm text-slate-300">Thank you. Our team will review your message and respond shortly.</p><button type="button" onClick={() => setStatus('idle')} className="mt-6 text-sm text-[#D4A44A] underline">Send another enquiry</button></div> : <><div className="grid sm:grid-cols-2 gap-4"><Field label="Full Name" name="fullName" value={form.fullName} onChange={updateField} required placeholder="Your full name" /><Field label="Email Address" name="email" type="email" value={form.email} onChange={updateField} required placeholder="you@example.com" /><Field label="Phone Number" name="phone" type="tel" value={form.phone} onChange={updateField} placeholder="Optional" /><label className="text-sm text-slate-300">Enquiry Type <span className="text-[#D4A44A]">*</span><select required name="enquiryType" value={form.enquiryType} onChange={updateField} className="mt-2 w-full rounded-xl bg-[#051329] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#D4A44A]"><option value="">Select an option</option>{enquiryTypes.map((type) => <option key={type} value={type}>{type}</option>)}</select></label></div><label className="block mt-4 text-sm text-slate-300">Message <span className="text-[#D4A44A]">*</span><textarea required maxLength={1000} name="message" value={form.message} onChange={updateField} rows="6" placeholder="How can we help?" className="mt-2 w-full resize-y rounded-xl bg-[#051329] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#D4A44A] placeholder:text-slate-500" /><span className="block mt-1 text-right text-xs text-slate-500">{form.message.length}/1000</span></label><label className="mt-3 flex items-start gap-3 text-xs text-slate-400"><input type="checkbox" name="consent" checked={form.consent} onChange={updateField} className="mt-0.5 accent-[#D4A44A]" /> <span>I agree to be contacted regarding my enquiry.</span></label>{error && <p role="alert" className="mt-4 flex items-center gap-2 text-xs text-red-300"><AlertCircle className="w-4 h-4" /> {error}</p>}<button type="submit" disabled={status === 'loading'} className="mt-6 w-full rounded-full gold-bg gold-bg-hover py-4 font-bold text-[#071B35] flex items-center justify-center gap-2 disabled:opacity-60">{status === 'loading' ? <><Loader2 className="w-5 h-5 animate-spin" /> Sending Enquiry...</> : <><Send className="w-5 h-5" /> Send Enquiry</>}</button></>}</form></div></div></section>
 
       <section className="py-20 bg-[#051329]"><div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div className="relative overflow-hidden rounded-3xl border border-[#D4A44A]/50 bg-gradient-to-r from-[#071B35] via-[#0D2548] to-[#071B35] p-8 sm:p-14 text-center"><div className="relative"><p className="text-[#D4A44A] uppercase tracking-[0.2em] text-xs font-bold">A considered next step</p><h2 className="mt-4 font-serif-luxury text-3xl sm:text-5xl font-bold text-white">What's Your Property <span className="gold-text">Worth?</span></h2><p className="mt-4 text-slate-300">Get a free, no-obligation property valuation from our experienced team.</p><Link to="/sell#valuation-form" className="mt-8 inline-flex items-center justify-center gap-2 rounded-full gold-bg gold-bg-hover px-7 py-4 font-bold text-[#071B35]"><Sparkles className="w-5 h-5" /> Get Free Valuation</Link></div></div></div></section>
-
-      {/* <section className="py-24 bg-[#071B35]/90"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center"><div className="relative min-h-[360px] overflow-hidden rounded-3xl border border-[#D4A44A]/30 bg-[#0D2548] p-6 sm:p-10"><div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_30%_30%,_#D4A44A_0,_transparent_30%),linear-gradient(135deg,_#0D2548,_#051329)]" /><div className="relative h-full min-h-[300px] flex items-center justify-center"><div className="w-16 h-16 rounded-full gold-bg flex items-center justify-center shadow-xl shadow-[#D4A44A]/30"><MapPin className="w-8 h-8 text-[#071B35]" /></div><div className="absolute bottom-0 left-0 right-0 glass-panel rounded-2xl p-4 text-center"><p className="text-white font-semibold">FK&CO Estate Office</p><p className="text-xs text-slate-400 mt-1">125 Colmore Row, Birmingham B3 3SD</p></div></div></div><div><p className="text-[#D4A44A] uppercase tracking-[0.2em] text-xs font-bold">Find us</p><h2 className="mt-3 font-serif-luxury text-3xl sm:text-5xl font-bold text-white">Visit our <span className="gold-text">office</span></h2><p className="mt-5 text-slate-300 leading-relaxed">Meet the team at our Birmingham office. (Google Maps integration)</p><a href="https://maps.google.com/?q=125+Colmore+Row+Birmingham" className="mt-7 inline-flex items-center gap-2 rounded-full border border-[#D4A44A]/40 px-6 py-3 text-sm font-semibold text-[#D4A44A] hover:bg-[#D4A44A] hover:text-[#071B35] transition-all"><Navigation className="w-4 h-4" /> Get Directions</a></div></div></div></section> */}
 
       <section className="py-24 bg-[#051329]"><div className="max-w-3xl mx-auto px-4 sm:px-6"><div className="text-center mb-12"><p className="text-[#D4A44A] uppercase tracking-[0.2em] text-xs font-bold">Need to know more?</p><h2 className="mt-3 font-serif-luxury text-3xl sm:text-5xl font-bold text-white">Frequently asked <span className="gold-text">questions</span></h2></div><div className="space-y-3">{faqs.map(([question, answer], index) => <div key={question} className="glass-panel rounded-xl border border-white/10 overflow-hidden"><button onClick={() => setOpenFaq(openFaq === index ? null : index)} className="w-full p-5 flex items-center justify-between gap-4 text-left text-white font-semibold"><span>{question}</span><ChevronDown className={`w-5 h-5 text-[#D4A44A] transition-transform ${openFaq === index ? 'rotate-180' : ''}`} /></button>{openFaq === index && <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="px-5 pb-5 text-sm text-slate-300 leading-relaxed">{answer}</motion.p>}</div>)}</div></div></section>
 

@@ -4,7 +4,8 @@ import BuyHero from '../components/buy/BuyHero';
 import BuyPropertyFilters from '../components/buy/BuyPropertyFilters';
 import BuyPropertyListings from '../components/buy/BuyPropertyListings';
 import ValuationCTA from '../components/ValuationCTA';
-import { PROPERTIES_DATA } from '../data/properties';
+
+import { useProperties } from '../hooks/useProperties';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -54,6 +55,8 @@ function filterBuyProperties(properties, filters) {
 
 export default function BuyProperties() {
   const { onOpenValuationModal, onSelectProperty } = useOutletContext();
+  
+  const { properties, loading, error } = useProperties();
 
   const [filterState, setFilterState] = useState(DEFAULT_FILTERS);
   const [appliedFilters, setAppliedFilters] = useState(DEFAULT_FILTERS);
@@ -85,9 +88,9 @@ export default function BuyProperties() {
   }, []);
 
   const filteredProperties = useMemo(() => {
-    const filtered = filterBuyProperties(PROPERTIES_DATA, appliedFilters);
+    const filtered = filterBuyProperties(properties, appliedFilters);
     return sortProperties(filtered, sortBy);
-  }, [appliedFilters, sortBy]);
+  }, [appliedFilters, sortBy, properties]);
 
   const totalPages = Math.max(1, Math.ceil(filteredProperties.length / ITEMS_PER_PAGE));
 
@@ -123,21 +126,31 @@ export default function BuyProperties() {
         onResetFilters={handleResetFilters}
       />
 
-      <BuyPropertyListings
-        properties={paginatedProperties}
-        totalCount={filteredProperties.length}
-        viewType={viewType}
-        setViewType={setViewType}
-        sortBy={sortBy}
-        setSortBy={handleSortChange}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-        onSelectProperty={onSelectProperty}
-        savedIds={savedIds}
-        onToggleSave={handleToggleSave}
-        filterActive={isFilterActive}
-      />
+      {loading ? (
+        <div className="py-24 text-center text-[#D4AF37] font-serif text-xl bg-[#051329]">
+          Loading exclusive properties...
+        </div>
+      ) : error ? (
+        <div className="py-24 text-center text-red-400 bg-[#051329]">
+          {error}
+        </div>
+      ) : (
+        <BuyPropertyListings
+          properties={paginatedProperties}
+          totalCount={filteredProperties.length}
+          viewType={viewType}
+          setViewType={setViewType}
+          sortBy={sortBy}
+          setSortBy={handleSortChange}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          onSelectProperty={onSelectProperty}
+          savedIds={savedIds}
+          onToggleSave={handleToggleSave}
+          filterActive={isFilterActive}
+        />
+      )}
 
       <ValuationCTA onOpenValuationModal={onOpenValuationModal} />
     </>
