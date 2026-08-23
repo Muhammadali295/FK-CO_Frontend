@@ -186,17 +186,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-[#080E1E] text-slate-200 p-6 md:p-10 font-sans">
       <header className="flex flex-col md:flex-row justify-between items-center pb-6 border-b border-[#D4AF37]/20 gap-4">
         <div className="flex items-center gap-3">
-          <div className="bg-[#D4AF37] text-[#080E1E] font-bold text-xl px-3 py-1.5 rounded font-serif">
-            FK
-          </div>
-          <div>
-            <h1 className="text-white text-xl font-serif tracking-widest leading-none">
-              FK&CO ESTATE
-            </h1>
-            <p className="text-[#D4AF37] text-[10px] tracking-wider mt-1">
-              ADMINISTRATION PORTAL
-            </p>
-          </div>
+          <img src="/fkco-estate-logo.svg" alt="FK&CO Estate logo" className="brand-logo brand-logo-admin" />
         </div>
 
         <div className="flex items-center gap-4">

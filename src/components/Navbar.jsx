@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone, ChevronRight, Award } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { companyInfo } from '../utils/companyInfo';
 
 export default function Navbar({ onOpenValuationModal }) {
   const [scrolled, setScrolled] = useState(false);
@@ -69,15 +70,12 @@ export default function Navbar({ onOpenValuationModal }) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group focus:outline-none">
-            <div className="w-10 h-10 rounded-lg gold-bg flex items-center justify-center shadow-lg shadow-[#D4A44A]/20 group-hover:scale-105 transition-transform duration-300">
-              <span className="font-serif-luxury font-bold text-xl text-[#071B35]">FK</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-serif-luxury text-lg sm:text-xl font-bold tracking-wider text-white flex items-center gap-1">
-                FK&CO <span className="gold-text font-light">ESTATE</span>
-              </span>
-            </div>
+          <Link to="/" className="flex items-center gap-3 group focus:outline-none min-w-0" aria-label="FK&CO Estate home">
+            <img
+              src="/fkco-estate-logo.svg"
+              alt="FK&CO Estate logo"
+              className="brand-logo brand-logo-navbar shrink-0"
+            />
           </Link>
 
           <nav className="hidden lg:flex items-center space-x-1 glass-panel-light px-4 py-1.5 rounded-full border border-white/10">
@@ -96,11 +94,11 @@ export default function Navbar({ onOpenValuationModal }) {
 
           <div className="hidden lg:flex items-center gap-4">
             <a
-              href="tel:+441212345678"
+              href={companyInfo.phoneHref}
               className="flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-[#D4A44A] transition-colors py-2 px-3 rounded-lg hover:bg-white/5"
             >
               <Phone className="w-3.5 h-3.5 text-[#D4A44A]" />
-              <span>0121 234 5678</span>
+              <span>{companyInfo.phone}</span>
             </a>
 
             <button
@@ -161,11 +159,11 @@ export default function Navbar({ onOpenValuationModal }) {
 
               <div className="pt-4 border-t border-white/10 space-y-3">
                 <a
-                  href="tel:+441212345678"
+                  href={companyInfo.phoneHref}
                   className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-white/10 text-slate-300 text-sm font-medium"
                 >
                   <Phone className="w-4 h-4 text-[#D4A44A]" />
-                  <span>Call 0121 234 5678</span>
+                  <span>Call {companyInfo.phone}</span>
                 </a>
 
                 <button

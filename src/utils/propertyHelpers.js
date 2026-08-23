@@ -2,10 +2,10 @@
 const AGENT = {
   name: 'James Whitfield',
   role: 'Senior Property Consultant',
-  phone: '+441212345678',
-  phoneDisplay: '0121 234 5678',
-  whatsapp: '441212345678',
-  email: 'viewings@fkcoestate.co.uk',
+  phone: '+441216306776',
+  phoneDisplay: '0121 630 6776',
+  whatsapp: '441216306776',
+  email: 'info@fkandcoestate.com',
 };
 
 const LOCATION_COORDS = {
@@ -237,18 +237,6 @@ export function formatCurrency(value) {
 
 
 
-// import { PROPERTIES_DATA } from '../data/properties';
-
-// const AGENT = {
-//   name: 'James Whitfield',
-//   role: 'Senior Property Consultant',
-//   phone: '+441212345678',
-//   phoneDisplay: '0121 234 5678',
-//   whatsapp: '441212345678',
-//   email: 'viewings@fkcoestate.co.uk',
-// };
-
-// const LOCATION_COORDS = {
 //   Edgbaston: { lat: 52.4539, lng: -1.9248 },
 //   Solihull: { lat: 52.4118, lng: -1.7776 },
 //   'Sutton Coldfield': { lat: 52.5648, lng: -1.8242 },
@@ -395,7 +383,6 @@ export function formatCurrency(value) {
 //     agent: property.agent || AGENT,
 //     longDescription:
 //       property.longDescription ||
-//       `${property.description}\n\nThis exceptional ${property.type.toLowerCase()} represents the finest in Birmingham luxury living. Presented by FK&CO Estate with full professional photography, verified EPC documentation, and accompanied viewings by our senior consultants. Early viewing is strongly recommended for this distinguished residence.`,
 //     allImages: [
 //       property.image,
 //       ...(property.gallery || []).filter((img) => img !== property.image),

@@ -1,0 +1,49 @@
+<svg width="1400" height="800" viewBox="0 0 1400 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold" x1="250" y1="90" x2="1050" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8E7B3"/>
+      <stop offset="0.28" stop-color="#E5C77F"/>
+      <stop offset="0.56" stop-color="#D4A44A"/>
+      <stop offset="0.82" stop-color="#B8892D"/>
+      <stop offset="1" stop-color="#F7E1A6"/>
+    </linearGradient>
+    <linearGradient id="whitefade" x1="370" y1="210" x2="1090" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F6F7F8"/>
+      <stop offset="1" stop-color="#E0E4E8"/>
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#D4A44A" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <rect width="1400" height="800" fill="#051B33"/>
+
+  <g filter="url(#softGlow)">
+    <path d="M347 278L533 118H867L1053 278V296H347V278Z" stroke="url(#gold)" stroke-width="18" stroke-linejoin="round"/>
+    <path d="M390 278L486 176H914L1010 278" stroke="url(#gold)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <rect x="507" y="300" width="118" height="96" stroke="url(#gold)" stroke-width="16"/>
+    <rect x="775" y="300" width="118" height="96" stroke="url(#gold)" stroke-width="16"/>
+    <path d="M495 366H905" stroke="url(#gold)" stroke-width="18" stroke-linecap="round"/>
+
+    <path d="M668 333C612 338 580 374 580 421C580 468 614 503 668 503C739 503 775 463 775 421C775 380 742 333 668 333Z" stroke="url(#gold)" stroke-width="14"/>
+    <path d="M600 427H742" stroke="url(#gold)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M712 420C712 453 683 478 645 478C607 478 579 453 579 420" stroke="url(#gold)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M718 420L725 464C729 489 716 516 692 522L667 529" stroke="url(#gold)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M711 327C711 303 734 285 760 285C786 285 809 303 809 327C809 350 786 369 760 369C734 369 711 350 711 327Z" stroke="url(#gold)" stroke-width="12"/>
+    <path d="M754 364L801 420" stroke="url(#gold)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M835 420C840 420 844 424 844 429C844 434 840 438 835 438C830 438 826 434 826 429C826 424 830 420 835 420Z" fill="url(#gold)"/>
+  </g>
+
+  <g>
+    <text x="700" y="468" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" letter-spacing="-8" font-size="230" font-weight="700" fill="url(#whitefade)">FK&amp;Co</text>
+    <g>
+      <line x1="350" y1="560" x2="540" y2="560" stroke="url(#gold)" stroke-width="8" stroke-linecap="round"/>
+      <line x1="860" y1="560" x2="1050" y2="560" stroke="url(#gold)" stroke-width="8" stroke-linecap="round"/>
+      <text x="700" y="610" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" letter-spacing="14" font-size="82" font-weight="700" fill="url(#gold)">ESTATE</text>
+      <line x1="350" y1="645" x2="1050" y2="645" stroke="url(#gold)" stroke-width="5" opacity="0.8"/>
+      <text x="700" y="705" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" letter-spacing="5" font-size="30" font-weight="700" fill="url(#gold)">SALES • LETTINGS • PROPERTY MANAGEMENT</text>
+      <text x="700" y="760" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" letter-spacing="10" font-size="28" font-weight="700" fill="url(#gold)">TRUSTED. LOCAL. PROVEN.</text>
+    </g>
+  </g>
+</svg>

@@ -269,9 +269,9 @@ export default function PropertyModal({ property, onClose, onOpenValuationModal 
                 )}
 
                 <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
-                  <a href="tel:+441212345678" className="flex items-center gap-1 hover:text-[#D4A44A]">
+                  <a href={companyInfo.phoneHref} className="flex items-center gap-1 hover:text-[#D4A44A]">
                     <Phone className="w-3 h-3 text-[#D4A44A]" />
-                    0121 234 5678
+                    {companyInfo.phone}
                   </a>
                   <span className="flex items-center gap-1 text-[#D4A44A]">
                     <ShieldCheck className="w-3 h-3" /> Confidential

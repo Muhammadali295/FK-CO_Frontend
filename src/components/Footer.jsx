@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Phone, Mail, Clock } from 'lucide-react';
 import rightmoveLogo from '../assets/Rightmove.png';
 import onthemarketLogo from '../assets/Onthemarket.png';
+import { companyInfo } from '../utils/companyInfo';
 
 export default function Footer({ onOpenValuationModal }) {
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -24,17 +25,10 @@ export default function Footer({ onOpenValuationModal }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg gold-bg flex items-center justify-center font-serif-luxury font-bold text-xl text-[#071B35]">
-                FK
-              </div>
-              <div className="flex flex-col">
-                <span className="font-serif-luxury text-xl font-bold tracking-wider text-white">
-                  FK&CO <span className="gold-text font-light">ESTATE</span>
-                </span>
-              </div>
+              <img src="/fkco-estate-logo.svg" alt="FK&CO Estate logo" className="brand-logo brand-logo-footer" />
             </div>
             <p className="text-slate-400 text-xs font-light leading-relaxed max-w-sm">
-              FK&CO Estate is a real estate agency built on transparency, deep Birmingham market intelligence, and uncompromised client dedication.
+              {companyInfo.name} is a real estate agency built on transparency, deep Birmingham market intelligence, and uncompromised client dedication.
             </p>
             <div className="flex items-center gap-3 pt-2">
               {[
@@ -72,11 +66,11 @@ export default function Footer({ onOpenValuationModal }) {
             <div className="space-y-3 text-xs font-light text-slate-400">
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#D4A44A] shrink-0" />
-                <a href="tel:+441212345678" className="hover:text-white">0121 234 5678</a>
+                <a href={companyInfo.phoneHref} className="hover:text-white">{companyInfo.phone}</a>
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#D4A44A] shrink-0" />
-                <a href="mailto:enquiries@fkcoestate.co.uk" className="hover:text-white">enquiries@fkcoestate.co.uk</a>
+                <a href={companyInfo.emailHref} className="hover:text-white">{companyInfo.email}</a>
               </div>
               <div className="flex items-center gap-2.5">
                 <Clock className="w-4 h-4 text-[#D4A44A] shrink-0" />
@@ -98,7 +92,7 @@ export default function Footer({ onOpenValuationModal }) {
       {/* Copyright Bar - 🚀 SIRF ONTHEMARKET BADA KIYA HAI, RIGHTMOVE FIX RAKHA */}
       <div className="border-t border-white/10 py-8 bg-[#060E20]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-slate-500 font-light">
-          <p>© {new Date().getFullYear()} FK&CO Estate Ltd. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {companyInfo.name} Ltd. All rights reserved.</p>
           
           {/* 
              Rightmove ko h-12 (fix) rakha hai. 

@@ -34,18 +34,8 @@ export default function AdminLogin() {
     <div className="min-h-screen bg-[#080E1E] flex items-center justify-center p-4 font-sans">
       <div className="w-full max-w-md bg-[#0D172A] p-8 rounded-2xl border border-[#D4AF37]/25 shadow-2xl">
         {/* Brand Header */}
-        <div className="flex items-center justify-center gap-3 mb-5">
-          <div className="bg-[#D4AF37] text-[#080E1E] font-bold text-lg px-2.5 py-1 rounded font-serif">
-            FK
-          </div>
-          <div>
-            <h1 className="text-white text-lg font-serif tracking-widest leading-none">
-              FK&CO ESTATE
-            </h1>
-            <p className="text-[#D4AF37] text-[9px] tracking-wider leading-none mt-1">
-              {/* LUXURY REAL ESTATE */}
-            </p>
-          </div>
+        <div className="flex items-center justify-center mb-5">
+          <img src="/fkco-estate-logo.svg" alt="FK&CO Estate logo" className="brand-logo brand-logo-admin" />
         </div>
 
         <div className="h-px bg-[#D4AF37]/15 my-5" />
@@ -73,7 +63,7 @@ export default function AdminLogin() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@fkcoestate.com"
+              placeholder="admin@fkandcoestate.com"
               className="w-full bg-[#132238] border border-white/10 text-white p-3 rounded-lg text-sm outline-none focus:border-[#D4AF37] transition"
             />
           </div>

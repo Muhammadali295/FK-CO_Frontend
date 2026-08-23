@@ -82,3 +82,38 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #D4A44A;
 }
+
+.brand-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.brand-logo-navbar {
+  width: 150px;
+}
+
+.brand-logo-footer {
+  width: 190px;
+}
+
+.brand-logo-admin {
+  width: 210px;
+}
+
+@media (max-width: 1024px) {
+  .brand-logo-navbar {
+    width: 130px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-logo-navbar {
+    width: 112px;
+  }
+
+  .brand-logo-footer {
+    width: 170px;
+  }
+}
