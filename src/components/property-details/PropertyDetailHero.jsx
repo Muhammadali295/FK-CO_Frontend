@@ -34,11 +34,11 @@ export default function PropertyDetailHero({ property }) {
           transition={{ duration: 0.4 }}
         >
           <Link
-            to={property.status === 'Buy' ? '/buy' : '/'}
+            to={property.purpose === 'Buy' ? '/buy' : property.purpose === 'Let' ? '/let' : property.purpose === 'Rent' ? '/rent' : '/'}
             className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-[#D4A44A] transition-colors mb-6"
           >
             <ChevronLeft className="w-4 h-4" />
-            Back to {property.status === 'Buy' ? 'Buy Properties' : 'Properties'}
+            Back to {property.purpose === 'Buy' ? 'Buy Properties' : property.purpose === 'Let' ? 'Let Properties' : property.purpose === 'Rent' ? 'Rent Properties' : 'Properties'}
           </Link>
         </motion.div>
 

@@ -36,8 +36,12 @@ export const useProperties = () => {
           // Format DB data to exactly match your old PROPERTIES_DATA structure
           const formattedData = json.data.map(prop => {
             const imageList = parseImages(prop.images);
-            const isRental = prop.type === 'rent' || prop.type === 'let';
-            
+            const rawType = String(prop.type || '').toLowerCase();
+            const isRental = rawType === 'rent' || rawType === 'let';
+
+            // canonical purpose mapping: 'sell' -> 'Buy'
+            let purpose = rawType ? (rawType === 'sell' ? 'Buy' : rawType.charAt(0).toUpperCase() + rawType.slice(1)) : undefined;
+
             return {
               id: prop.id,
               title: prop.title,
@@ -47,7 +51,8 @@ export const useProperties = () => {
                 ? `£${Number(prop.price).toLocaleString()} / pcm` 
                 : `£${Number(prop.price).toLocaleString()}`,
               type: 'Luxury Property', // Or pull from DB if you add a category column
-              status: prop.type.charAt(0).toUpperCase() + prop.type.slice(1), // 'buy' -> 'Buy'
+              status: rawType ? rawType.charAt(0).toUpperCase() + rawType.slice(1) : undefined, // 'buy' -> 'Buy'
+              purpose,
               bedrooms: prop.bedrooms || 0,
               bathrooms: prop.bathrooms || 0,
               areaSqFt: prop.area_sqft || 0,
@@ -56,7 +61,7 @@ export const useProperties = () => {
               gallery: imageList,
               featured: false,
               tag: isRental ? 'Fully Managed' : 'Exclusive Listing',
-              listingStatus: prop.status.charAt(0).toUpperCase() + prop.status.slice(1),
+              listingStatus: prop.status ? prop.status.charAt(0).toUpperCase() + prop.status.slice(1) : undefined,
               description: prop.description || 'An exceptional luxury property presented by FK&CO Estate.',
               features: ['Premium Location', 'Luxury Finish', 'Concierge Service'] // Fallback features
             };

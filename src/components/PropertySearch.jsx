@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Home, PoundSterling, Bed, Bath, Sofa, Car, PawPrint, Calendar, SlidersHorizontal, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function PropertySearch({ filterState, setFilterState, onResetFilters, isRental = false }) {
-  const [activeTab, setActiveTab] = useState(filterState.status || 'All');
+export default function PropertySearch({ filterState, setFilterState, onResetFilters, isRental = false, purpose = undefined }) {
+  const [activeTab, setActiveTab] = useState(filterState.status || purpose || 'All');
+
+  useEffect(() => {
+    if (purpose) {
+      setActiveTab(purpose);
+      setFilterState((prev) => ({ ...prev, status: purpose }));
+    }
+    // Only run on mount when purpose is provided
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [purpose]);
 
   const handleTabChange = (status) => {
     setActiveTab(status);
@@ -26,21 +35,23 @@ export default function PropertySearch({ filterState, setFilterState, onResetFil
       >
         {/* Status Tabs: Buy / Let / Rent / All */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 pb-6 border-b border-white/10">
-          <div className="grid grid-cols-4 gap-1 w-full sm:flex sm:items-center sm:gap-2 sm:w-auto p-1 rounded-2xl sm:rounded-full bg-[#051329]/80 border border-white/10">
-            {['All', 'Buy', 'Let', 'Rent'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => handleTabChange(tab)}
-                className={`px-2 sm:px-5 py-2 rounded-xl sm:rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer text-center whitespace-nowrap ${
-                  activeTab === tab
-                    ? 'gold-bg text-[#071B35] shadow-lg shadow-[#D4A44A]/20'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                {tab === 'All' ? 'All' : tab}
-              </button>
-            ))}
-          </div>
+          {!purpose && (
+            <div className="grid grid-cols-4 gap-1 w-full sm:flex sm:items-center sm:gap-2 sm:w-auto p-1 rounded-2xl sm:rounded-full bg-[#051329]/80 border border-white/10">
+              {['All', 'Buy', 'Let', 'Rent'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => handleTabChange(tab)}
+                  className={`px-2 sm:px-5 py-2 rounded-xl sm:rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer text-center whitespace-nowrap ${
+                    activeTab === tab
+                      ? 'gold-bg text-[#071B35] shadow-lg shadow-[#D4A44A]/20'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {tab === 'All' ? 'All' : tab}
+                </button>
+              ))}
+            </div>
+          )}
 
           <button
             onClick={onResetFilters}

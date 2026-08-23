@@ -38,12 +38,9 @@ function sortProperties(properties, sortBy) {
 // UPGRADED: Smarter, fault-tolerant filtering
 function filterBuyProperties(properties, filters) {
   return properties.filter((item) => {
-    // Safely check if it's a Buy/Sell property (checks both status and type)
-    const isBuy = 
-      item.status?.toLowerCase() === 'buy' || 
-      item.type?.toLowerCase() === 'buy' ||
-      item.status?.toLowerCase() === 'sell' ||
-      item.type?.toLowerCase() === 'sell';
+      // Safely check if it's a Buy/Sell property (prefer canonical `purpose` if present)
+      const rawPurpose = (item.purpose || item.status || item.type || '').toString().toLowerCase();
+      const isBuy = rawPurpose === 'buy' || rawPurpose === 'sell';
 
     if (!isBuy) return false;
 

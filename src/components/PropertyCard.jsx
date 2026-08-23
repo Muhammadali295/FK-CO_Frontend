@@ -31,7 +31,7 @@ export default function PropertyCard({ property, viewType = 'grid', onSelect, is
         {/* Status & Tag Badges */}
         <div className="absolute top-4 left-4 flex flex-wrap gap-2">
           <span className="px-3 py-1 rounded-full gold-bg text-[#071B35] text-xs font-bold uppercase tracking-wider shadow-lg">
-            {property.status}
+            {property.purpose || property.status}
           </span>
           {property.listingStatus && (
             <span className={`px-3 py-1 rounded-full backdrop-blur-md text-xs font-semibold border ${

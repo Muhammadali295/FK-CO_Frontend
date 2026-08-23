@@ -581,7 +581,7 @@ export default function LetProperties() {
   const { properties, loading, error } = useProperties();
 
   const rentalProperties = useMemo(
-    () => properties.filter(p => p.status === 'Let' || p.status === 'Rent'),
+    () => properties.filter(p => (p.purpose || p.status || p.type) === 'Let' || (p.purpose || p.status || p.type) === 'let'),
     [properties]
   );
 

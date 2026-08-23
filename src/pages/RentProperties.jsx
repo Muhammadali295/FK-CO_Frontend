@@ -233,11 +233,10 @@ export default function RentProperties() {
   };
 
   const filteredProperties = useMemo(() => {
-    // 1. Base filter: Identify Rental properties safely (handles cases where DB uses 'status' or 'type' column)
+    // 1. Base filter: Only include properties whose canonical purpose is 'Rent'
     let result = properties.filter(p => {
-      const pStatus = p.status?.toLowerCase() || '';
-      const pType = p.type?.toLowerCase() || '';
-      return pStatus === 'rent' || pStatus === 'let' || pType === 'rent' || pType === 'let';
+      const pPurpose = (p.purpose || p.status || p.type || '').toString().toLowerCase();
+      return pPurpose === 'rent';
     });
 
     // 2. Location matching (Checks city, address, or formatted location)
@@ -376,6 +375,7 @@ export default function RentProperties() {
         setFilterState={setFilterState}
         onResetFilters={handleResetFilters}
         isRental={true}
+        purpose="Rent"
       />
 
       <section id="properties" className="py-24 relative overflow-hidden">

@@ -124,29 +124,29 @@ function inferCouncilTax(property) {
 }
 
 export function getPurposeLabel(status) {
-  switch (status?.toLowerCase()) {
-    case 'buy': return 'For Sale';
-    case 'let': return 'To Let';
-    case 'rent': return 'To Rent';
-    case 'sell': return 'For Sale';
-    default: return status || 'For Sale';
-  }
+  // Return canonical purpose values used across the app: 'Buy', 'Let', 'Rent'
+  if (!status) return undefined;
+  const s = String(status).toLowerCase();
+  if (s === 'buy' || s === 'for sale' || s === 'sell') return 'Buy';
+  if (s === 'let' || s === 'to let') return 'Let';
+  if (s === 'rent' || s === 'to rent') return 'Rent';
+  return undefined;
 }
 
 export function getDisplayStatus(property) {
   const { status, listingStatus, type } = property;
-  
-  // Handle DB schema where 'type' is buy/rent and 'status' is available/sold
-  const currentIntent = status === 'Buy' || type === 'buy' ? 'Buy' : 'Rent';
-  const currentStatus = listingStatus || status; 
 
-  if (currentIntent === 'Buy') {
-    if (currentStatus === 'sold' || currentStatus === 'Sold STC') return 'Sold';
-    if (currentStatus === 'pending' || currentStatus === 'Under Offer') return 'Under Offer';
+  // Determine canonical intent: prefer explicit `purpose` if present, otherwise infer
+  const intent = property.purpose || getPurposeLabel(status) || getPurposeLabel(type) || (status === 'Buy' || type === 'buy' ? 'Buy' : 'Rent');
+  const currentStatus = listingStatus || status;
+
+  if (intent === 'Buy') {
+    if ((String(currentStatus).toLowerCase() === 'sold') || currentStatus === 'Sold STC') return 'Sold';
+    if ((String(currentStatus).toLowerCase() === 'pending') || currentStatus === 'Under Offer') return 'Under Offer';
     return 'Available for Sale';
   }
-  if (currentIntent === 'Rent' || currentIntent === 'Let') {
-    if (currentStatus === 'rented' || currentStatus === 'Under Offer') return 'Let Agreed';
+  if (intent === 'Rent' || intent === 'Let') {
+    if ((String(currentStatus).toLowerCase() === 'rented') || currentStatus === 'Under Offer') return 'Let Agreed';
     return 'To Let';
   }
   return currentStatus || 'Available';

@@ -520,15 +520,7 @@ export default function SellProperties() {
   // 3. Fetch live properties from backend
   const { properties, loading, error } = useProperties();
 
-  // Filter for properties listed as 'Sell' or 'Buy'
-  const sellProperties = useMemo(() => {
-    return properties.filter(p => 
-      p.status?.toLowerCase() === 'sell' || 
-      p.type?.toLowerCase() === 'sell' ||
-      p.status?.toLowerCase() === 'buy' || 
-      p.type?.toLowerCase() === 'buy'
-    );
-  }, [properties]);
+  // Sell page does not show active Buy/Let/Rent listings — it's a valuation/lead page.
 
   const handleToggleSave = (id) => {
     setSavedProperties(prev =>
@@ -656,56 +648,7 @@ export default function SellProperties() {
         </div>
       </section>
 
-      {/* ── LIVE PROPERTIES WE ARE SELLING (NEW) ── */}
-      {(loading || error || sellProperties.length > 0) && (
-        <section className="py-24 relative overflow-hidden bg-[#071B35]/40 border-y border-[#D4A44A]/10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <FadeInUp className="text-center mb-14">
-              <SectionLabel>Available Now</SectionLabel>
-              <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
-                Properties We Are <span className="gold-text">Selling</span>
-              </h2>
-              <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-                Browse our current portfolio of exclusive properties on the market to see the standard of our marketing and presentation.
-              </p>
-            </FadeInUp>
-
-            {loading ? (
-              <div className="py-12 text-center text-[#D4AF37] font-serif text-xl">
-                Loading exclusive properties...
-              </div>
-            ) : error ? (
-              <div className="py-12 text-center text-red-400">
-                {error}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sellProperties.slice(0, 6).map((property) => (
-                  <PropertyCard
-                    key={property.id}
-                    property={property}
-                    viewType="grid"
-                    onSelect={() => {}}
-                    isSaved={savedProperties.includes(property.id)}
-                    onToggleSave={handleToggleSave}
-                  />
-                ))}
-              </div>
-            )}
-
-            <FadeInUp delay={0.3} className="text-center mt-12">
-              <Link
-                to="/buy"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border border-[#D4A44A]/40 text-[#D4A44A] font-semibold text-sm uppercase tracking-wider hover:bg-[#D4A44A] hover:text-[#071B35] transition-all duration-300"
-              >
-                Browse All Properties
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </FadeInUp>
-          </div>
-        </section>
-      )}
+      {/* No active property listing grid on Sell page; valuation + recently sold shown below. */}
 
       {/* ── WHY SELL WITH FK&CO ── */}
       <section className="py-24 relative overflow-hidden">
