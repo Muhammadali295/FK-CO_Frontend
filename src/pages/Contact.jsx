@@ -20,6 +20,7 @@ import {
   Send,
   Sparkles,
 } from 'lucide-react';
+import API_BASE_URL from '../utils/api';
 
 const initialForm = { fullName: '', email: '', phone: '', enquiryType: '', message: '', consent: false };
 const enquiryTypes = ['Buying a Property', 'Selling a Property', 'Letting a Property', 'Renting a Property', 'Property Management', 'General Enquiry'];
@@ -64,8 +65,6 @@ export default function Contact() {
     
     setError('');
     setStatus('loading');
-
-    const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000';
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/contact`, {

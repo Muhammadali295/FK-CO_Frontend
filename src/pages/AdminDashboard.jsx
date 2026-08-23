@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { X, ArrowLeft, ArrowRight, Upload } from 'lucide-react';
+import API_BASE_URL from '../utils/api';
 
 // --- UTILITY: Safely parse Postgres strings, JSON, or Arrays ---
 const parseImages = (data) => {
@@ -52,11 +53,11 @@ export default function AdminDashboard() {
       };
 
       if (activeTab === 'leads') {
-        const res = await fetch('http://localhost:5000/api/leads', { headers });
+        const res = await fetch(`${API_BASE_URL}/api/leads`, { headers });
         const json = await res.json();
         if (json.success) setLeads(json.data);
       } else {
-        const res = await fetch('http://localhost:5000/api/properties');
+        const res = await fetch(`${API_BASE_URL}/api/properties`);
         const json = await res.json();
         if (json.success) setProperties(json.data);
       }
@@ -81,7 +82,7 @@ export default function AdminDashboard() {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      const res = await fetch(`http://localhost:5000/api/properties/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/properties/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +108,7 @@ export default function AdminDashboard() {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      const res = await fetch(`http://localhost:5000/api/leads/${id}/status`, {
+      const res = await fetch(`${API_BASE_URL}/api/leads/${id}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +138,7 @@ export default function AdminDashboard() {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      const res = await fetch(`http://localhost:5000/api/properties/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/properties/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -162,7 +163,7 @@ export default function AdminDashboard() {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      const res = await fetch(`http://localhost:5000/api/leads/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/leads/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

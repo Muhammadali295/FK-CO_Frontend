@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Send, Phone, CheckCircle2, User, Mail, MessageSquare, Loader2, AlertCircle } from 'lucide-react';
+import API_BASE_URL from '../../utils/api';
 
 const TIME_SLOTS = [
   '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
@@ -33,8 +34,6 @@ export default function ViewingEnquiryForm({ propertyTitle, propertyId, agent })
     setSubmitType(type);
     setLoading(true);
     setErrorMsg('');
-
-    const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000';
 
     // Format full request message with date/time preference
     const formattedMessage = type === 'viewing'

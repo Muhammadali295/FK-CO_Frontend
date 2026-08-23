@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { X, Award, CheckCircle2, ArrowRight, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import API_BASE_URL from '../utils/api';
 
 export default function ValuationModal({ isOpen, onClose }) {
   const [step, setStep] = useState(1);
@@ -41,8 +42,6 @@ export default function ValuationModal({ isOpen, onClose }) {
   const submitToBackend = async () => {
     setLoading(true);
     setErrorMsg('');
-
-    const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000';
 
     // Map form service to backend intent ('sell', 'let', 'buy', 'rent')
     let intentCategory = 'sell';

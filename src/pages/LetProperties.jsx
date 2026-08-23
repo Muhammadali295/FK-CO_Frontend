@@ -12,6 +12,7 @@ import PropertyCard from '../components/PropertyCard';
 import { Star as StarIcon, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 
 import { useProperties } from '../hooks/useProperties';
+import API_BASE_URL from '../utils/api';
 
 
 const LANDLORD_BENEFITS = [
@@ -394,8 +395,6 @@ function RentalValuationForm() {
     if (!formData.agreeContact) return;
     setLoading(true);
     setErrorMsg('');
-
-    const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000';
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads`, {

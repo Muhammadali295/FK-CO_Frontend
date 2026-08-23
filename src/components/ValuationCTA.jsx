@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Award, ArrowRight, ShieldCheck, Clock, MapPin, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import API_BASE_URL from '../utils/api';
 
 export default function ValuationCTA({ onOpenValuationModal, intent = 'sell' }) {
   // Local state for inline valuation submission
@@ -24,9 +25,6 @@ export default function ValuationCTA({ onOpenValuationModal, intent = 'sell' }) 
     e.preventDefault();
     setLoading(true);
     setErrorMsg('');
-
-    // Fallback to localhost:5000 if VITE_API_URL is not set in .env
-    const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:5000';
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads`, {
