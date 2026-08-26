@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { X, Bed, Bath, Maximize, MapPin, CheckCircle2, Phone, Mail, Send, Award, ShieldCheck, Loader2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import API_BASE_URL from '../utils/api';
+// 🚀 ADDED: companyInfo import to fix the ReferenceError
+import { companyInfo } from '../utils/companyInfo';
 
 export default function PropertyModal({ property, onClose, onOpenValuationModal }) {
   const [selectedImg, setSelectedImg] = useState(property?.image);
