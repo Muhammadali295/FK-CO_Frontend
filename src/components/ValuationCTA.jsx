@@ -86,7 +86,7 @@ export default function ValuationCTA({ onOpenValuationModal, intent = 'sell' }) 
             </h2>
 
             <p className="text-slate-300 text-base sm:text-lg font-light leading-relaxed">
-              Discover the true market value of your property with an in-depth valuation from Birmingham's leading luxury property specialists.
+              Discover the true market value of your property with an in-depth valuation from Birmingham's leading property specialists.
             </p>
 
             {/* Quick Benefits Pills */}

@@ -9,8 +9,6 @@ import {
   ShieldCheck,
   BadgePercent,
   Home,
-  ImageIcon,
-  ListOrdered,
   Eye,
   Handshake,
   FileText,
@@ -22,18 +20,13 @@ import {
   Phone,
   Sparkles,
   CheckCircle2,
-  Bed,
-  Bath,
-  Maximize,
   MapPin,
-  Timer,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Testimonials from "../components/Testimonials";
-import ValuationCTA from "../components/ValuationCTA";
 import PropertyCard from "../components/PropertyCard";
 
-// 1. Import the custom hook instead of dummy data
+// 1. Import the custom hook
 import { useProperties } from "../hooks/useProperties";
 import API_BASE_URL from "../utils/api";
 
@@ -135,54 +128,12 @@ const SELLING_STEPS = [
   },
 ];
 
-const STATS = [
-  { value: "1,000+", label: "Properties Sold", icon: Home },
-  { value: "98%", label: "Client Satisfaction", icon: Star },
-  { value: "15+", label: "Years Experience", icon: Award },
-  { value: "24hrs", label: "Average Response Time", icon: Clock },
-];
-
-const SOLD_PROPERTIES = [
-  {
-    id: "sold-1",
-    title: "The Wellington Manor",
-    location: "Edgbaston, Birmingham B15",
-    soldPrice: "£1,920,000",
-    bedrooms: 6,
-    bathrooms: 5,
-    areaSqFt: 5100,
-    timeToSell: "9 days",
-    image:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
-    overAskingBy: "4% over asking",
-  },
-  {
-    id: "sold-2",
-    title: "Sutton Park Residence",
-    location: "Sutton Coldfield, B73",
-    soldPrice: "£875,000",
-    bedrooms: 5,
-    bathrooms: 4,
-    areaSqFt: 3900,
-    timeToSell: "14 days",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
-    overAskingBy: "Asking Price Achieved",
-  },
-  {
-    id: "sold-3",
-    title: "The Harborne Townhouse",
-    location: "Harborne, Birmingham B17",
-    soldPrice: "£645,000",
-    bedrooms: 4,
-    bathrooms: 3,
-    areaSqFt: 2600,
-    timeToSell: "6 days",
-    image:
-      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=800&q=80",
-    overAskingBy: "7% over asking",
-  },
-];
+// const STATS = [
+//   { value: "1,000+", label: "Properties Sold", icon: Home },
+//   { value: "98%", label: "Client Satisfaction", icon: Star },
+//   { value: "15+", label: "Years Experience", icon: Award },
+//   { value: "24hrs", label: "Average Response Time", icon: Clock },
+// ];
 
 const FAQ_ITEMS = [
   {
@@ -286,72 +237,6 @@ function FAQItem({ item, index }) {
   );
 }
 
-// ─── Sold Property Card ───────────────────────────────────────────────────────
-
-function SoldPropertyCard({ property, index }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="glass-card rounded-3xl overflow-hidden group"
-    >
-      <div className="relative h-56 overflow-hidden">
-        <img
-          src={property.image}
-          alt={property.title}
-          loading="lazy"
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#071B35]/80 via-transparent to-black/20" />
-        <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 rounded-full gold-bg text-[#071B35] text-xs font-bold uppercase tracking-wider">
-            SOLD
-          </span>
-        </div>
-        <div className="absolute bottom-4 left-4 right-4">
-          <p className="text-2xl font-serif-luxury font-bold text-white">
-            {property.soldPrice}
-          </p>
-          <p className="text-[#D4A44A] text-xs font-semibold mt-0.5">
-            {property.overAskingBy}
-          </p>
-        </div>
-      </div>
-      <div className="p-5 space-y-3">
-        <div>
-          <h3 className="font-serif-luxury text-lg font-bold text-white">
-            {property.title}
-          </h3>
-          <div className="flex items-center gap-1.5 text-xs text-[#D4A44A] mt-1">
-            <MapPin className="w-3.5 h-3.5 shrink-0" />
-            <span>{property.location}</span>
-          </div>
-        </div>
-        <div className="grid grid-cols-4 gap-1 py-3 border-y border-white/10 text-slate-300 text-[10px] sm:text-xs">
-          <div className="flex items-center gap-1">
-            <Bed className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
-            <span>{property.bedrooms}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Bath className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
-            <span>{property.bathrooms}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Maximize className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
-            <span className="truncate">{property.areaSqFt} ft²</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Timer className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
-            <span className="truncate">{property.timeToSell}</span>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 // ─── Valuation Form ──────────────────────────────────────────────────────────
 
 const PROPERTY_TYPES = [
@@ -381,7 +266,7 @@ function ValuationForm() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(""); 
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -710,10 +595,18 @@ export default function SellProperties() {
   const [savedProperties, setSavedProperties] = useState([]);
   const [showMore, setShowMore] = useState(false);
 
-  // 3. Fetch live properties from backend
+  // Fetch live properties from backend
   const { properties, loading, error } = useProperties();
 
-  // Sell page does not show active Buy/Let/Rent listings — it's a valuation/lead page.
+  // Smart filter to identify properties listed for 'buy/sell'
+  const sellProperties = useMemo(() => {
+    return properties.filter((item) => {
+      const rawPurpose = (item.purpose || item.status || item.type || "")
+        .toString()
+        .toLowerCase();
+      return rawPurpose === "buy" || rawPurpose === "sell";
+    });
+  }, [properties]);
 
   const handleToggleSave = (id) => {
     setSavedProperties((prev) =>
@@ -734,12 +627,12 @@ export default function SellProperties() {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#071B35]/70 via-[#071B35]/60 to-[#071B35]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#071B35]/80 via-transparent to-[#071B35]/40" />
-          
-          {/* NEW: Dynamic Blur Overlay */}
-          <div 
+
+          {/* Dynamic Blur Overlay */}
+          <div
             className={`absolute inset-0 bg-[#051329]/60 backdrop-blur-md transition-all duration-700 ease-in-out ${
               showMore ? "opacity-100 visible" : "opacity-0 invisible"
-            }`} 
+            }`}
           />
         </div>
 
@@ -790,21 +683,30 @@ export default function SellProperties() {
                   className="overflow-hidden"
                 >
                   <div className="pt-6 space-y-5 text-sm sm:text-base text-slate-300 font-light leading-relaxed text-left sm:text-left">
-                    <p></p>
                     <p>
-                      Selling your home can be one of the biggest financial and emotional decisions you will make.
+                      Selling your home can be one of the biggest financial and
+                      emotional decisions you will make.
                     </p>
                     <p>
-                      You need an agent who understands that getting the right result is not simply about putting a property online. It is about presentation, marketing, communication, negotiation and having someone beside you who genuinely takes responsibility for progressing your sale.
+                      You need an agent who understands that getting the right
+                      result is not simply about putting a property online. It
+                      is about presentation, marketing, communication,
+                      negotiation and having someone beside you who genuinely
+                      takes responsibility for progressing your sale.
                     </p>
                     <p>
-                      We take the time to understand your property, your circumstances and what you want to achieve before recommending the best way forward.
+                      We take the time to understand your property, your
+                      circumstances and what you want to achieve before
+                      recommending the best way forward.
                     </p>
                     <p>
-                      From the first valuation to handing over the keys, our aim is to make you feel informed, supported and confident that your property is receiving the attention it deserves.
+                      From the first valuation to handing over the keys, our aim
+                      is to make you feel informed, supported and confident that
+                      your property is receiving the attention it deserves.
                     </p>
                     <p className="font-bold text-[#D4A44A] pt-2 text-lg">
-                      Your home matters. Your move matters. And the result matters.
+                      Your home matters. Your move matters. And the result
+                      matters.
                     </p>
                   </div>
                 </motion.div>
@@ -816,9 +718,13 @@ export default function SellProperties() {
               className="mt-6 text-[#D4A44A] hover:text-white transition-colors text-sm font-semibold uppercase tracking-wider inline-flex items-center gap-1.5 focus:outline-none"
             >
               {showMore ? (
-                <>See Less <ChevronUp className="w-4 h-4" /></>
+                <>
+                  See Less <ChevronUp className="w-4 h-4" />
+                </>
               ) : (
-                <>See More <ChevronDown className="w-4 h-4" /></>
+                <>
+                  See More <ChevronDown className="w-4 h-4" />
+                </>
               )}
             </button>
           </motion.div>
@@ -879,7 +785,7 @@ export default function SellProperties() {
           <FadeInUp className="text-center mb-12">
             <SectionLabel>Book Your Valuation</SectionLabel>
             <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
-              Request a <span className="gold-text">Free Valuation</span>
+              Request a <span className="gold-text">Free Sell Valuation</span>
             </h2>
             <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
               Complete the form below and one of our local property experts will
@@ -899,7 +805,56 @@ export default function SellProperties() {
         </div>
       </section>
 
-      {/* No active property listing grid on Sell page; valuation + recently sold shown below. */}
+      {/* ── FEATURED PROPERTIES DB INTEGRATION ── */}
+      {(loading || error || sellProperties.length > 0) && (
+        <section className="py-24 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <FadeInUp className="text-center mb-14">
+              <SectionLabel>Featured Portfolio</SectionLabel>
+              <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
+                Properties <span className="gold-text">For Sale</span>
+              </h2>
+              <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
+                Explore our exclusive collection of premium properties currently
+                on the market.
+              </p>
+            </FadeInUp>
+
+            {loading ? (
+              <div className="py-12 text-center text-[#D4AF37] font-serif text-xl">
+                Loading featured properties...
+              </div>
+            ) : error ? (
+              <div className="py-12 text-center text-red-400">{error}</div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Slicing to show top 3 featured items on the Sell landing page */}
+                {sellProperties.slice(0, 3).map((property) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    viewType="grid"
+                    onSelect={() => {}}
+                    isSaved={savedProperties.includes(property.id)}
+                    onToggleSave={handleToggleSave}
+                  />
+                ))}
+              </div>
+            )}
+
+            <FadeInUp delay={0.3} className="text-center mt-12">
+              <Link
+                to="/buy"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border border-[#D4A44A]/40 text-[#D4A44A] font-semibold text-sm uppercase tracking-wider hover:bg-[#D4A44A] hover:text-[#071B35] transition-all duration-300"
+              >
+                View All Properties
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </FadeInUp>
+          </div>
+        </section>
+      )}
 
       {/* ── WHY SELL WITH FK&CO ── */}
       <section className="py-24 relative overflow-hidden">
@@ -1012,7 +967,7 @@ export default function SellProperties() {
       </section>
 
       {/* ── STATS ── */}
-      <section className="py-20 bg-[#051329]/60 border-y border-[#D4A44A]/10">
+      {/* <section className="py-20 bg-[#051329]/60 border-y border-[#D4A44A]/10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {STATS.map((stat, i) => {
@@ -1040,30 +995,7 @@ export default function SellProperties() {
             })}
           </div>
         </div>
-      </section>
-
-      {/* ── RECENTLY SOLD ── */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeInUp className="text-center mb-14">
-            <SectionLabel>Recent Sales</SectionLabel>
-            <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
-              Recently <span className="gold-text">Sold Properties</span>
-            </h2>
-            <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-              Real results for real clients — these properties sold quickly and
-              at exceptional prices.
-            </p>
-          </FadeInUp>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SOLD_PROPERTIES.map((p, i) => (
-              <SoldPropertyCard key={p.id} property={p} index={i} />
-            ))}
-          </div>
-        </div>
-      </section>
+      </section> */}
 
       {/* ── TESTIMONIALS ── */}
       <Testimonials />

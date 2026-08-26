@@ -134,28 +134,28 @@ const team = [
   },
 ];
 
-const aboutStats = [
-  {
-    value: "1000+",
-    label: "Properties Sold",
-    detail: "Successful moves across the region",
-  },
-  {
-    value: "500+",
-    label: "Properties Managed",
-    detail: "Homes and portfolios cared for",
-  },
-  {
-    value: "15+",
-    label: "Years Experience",
-    detail: "Trusted local market knowledge",
-  },
-  {
-    value: "98%",
-    label: "Client Satisfaction",
-    detail: "A service built around people",
-  },
-];
+// const aboutStats = [
+//   {
+//     value: "1000+",
+//     label: "Properties Sold",
+//     detail: "Successful moves across the region",
+//   },
+//   {
+//     value: "500+",
+//     label: "Properties Managed",
+//     detail: "Homes and portfolios cared for",
+//   },
+//   {
+//     value: "15+",
+//     label: "Years Experience",
+//     detail: "Trusted local market knowledge",
+//   },
+//   {
+//     value: "98%",
+//     label: "Client Satisfaction",
+//     detail: "A service built around people",
+//   },
+// ];
 
 export default function About() {
   const { onOpenValuationModal } = useOutletContext();
@@ -170,7 +170,7 @@ export default function About() {
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=2200&q=90"
-            alt="Elegant luxury property"
+            alt="Elegant property"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#051329]/95 via-[#071B35]/85 to-[#071B35]/65" />
@@ -473,7 +473,7 @@ export default function About() {
         </div>
       </section>
 
-      <StatsSection stats={aboutStats} />
+      {/* <StatsSection stats={aboutStats} /> */}
 
       <section className="py-24 bg-[#071B35]/90 border-y border-[#D4A44A]/15">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -511,7 +511,9 @@ export default function About() {
         </div>
       </section>
 
-      <section className="py-24 bg-[#051329]">
+       {/* //TEAM MEMBER IMAGES SECTION */}
+       
+      {/* <section className="py-24 bg-[#051329]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-14">
             <div>
@@ -568,7 +570,7 @@ export default function About() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       <Testimonials />
 

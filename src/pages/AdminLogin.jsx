@@ -35,7 +35,7 @@ export default function AdminLogin() {
       <div className="w-full max-w-md bg-[#0D172A] p-8 rounded-2xl border border-[#D4AF37]/25 shadow-2xl">
         {/* Brand Header */}
         <div className="flex items-center justify-center mb-5">
-          <img src="/fkco-estate-logo.svg" alt="FK&CO Estate logo" className="brand-logo brand-logo-admin" />
+          <img src="/fkco-estate-logo4.png" alt="FK&CO Estate logo" className="brand-logo brand-logo-admin" />
         </div>
 
         <div className="h-px bg-[#D4AF37]/15 my-5" />

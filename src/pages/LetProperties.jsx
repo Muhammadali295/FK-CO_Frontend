@@ -202,10 +202,10 @@ const SERVICES = [
 ];
 
 const STATS = [
-  { value: "500+", label: "Properties Managed", icon: Building2 },
-  { value: "99%", label: "Rent Collected On Time", icon: Banknote },
-  { value: "97%", label: "Occupancy Rate", icon: PieChart },
-  { value: "15+", label: "Years Experience", icon: Award },
+  // { value: "500+", label: "Properties Managed", icon: Building2 },
+  // { value: "99%", label: "Rent Collected On Time", icon: Banknote },
+  // { value: "97%", label: "Occupancy Rate", icon: PieChart },
+  // { value: "15+", label: "Years Experience", icon: Award },
 ];
 
 const FAQ_ITEMS = [
@@ -1038,6 +1038,93 @@ export default function LetProperties() {
         </div>
       </section>
 
+
+      
+      <section className="py-20 bg-[#071B35]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {STATS.map((stat, i) => {
+              const Icon = stat.icon;
+              return (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="glass-card rounded-2xl p-6 text-center"
+                >
+                  <div className="w-10 h-10 rounded-xl gold-bg flex items-center justify-center mx-auto mb-3">
+                    <Icon className="w-5 h-5 text-[#071B35]" />
+                  </div>
+                  <p className="font-serif-luxury text-3xl sm:text-4xl font-bold gold-text">
+                    {stat.value}
+                  </p>
+                  <p className="text-slate-400 text-xs mt-1 font-medium">
+                    {stat.label}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+
+      
+
+      {(loading || error || rentalProperties.length > 0) && (
+        <section className="py-24 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <FadeInUp className="text-center mb-14">
+              <SectionLabel>Available Now</SectionLabel>
+              <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
+                Featured <span className="gold-text">Rental Properties</span>
+              </h2>
+              <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
+                Premium properties available to let now — professionally managed
+                and immediately available.
+              </p>
+            </FadeInUp>
+
+            {loading ? (
+              <div className="py-12 text-center text-[#D4AF37] font-serif text-xl">
+                Loading exclusive rentals...
+              </div>
+            ) : error ? (
+              <div className="py-12 text-center text-red-400">{error}</div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {rentalProperties.map((property, i) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    viewType="grid"
+                    onSelect={() => {}}
+                    isSaved={savedProperties.includes(property.id)}
+                    onToggleSave={handleToggleSave}
+                  />
+                ))}
+              </div>
+            )}
+
+            <FadeInUp delay={0.3} className="text-center mt-12">
+              <Link
+                to="/buy"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border border-[#D4A44A]/40 text-[#D4A44A] font-semibold text-sm uppercase tracking-wider hover:bg-[#D4A44A] hover:text-[#071B35] transition-all duration-300"
+              >
+                View All Properties
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </FadeInUp>
+          </div>
+        </section>
+      )}
+
+
+      
+
       <section className="py-24 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1081,6 +1168,8 @@ export default function LetProperties() {
           </div>
         </div>
       </section>
+
+      
 
       <section className="py-24 bg-[#051329]/60 border-y border-[#D4A44A]/10 relative overflow-hidden">
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
@@ -1205,84 +1294,6 @@ export default function LetProperties() {
         </div>
       </section>
 
-      <section className="py-20 bg-[#071B35]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {STATS.map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="glass-card rounded-2xl p-6 text-center"
-                >
-                  <div className="w-10 h-10 rounded-xl gold-bg flex items-center justify-center mx-auto mb-3">
-                    <Icon className="w-5 h-5 text-[#071B35]" />
-                  </div>
-                  <p className="font-serif-luxury text-3xl sm:text-4xl font-bold gold-text">
-                    {stat.value}
-                  </p>
-                  <p className="text-slate-400 text-xs mt-1 font-medium">
-                    {stat.label}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {(loading || error || rentalProperties.length > 0) && (
-        <section className="py-24 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <FadeInUp className="text-center mb-14">
-              <SectionLabel>Available Now</SectionLabel>
-              <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
-                Featured <span className="gold-text">Rental Properties</span>
-              </h2>
-              <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-                Premium properties available to let now — professionally managed
-                and immediately available.
-              </p>
-            </FadeInUp>
-
-            {loading ? (
-              <div className="py-12 text-center text-[#D4AF37] font-serif text-xl">
-                Loading exclusive rentals...
-              </div>
-            ) : error ? (
-              <div className="py-12 text-center text-red-400">{error}</div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {rentalProperties.map((property, i) => (
-                  <PropertyCard
-                    key={property.id}
-                    property={property}
-                    viewType="grid"
-                    onSelect={() => {}}
-                    isSaved={savedProperties.includes(property.id)}
-                    onToggleSave={handleToggleSave}
-                  />
-                ))}
-              </div>
-            )}
-
-            <FadeInUp delay={0.3} className="text-center mt-12">
-              <Link
-                to="/buy"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border border-[#D4A44A]/40 text-[#D4A44A] font-semibold text-sm uppercase tracking-wider hover:bg-[#D4A44A] hover:text-[#071B35] transition-all duration-300"
-              >
-                View All Properties
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </FadeInUp>
-          </div>
-        </section>
-      )}
 
       <LandlordTestimonials />
       <section className="py-24 bg-[#051329]/40 border-t border-[#D4A44A]/10">

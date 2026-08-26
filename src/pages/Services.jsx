@@ -50,12 +50,12 @@ const faqs = [
   ['Can you help investors?', 'Our local market analysis and buy-to-let guidance help investors make confident, informed decisions.'],
 ];
 
-const serviceStats = [
-  { value: '1000+', label: 'Properties Sold', detail: 'Successful moves across the region' },
-  { value: '500+', label: 'Managed Properties', detail: 'Carefully managed homes and portfolios' },
-  { value: '98%', label: 'Customer Satisfaction', detail: 'Built on communication and care' },
-  { value: '15+', label: 'Years Experience', detail: 'Deep local property expertise' },
-];
+// const serviceStats = [
+//   { value: '1000+', label: 'Properties Sold', detail: 'Successful moves across the region' },
+//   { value: '500+', label: 'Managed Properties', detail: 'Carefully managed homes and portfolios' },
+//   { value: '98%', label: 'Customer Satisfaction', detail: 'Built on communication and care' },
+//   { value: '15+', label: 'Years Experience', detail: 'Deep local property expertise' },
+// ];
 
 export default function Services() {
   const { onOpenValuationModal } = useOutletContext();
@@ -105,7 +105,7 @@ export default function Services() {
 
       <section className="py-24 bg-[#051329]"><div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"><div className="text-center mb-14"><p className="text-[#D4A44A] uppercase tracking-[0.2em] text-xs font-bold">A clear path</p><h2 className="mt-3 font-serif-luxury text-3xl sm:text-5xl font-bold text-white">Our <span className="gold-text">process</span></h2></div><div className="grid grid-cols-2 md:grid-cols-6 gap-4">{process.map((step, index) => <motion.div key={step} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="relative text-center"><div className="w-12 h-12 mx-auto rounded-full gold-bg text-[#071B35] flex items-center justify-center font-bold text-lg">{index + 1}</div><p className="mt-4 text-white text-sm font-semibold">{step}</p>{index < process.length - 1 && <ArrowRight className="hidden md:block absolute top-4 -right-3 w-6 h-6 text-[#D4A44A]/50" />}</motion.div>)}</div><div className="flex justify-center mt-8 md:hidden"><ArrowDown className="w-5 h-5 text-[#D4A44A]" /></div></div></section>
 
-      <StatsSection stats={serviceStats} />
+      {/* <StatsSection stats={serviceStats} /> */}
       <Testimonials />
 
       <section className="py-24 bg-[#071B35]/90"><div className="max-w-3xl mx-auto px-4 sm:px-6"><div className="text-center mb-12"><p className="text-[#D4A44A] uppercase tracking-[0.2em] text-xs font-bold">Need to know more?</p><h2 className="mt-3 font-serif-luxury text-3xl sm:text-5xl font-bold text-white">Frequently asked <span className="gold-text">questions</span></h2></div><div className="space-y-3">{faqs.map(([question, answer], index) => <div key={question} className="glass-panel rounded-xl border border-white/10 overflow-hidden"><button onClick={() => setOpenFaq(openFaq === index ? null : index)} className="w-full p-5 flex items-center justify-between gap-4 text-left text-white font-semibold"><span>{question}</span><ChevronDown className={`w-5 h-5 text-[#D4A44A] transition-transform ${openFaq === index ? 'rotate-180' : ''}`} /></button>{openFaq === index && <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="px-5 pb-5 text-sm text-slate-300 leading-relaxed">{answer}</motion.p>}</div>)}</div></div></section>

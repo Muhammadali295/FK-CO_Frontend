@@ -62,14 +62,15 @@ export default function WhyChooseUs() {
   };
 
   return (
-    <section id="why-us" className="py-16 sm:py-24 relative overflow-hidden bg-[#051329]/90">
-      
+    <section
+      id="why-us"
+      className="py-16 sm:py-24 relative overflow-hidden bg-[#051329]/90"
+    >
       {/* Background Glows */}
       <div className="absolute top-1/2 left-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-900/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel border border-[#D4A44A]/30 text-[#D4A44A] text-xs font-semibold uppercase tracking-widest mb-4">
@@ -77,10 +78,11 @@ export default function WhyChooseUs() {
             The FK&CO Difference
           </div>
           <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
-            Why High-Net-Worth Clients <span className="gold-text">Choose FK&CO</span>
+            Why Clients <span className="gold-text">Choose FK&CO</span>
           </h2>
           <p className="mt-4 text-slate-300 text-sm sm:text-base font-light leading-relaxed">
-            We combine high-street personal relationship management with modern digital marketing to maximize property values across Birmingham.
+            We combine high-street personal relationship management with modern
+            digital marketing to maximize property values across Birmingham.
           </p>
         </div>
 
@@ -95,18 +97,27 @@ export default function WhyChooseUs() {
           {/* Card Header - Only About Us */}
           <div className="pb-6 border-b border-white/10 mb-8">
             <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-white">
-              About Us
+              About Us 
             </h3>
+
+            <p>
+                            FK&Co Estate provides personal, professional estate and
+              letting services focused on Sales, Lettings and Property
+              Management. They treat every property as their own, combining
+              honest advice, modern marketing and local expertise to achieve the
+              best possible results. Whether selling a home or managing a rental
+              portfolio, their priority is protecting your property, maximising
+              its potential and giving you peace of mind.
+            </p>
           </div>
 
           {/* Flex Column on Mobile, Grid on Desktop */}
           <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 items-start">
-            
             {/* 1. Features (Order 1 on Mobile & Desktop) */}
             <div className="order-1 lg:order-1 lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full">
               {WHY_CHOOSE_US_DATA.map((item) => (
-                <div 
-                  key={item.id} 
+                <div
+                  key={item.id}
                   className="p-5 rounded-2xl bg-[#051329]/60 border border-white/5 hover:border-[#D4A44A]/40 transition-all duration-300 group"
                 >
                   <div className="w-10 h-10 rounded-xl bg-[#071B35] border border-[#D4A44A]/30 flex items-center justify-center mb-3 group-hover:border-[#D4A44A] transition-all">
@@ -123,12 +134,15 @@ export default function WhyChooseUs() {
             </div>
 
             {/* 2. Stats Section (Order 2 on Mobile, Order 3 on Desktop) */}
-            <div className="order-2 lg:order-3 lg:col-span-12 w-full">
+            {/* <div className="order-2 lg:order-3 lg:col-span-12 w-full">
               <StatsSection />
-            </div>
+            </div> */}
 
             {/* 3. Integrated Contact Form (Order 3 on Mobile [Bottom], Order 2 on Desktop [Right]) */}
-            <div id="contact" className="order-3 lg:order-2 lg:col-span-5 scroll-mt-28 w-full">
+            <div
+              id="contact"
+              className="order-3 lg:order-2 lg:col-span-5 scroll-mt-28 w-full"
+            >
               <div className="p-6 sm:p-7 rounded-2xl bg-[#051329]/80 border border-[#D4A44A]/30 shadow-xl">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full gold-bg text-[#071B35] text-[10px] font-extrabold uppercase tracking-widest mb-3">
                   <Mail className="w-3 h-3" /> Get In Touch
@@ -137,15 +151,20 @@ export default function WhyChooseUs() {
                   Contact FK&CO Estate
                 </h4>
                 <p className="text-slate-300 text-xs font-light leading-relaxed mb-5">
-                  Have a query regarding property advisory or investments? Leave your details and our senior team will get back to you.
+                  Have a query regarding property advisory or investments? Leave
+                  your details and our senior team will get back to you.
                 </p>
 
                 {submitted ? (
                   <div className="bg-[#D4A44A]/15 border border-[#D4A44A]/40 p-5 rounded-xl text-center my-2">
                     <CheckCircle2 className="w-8 h-8 text-[#D4A44A] mx-auto mb-2" />
-                    <h5 className="text-white font-semibold text-sm">Message Sent!</h5>
-                    <p className="text-slate-300 text-xs mt-1">We will contact you shortly.</p>
-                    <button 
+                    <h5 className="text-white font-semibold text-sm">
+                      Message Sent!
+                    </h5>
+                    <p className="text-slate-300 text-xs mt-1">
+                      We will contact you shortly.
+                    </p>
+                    <button
                       onClick={() => setSubmitted(false)}
                       className="mt-3 text-[11px] text-[#D4A44A] underline font-medium hover:text-white"
                     >
@@ -217,7 +236,7 @@ export default function WhyChooseUs() {
                       className="w-full py-3 rounded-xl gold-bg gold-bg-hover text-[#071B35] font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#D4A44A]/20 cursor-pointer flex items-center justify-center gap-2 transition disabled:opacity-50"
                     >
                       {loading ? (
-                        'Sending...'
+                        "Sending..."
                       ) : (
                         <>
                           <span>Submit Inquiry</span>
@@ -229,11 +248,8 @@ export default function WhyChooseUs() {
                 )}
               </div>
             </div>
-
           </div>
-
         </motion.div>
-
       </div>
     </section>
   );

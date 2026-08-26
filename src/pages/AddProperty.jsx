@@ -35,8 +35,8 @@ export default function AddProperty() {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
       
-      if (imageFiles.length + newFiles.length > 5) {
-        alert('You can only upload a maximum of 5 images per property.');
+      if (imageFiles.length + newFiles.length > 25) {
+        alert('You can only upload a maximum of 25 images per property.');
         e.target.value = null; // reset input
         return;
       }
