@@ -30,7 +30,7 @@ export default function LandlordSection({ onOpenValuationModal }) {
           >
             <div className="relative rounded-3xl overflow-hidden border border-[#D4A44A]/40 shadow-2xl group">
               <img
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80"
+                // src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80"
                 alt="Landlord Property Management"
                 className="w-full h-[300px] sm:h-[400px] lg:h-[520px] object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-90"
               />

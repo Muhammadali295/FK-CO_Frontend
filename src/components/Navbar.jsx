@@ -72,7 +72,7 @@ export default function Navbar({ onOpenValuationModal }) {
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group focus:outline-none min-w-0" aria-label="FK&CO Estate home">
             <img
-              src="/fkco-estate-logo.svg"
+              src="/fkco-estate-logo4.png"
               alt="FK&CO Estate logo"
               className="brand-logo brand-logo-navbar shrink-0"
             />

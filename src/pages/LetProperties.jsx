@@ -1,224 +1,295 @@
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  UserCheck, TrendingUp, Settings, Banknote, Wrench, ShieldCheck,
-  Lock, ClipboardList, Award, Camera, Globe, Eye, FileSearch,
-  KeyRound, BarChart3, Phone, Sparkles, MapPin, Bed, Bath,
-  Maximize, CheckCircle2, ChevronDown, ChevronUp, ArrowRight,
-  CalendarCheck, Clock, Home, Star, PieChart, Building2
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
-import PropertyCard from '../components/PropertyCard';
-import { Star as StarIcon, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+  UserCheck,
+  TrendingUp,
+  Settings,
+  Banknote,
+  Wrench,
+  ShieldCheck,
+  Lock,
+  ClipboardList,
+  Award,
+  Camera,
+  Globe,
+  Eye,
+  FileSearch,
+  KeyRound,
+  BarChart3,
+  Phone,
+  Sparkles,
+  MapPin,
+  Bed,
+  Bath,
+  Maximize,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  ArrowRight,
+  CalendarCheck,
+  Clock,
+  Home,
+  Star,
+  PieChart,
+  Building2,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import PropertyCard from "../components/PropertyCard";
+import {
+  Star as StarIcon,
+  ChevronLeft,
+  ChevronRight,
+  Quote,
+} from "lucide-react";
 
-import { useProperties } from '../hooks/useProperties';
-import API_BASE_URL from '../utils/api';
-
+import { useProperties } from "../hooks/useProperties";
+import API_BASE_URL from "../utils/api";
 
 const LANDLORD_BENEFITS = [
   {
     icon: UserCheck,
-    title: 'Professional Tenant Screening',
-    description: 'Full credit checks, employment verification, previous landlord references and Right to Rent checks on every applicant.'
+    title: "Professional Tenant Screening",
+    description:
+      "Full credit checks, employment verification, previous landlord references and Right to Rent checks on every applicant.",
   },
   {
     icon: TrendingUp,
-    title: 'Maximum Rental Income',
-    description: "We position your property at the optimal rent level backed by live market data to achieve the highest sustainable return."
+    title: "Maximum Rental Income",
+    description:
+      "We position your property at the optimal rent level backed by live market data to achieve the highest sustainable return.",
   },
   {
     icon: Settings,
-    title: 'Full Property Management',
-    description: 'From routine inspections to emergency repairs — we handle every aspect of managing your property on your behalf.'
+    title: "Full Property Management",
+    description:
+      "From routine inspections to emergency repairs — we handle every aspect of managing your property on your behalf.",
   },
   {
     icon: Banknote,
-    title: 'Guaranteed Rent Collection',
-    description: 'Rent collected, processed and transferred to your account each month with a full transparent statement.'
+    title: "Guaranteed Rent Collection",
+    description:
+      "Rent collected, processed and transferred to your account each month with a full transparent statement.",
   },
   {
     icon: Wrench,
-    title: 'Property Maintenance',
-    description: 'Access to our vetted network of qualified contractors for repairs, maintenance and property improvements.'
+    title: "Property Maintenance",
+    description:
+      "Access to our vetted network of qualified contractors for repairs, maintenance and property improvements.",
   },
   {
     icon: ShieldCheck,
-    title: 'Legal Compliance',
-    description: 'We keep your property fully compliant — gas safety, electrical certificates, EPC, HMO licensing and more.'
+    title: "Legal Compliance",
+    description:
+      "We keep your property fully compliant — gas safety, electrical certificates, EPC, HMO licensing and more.",
   },
   {
     icon: Lock,
-    title: 'Deposit Protection',
-    description: 'All deposits registered with a government-approved scheme within 30 days of receipt, fully documented.'
+    title: "Deposit Protection",
+    description:
+      "All deposits registered with a government-approved scheme within 30 days of receipt, fully documented.",
   },
   {
     icon: ClipboardList,
-    title: 'Regular Property Inspections',
-    description: 'Quarterly inspections with full written and photographic reports sent to you after every visit.'
+    title: "Regular Property Inspections",
+    description:
+      "Quarterly inspections with full written and photographic reports sent to you after every visit.",
   },
 ];
 
 const LETTING_STEPS = [
   {
-    number: '01',
+    number: "01",
     icon: Award,
-    title: 'Rental Valuation',
-    description: 'Our lettings specialists assess your property and provide a free, accurate rental valuation based on current live market demand in your area.'
+    title: "Rental Valuation",
+    description:
+      "Our lettings specialists assess your property and provide a free, accurate rental valuation based on current live market demand in your area.",
   },
   {
-    number: '02',
+    number: "02",
     icon: Camera,
-    title: 'Professional Photography',
-    description: '4K property photography, detailed floor plans and premium listing content crafted to attract quality tenants quickly.'
+    title: "Professional Photography",
+    description:
+      "4K property photography, detailed floor plans and premium listing content crafted to attract quality tenants quickly.",
   },
   {
-    number: '03',
+    number: "03",
     icon: Globe,
-    title: 'Marketing Your Property',
-    description: 'Launched across Rightmove, Zoopla, SpareRoom and our exclusive registered tenant database for maximum exposure.'
+    title: "Marketing Your Property",
+    description:
+      "Launched across Rightmove, Zoopla, SpareRoom and our exclusive registered tenant database for maximum exposure.",
   },
   {
-    number: '04',
+    number: "04",
     icon: Eye,
-    title: 'Tenant Viewings',
-    description: 'We conduct and coordinate all viewings, gathering detailed feedback and managing all applicant communications.'
+    title: "Tenant Viewings",
+    description:
+      "We conduct and coordinate all viewings, gathering detailed feedback and managing all applicant communications.",
   },
   {
-    number: '05',
+    number: "05",
     icon: FileSearch,
-    title: 'Tenant Referencing',
-    description: 'Comprehensive referencing including credit history, employment verification, affordability assessment and previous landlord checks.'
+    title: "Tenant Referencing",
+    description:
+      "Comprehensive referencing including credit history, employment verification, affordability assessment and previous landlord checks.",
   },
   {
-    number: '06',
+    number: "06",
     icon: KeyRound,
-    title: 'Move In',
-    description: 'Full check-in process including detailed inventory, key handover, utility registration and deposit protection registration.'
+    title: "Move In",
+    description:
+      "Full check-in process including detailed inventory, key handover, utility registration and deposit protection registration.",
   },
   {
-    number: '07',
+    number: "07",
     icon: Settings,
-    title: 'Ongoing Property Management',
-    description: 'We manage your property throughout the tenancy — rent collection, maintenance, inspections and renewals handled seamlessly.'
+    title: "Ongoing Property Management",
+    description:
+      "We manage your property throughout the tenancy — rent collection, maintenance, inspections and renewals handled seamlessly.",
   },
 ];
 
 const SERVICES = [
   {
     icon: Settings,
-    title: 'Fully Managed',
-    description: 'Our premium end-to-end service. We handle everything — so you can enjoy the income without the hassle.',
+    title: "Fully Managed",
+    description:
+      "Our premium end-to-end service. We handle everything — so you can enjoy the income without the hassle.",
     highlight: true,
-    badge: 'Most Popular'
+    badge: "Most Popular",
   },
   {
     icon: UserCheck,
-    title: 'Tenant Find Only',
-    description: 'We find and reference your ideal tenant, then hand back management once they move in.'
+    title: "Tenant Find Only",
+    description:
+      "We find and reference your ideal tenant, then hand back management once they move in.",
   },
   {
     icon: Banknote,
-    title: 'Rent Collection',
-    description: 'Monthly rent collection, processing and detailed statements — keeping your cashflow healthy.'
+    title: "Rent Collection",
+    description:
+      "Monthly rent collection, processing and detailed statements — keeping your cashflow healthy.",
   },
   {
     icon: Wrench,
-    title: 'Property Maintenance',
-    description: 'Access to our trusted contractor network for reactive repairs and planned maintenance works.'
+    title: "Property Maintenance",
+    description:
+      "Access to our trusted contractor network for reactive repairs and planned maintenance works.",
   },
   {
     icon: ShieldCheck,
-    title: 'Legal Compliance',
-    description: 'We keep your certificates, licensing and notices up to date — protecting you from costly penalties.'
+    title: "Legal Compliance",
+    description:
+      "We keep your certificates, licensing and notices up to date — protecting you from costly penalties.",
   },
   {
     icon: ClipboardList,
-    title: 'Inventory Management',
-    description: 'Professional check-in and check-out inventories with timestamped photographic evidence.'
+    title: "Inventory Management",
+    description:
+      "Professional check-in and check-out inventories with timestamped photographic evidence.",
   },
   {
     icon: Wrench,
-    title: 'Emergency Repairs',
-    description: '24/7 emergency maintenance line ensuring your property and tenants are never left without support.'
+    title: "Emergency Repairs",
+    description:
+      "24/7 emergency maintenance line ensuring your property and tenants are never left without support.",
   },
   {
     icon: Eye,
-    title: 'Annual Inspections',
-    description: 'Scheduled inspections with full photographic reports to keep your property in prime condition.'
+    title: "Annual Inspections",
+    description:
+      "Scheduled inspections with full photographic reports to keep your property in prime condition.",
   },
 ];
 
 const STATS = [
-  { value: '500+', label: 'Properties Managed', icon: Building2 },
-  { value: '99%', label: 'Rent Collected On Time', icon: Banknote },
-  { value: '97%', label: 'Occupancy Rate', icon: PieChart },
-  { value: '15+', label: 'Years Experience', icon: Award },
+  { value: "500+", label: "Properties Managed", icon: Building2 },
+  { value: "99%", label: "Rent Collected On Time", icon: Banknote },
+  { value: "97%", label: "Occupancy Rate", icon: PieChart },
+  { value: "15+", label: "Years Experience", icon: Award },
 ];
 
 const FAQ_ITEMS = [
   {
-    question: 'How quickly can you find tenants?',
-    answer: "On average, we source and reference a quality tenant within 10–14 days of your property going live. Our pre-registered tenant database means many properties are matched before they even reach the portals."
+    question: "How quickly can you find tenants?",
+    answer:
+      "On average, we source and reference a quality tenant within 10–14 days of your property going live. Our pre-registered tenant database means many properties are matched before they even reach the portals.",
   },
   {
-    question: 'What management packages do you offer?',
-    answer: 'We offer Tenant Find Only, Rent Collection, and our premium Fully Managed package. Each package is tailored to your needs and portfolio size. Speak with our lettings team to find the right fit.'
+    question: "What management packages do you offer?",
+    answer:
+      "We offer Tenant Find Only, Rent Collection, and our premium Fully Managed package. Each package is tailored to your needs and portfolio size. Speak with our lettings team to find the right fit.",
   },
   {
-    question: 'How are tenants screened?',
-    answer: 'Every applicant undergoes a comprehensive referencing process: full credit check, employment verification and income assessment, current and previous landlord references, Right to Rent identity verification, and an affordability analysis to ensure rent is sustainable.'
+    question: "How are tenants screened?",
+    answer:
+      "Every applicant undergoes a comprehensive referencing process: full credit check, employment verification and income assessment, current and previous landlord references, Right to Rent identity verification, and an affordability analysis to ensure rent is sustainable.",
   },
   {
-    question: 'How is rent collected?',
-    answer: 'Rent is collected by standing order on the due date each month. Once received and cleared, it is transferred directly to your nominated bank account along with a full itemised monthly statement.'
+    question: "How is rent collected?",
+    answer:
+      "Rent is collected by standing order on the due date each month. Once received and cleared, it is transferred directly to your nominated bank account along with a full itemised monthly statement.",
   },
   {
-    question: 'Do you handle all maintenance?',
-    answer: "Yes. Under our Fully Managed package, all maintenance requests are handled by our in-house team who coordinate with our vetted contractor network. You'll receive a notification and approval request for any works above your pre-agreed threshold."
+    question: "Do you handle all maintenance?",
+    answer:
+      "Yes. Under our Fully Managed package, all maintenance requests are handled by our in-house team who coordinate with our vetted contractor network. You'll receive a notification and approval request for any works above your pre-agreed threshold.",
   },
   {
-    question: 'What happens if a tenant stops paying rent?',
-    answer: 'We offer optional Rent Guarantee Insurance that protects your income even if the tenant defaults. In all cases, we manage the arrears process on your behalf including formal notices and legal proceedings if required.'
+    question: "What happens if a tenant stops paying rent?",
+    answer:
+      "We offer optional Rent Guarantee Insurance that protects your income even if the tenant defaults. In all cases, we manage the arrears process on your behalf including formal notices and legal proceedings if required.",
   },
 ];
 
 const LANDLORD_TESTIMONIALS = [
   {
-    id: 'lt-1',
-    name: 'Marcus Vance',
-    role: 'Portfolio Landlord — 14 Units',
-    location: 'Solihull & City Centre',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+    id: "lt-1",
+    name: "Marcus Vance",
+    role: "Portfolio Landlord — 14 Units",
+    location: "Solihull & City Centre",
+    image:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
     rating: 5,
-    text: "As a landlord myself, finding FK&CO's Landlord to Landlord management service was a game-changer. They look after my properties with the same rigor as their own portfolio. Void periods have dropped to near zero."
+    text: "As a landlord myself, finding FK&CO's Landlord to Landlord management service was a game-changer. They look after my properties with the same rigor as their own portfolio. Void periods have dropped to near zero.",
   },
   {
-    id: 'lt-2',
-    name: 'Priya Sharma',
-    role: 'BTL Landlord — 6 Properties',
-    location: 'Edgbaston & Harborne',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
+    id: "lt-2",
+    name: "Priya Sharma",
+    role: "BTL Landlord — 6 Properties",
+    location: "Edgbaston & Harborne",
+    image:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80",
     rating: 5,
-    text: 'Switched to FK&CO after years of self-managing. The difference is night and day. My properties are always tenanted, rent arrives on time every month, and I finally sleep soundly. Genuinely cannot recommend highly enough.'
+    text: "Switched to FK&CO after years of self-managing. The difference is night and day. My properties are always tenanted, rent arrives on time every month, and I finally sleep soundly. Genuinely cannot recommend highly enough.",
   },
   {
-    id: 'lt-3',
-    name: 'David Thornton',
-    role: 'First-Time Landlord',
-    location: 'Jewellery Quarter, Birmingham',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+    id: "lt-3",
+    name: "David Thornton",
+    role: "First-Time Landlord",
+    location: "Jewellery Quarter, Birmingham",
+    image:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
     rating: 5,
-    text: 'As a first-time landlord I was nervous. FK&CO guided me through every step — from the rental valuation to tenant move-in. Everything was handled professionally and I had a tenant within 12 days of going live.'
+    text: "As a first-time landlord I was nervous. FK&CO guided me through every step — from the rental valuation to tenant move-in. Everything was handled professionally and I had a tenant within 12 days of going live.",
   },
 ];
 
-const PROPERTY_TYPES = ['Detached House', 'Semi-Detached House', 'Terraced House', 'Flat / Apartment', 'Bungalow', 'HMO', 'Studio', 'Other'];
+const PROPERTY_TYPES = [
+  "Detached House",
+  "Semi-Detached House",
+  "Terraced House",
+  "Flat / Apartment",
+  "Bungalow",
+  "HMO",
+  "Studio",
+  "Other",
+];
 
-const FadeInUp = ({ children, delay = 0, className = '' }) => (
+const FadeInUp = ({ children, delay = 0, className = "" }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-60px' }}
+    viewport={{ once: true, margin: "-60px" }}
     transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
     className={className}
   >
@@ -250,17 +321,23 @@ function FAQItem({ item, index }) {
         <span className="font-serif-luxury text-white text-base sm:text-lg font-semibold group-hover:text-[#D4A44A] transition-colors pr-2">
           {item.question}
         </span>
-        <span className={`shrink-0 p-1.5 rounded-full border border-white/10 text-[#D4A44A] transition-all duration-300 ${open ? 'bg-[#D4A44A] text-[#071B35] border-[#D4A44A]' : ''}`}>
-          {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        <span
+          className={`shrink-0 p-1.5 rounded-full border border-white/10 text-[#D4A44A] transition-all duration-300 ${open ? "bg-[#D4A44A] text-[#071B35] border-[#D4A44A]" : ""}`}
+        >
+          {open ? (
+            <ChevronUp className="w-4 h-4" />
+          ) : (
+            <ChevronDown className="w-4 h-4" />
+          )}
         </span>
       </button>
       <AnimatePresence>
         {open && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
             <div className="px-6 pt-3 pb-5 text-slate-300 text-sm leading-relaxed border-x border-b border-[#D4A44A]/20 rounded-b-2xl bg-[#051329]/50 -mt-1">
@@ -277,9 +354,11 @@ function LandlordTestimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () =>
-    setCurrentIndex(prev => (prev === 0 ? LANDLORD_TESTIMONIALS.length - 1 : prev - 1));
+    setCurrentIndex((prev) =>
+      prev === 0 ? LANDLORD_TESTIMONIALS.length - 1 : prev - 1,
+    );
   const handleNext = () =>
-    setCurrentIndex(prev => (prev + 1) % LANDLORD_TESTIMONIALS.length);
+    setCurrentIndex((prev) => (prev + 1) % LANDLORD_TESTIMONIALS.length);
 
   const current = LANDLORD_TESTIMONIALS[currentIndex];
 
@@ -294,7 +373,8 @@ function LandlordTestimonials() {
             What Our <span className="gold-text">Landlords Say</span>
           </h2>
           <p className="mt-3 text-slate-300 text-base font-light">
-            Hear from portfolio landlords and first-time investors who trust FK&CO with their properties.
+            Hear from portfolio landlords and first-time investors who trust
+            FK&CO with their properties.
           </p>
         </div>
 
@@ -311,7 +391,10 @@ function LandlordTestimonials() {
               <Quote className="w-10 h-10 sm:w-16 sm:h-16 text-[#D4A44A]/15 absolute top-4 right-4 sm:top-6 sm:right-8 pointer-events-none" />
               <div className="flex items-center gap-1.5 mb-6">
                 {[...Array(current.rating)].map((_, i) => (
-                  <StarIcon key={i} className="w-5 h-5 fill-[#D4A44A] text-[#D4A44A]" />
+                  <StarIcon
+                    key={i}
+                    className="w-5 h-5 fill-[#D4A44A] text-[#D4A44A]"
+                  />
                 ))}
               </div>
               <p className="text-slate-200 text-lg sm:text-xl font-serif-luxury italic leading-relaxed mb-8">
@@ -324,8 +407,12 @@ function LandlordTestimonials() {
                   className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-[#D4A44A] shrink-0"
                 />
                 <div>
-                  <h4 className="font-serif-luxury font-bold text-white text-lg">{current.name}</h4>
-                  <p className="text-xs text-[#D4A44A] font-semibold">{current.role} · {current.location}</p>
+                  <h4 className="font-serif-luxury font-bold text-white text-lg">
+                    {current.name}
+                  </h4>
+                  <p className="text-xs text-[#D4A44A] font-semibold">
+                    {current.role} · {current.location}
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -337,16 +424,24 @@ function LandlordTestimonials() {
                 <button
                   key={idx}
                   onClick={() => setCurrentIndex(idx)}
-                  className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${currentIndex === idx ? 'w-8 gold-bg' : 'w-2.5 bg-white/20 hover:bg-white/40'}`}
+                  className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${currentIndex === idx ? "w-8 gold-bg" : "w-2.5 bg-white/20 hover:bg-white/40"}`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={handlePrev} className="p-3 rounded-full glass-panel hover:bg-[#D4A44A] text-slate-300 hover:text-[#071B35] transition-all duration-300 cursor-pointer" aria-label="Previous">
+              <button
+                onClick={handlePrev}
+                className="p-3 rounded-full glass-panel hover:bg-[#D4A44A] text-slate-300 hover:text-[#071B35] transition-all duration-300 cursor-pointer"
+                aria-label="Previous"
+              >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <button onClick={handleNext} className="p-3 rounded-full glass-panel hover:bg-[#D4A44A] text-slate-300 hover:text-[#071B35] transition-all duration-300 cursor-pointer" aria-label="Next">
+              <button
+                onClick={handleNext}
+                className="p-3 rounded-full glass-panel hover:bg-[#D4A44A] text-slate-300 hover:text-[#071B35] transition-all duration-300 cursor-pointer"
+                aria-label="Next"
+              >
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
@@ -359,73 +454,90 @@ function LandlordTestimonials() {
 
 function RentalValuationForm() {
   const [formData, setFormData] = useState({
-    address: '',
-    postcode: '',
-    propertyType: '',
-    bedrooms: '',
-    bathrooms: '',
-    currentRent: '',
-    ownerName: '',
-    phone: '',
-    email: '',
-    additionalInfo: '',
+    address: "",
+    postcode: "",
+    propertyType: "",
+    bedrooms: "",
+    bathrooms: "",
+    currentRent: "",
+    ownerName: "",
+    phone: "",
+    email: "",
+    additionalInfo: "",
     agreeContact: false,
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(''); // NEW: Error tracking
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleReset = () => {
     setFormData({
-      address: '', postcode: '', propertyType: '', bedrooms: '',
-      bathrooms: '', currentRent: '', ownerName: '', phone: '',
-      email: '', additionalInfo: '', agreeContact: false,
+      address: "",
+      postcode: "",
+      propertyType: "",
+      bedrooms: "",
+      bathrooms: "",
+      currentRent: "",
+      ownerName: "",
+      phone: "",
+      email: "",
+      additionalInfo: "",
+      agreeContact: false,
     });
     setSubmitted(false);
-    setErrorMsg('');
+    setErrorMsg("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.agreeContact) return;
     setLoading(true);
-    setErrorMsg('');
+    setErrorMsg("");
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           full_name: formData.ownerName,
           email: formData.email,
           phone: formData.phone,
-          intent: 'let',
-          lead_type: 'valuation',
+          intent: "let",
+          lead_type: "valuation",
           property_address: `${formData.address}, ${formData.postcode}`,
-          message: `Service: Letting | Type: ${formData.propertyType} (${formData.bedrooms} Beds, ${formData.bathrooms} Baths) | Postcode: ${formData.postcode} | Est Rent: ${formData.currentRent || 'Not provided'} | Notes: ${formData.additionalInfo || 'None'}`
-        })
+          message: `Service: Letting | Type: ${formData.propertyType} (${formData.bedrooms} Beds, ${formData.bathrooms} Baths) | Postcode: ${formData.postcode} | Est Rent: ${formData.currentRent || "Not provided"} | Notes: ${formData.additionalInfo || "None"}`,
+        }),
       });
 
       const result = await response.json();
       if (result.success) {
         setSubmitted(true);
       } else {
-        setErrorMsg(result.error || 'Failed to submit rental valuation request.');
+        setErrorMsg(
+          result.error || "Failed to submit rental valuation request.",
+        );
       }
     } catch (err) {
-      setErrorMsg('Server connection failed. Please ensure your backend is running.');
+      setErrorMsg(
+        "Server connection failed. Please ensure your backend is running.",
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const inputClass = "w-full bg-[#051329]/80 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#D4A44A]/60 focus:ring-1 focus:ring-[#D4A44A]/30 transition-all duration-200";
-  const labelClass = "block text-slate-300 text-xs font-semibold uppercase tracking-wider mb-1.5";
+  const inputClass =
+    "w-full bg-[#051329]/80 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#D4A44A]/60 focus:ring-1 focus:ring-[#D4A44A]/30 transition-all duration-200";
+  const labelClass =
+    "block text-slate-300 text-xs font-semibold uppercase tracking-wider mb-1.5";
 
   if (submitted) {
     return (
@@ -437,9 +549,17 @@ function RentalValuationForm() {
         <div className="w-20 h-20 rounded-full gold-bg flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#D4A44A]/30">
           <CheckCircle2 className="w-10 h-10 text-[#071B35]" />
         </div>
-        <h3 className="font-serif-luxury text-2xl font-bold text-white mb-3">Rental Valuation Request Received!</h3>
+        <h3 className="font-serif-luxury text-2xl font-bold text-white mb-3">
+          Rental Valuation Request Received!
+        </h3>
         <p className="text-slate-300 text-sm max-w-md mx-auto mb-8">
-          Thank you, <span className="text-[#D4A44A] font-semibold">{formData.ownerName || 'valued landlord'}</span>. Our lettings team will contact you within <span className="text-[#D4A44A] font-semibold">24 hours</span> to arrange your free rental valuation.
+          Thank you,{" "}
+          <span className="text-[#D4A44A] font-semibold">
+            {formData.ownerName || "valued landlord"}
+          </span>
+          . Our lettings team will contact you within{" "}
+          <span className="text-[#D4A44A] font-semibold">24 hours</span> to
+          arrange your free rental valuation.
         </p>
         <button
           onClick={handleReset}
@@ -462,55 +582,128 @@ function RentalValuationForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label className={labelClass}>Property Address *</label>
-          <input name="address" value={formData.address} onChange={handleChange} required placeholder="e.g. 14 Harborne Road" className={inputClass} />
+          <input
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            required
+            placeholder="e.g. 14 Harborne Road"
+            className={inputClass}
+          />
         </div>
         <div>
           <label className={labelClass}>Postcode *</label>
-          <input name="postcode" value={formData.postcode} onChange={handleChange} required placeholder="e.g. B15 3JU" className={inputClass} />
+          <input
+            name="postcode"
+            value={formData.postcode}
+            onChange={handleChange}
+            required
+            placeholder="e.g. B15 3JU"
+            className={inputClass}
+          />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div>
           <label className={labelClass}>Property Type *</label>
-          <select name="propertyType" value={formData.propertyType} onChange={handleChange} required className={inputClass}>
+          <select
+            name="propertyType"
+            value={formData.propertyType}
+            onChange={handleChange}
+            required
+            className={inputClass}
+          >
             <option value="">Select type...</option>
-            {PROPERTY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+            {PROPERTY_TYPES.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
           </select>
         </div>
         <div>
           <label className={labelClass}>Bedrooms *</label>
-          <select name="bedrooms" value={formData.bedrooms} onChange={handleChange} required className={inputClass}>
+          <select
+            name="bedrooms"
+            value={formData.bedrooms}
+            onChange={handleChange}
+            required
+            className={inputClass}
+          >
             <option value="">Select...</option>
-            {[1,2,3,4,5,6,7,'8+'].map(n => <option key={n} value={n}>{n}</option>)}
+            {[1, 2, 3, 4, 5, 6, 7, "8+"].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
           </select>
         </div>
         <div>
           <label className={labelClass}>Bathrooms *</label>
-          <select name="bathrooms" value={formData.bathrooms} onChange={handleChange} required className={inputClass}>
+          <select
+            name="bathrooms"
+            value={formData.bathrooms}
+            onChange={handleChange}
+            required
+            className={inputClass}
+          >
             <option value="">Select...</option>
-            {[1,2,3,4,'5+'].map(n => <option key={n} value={n}>{n}</option>)}
+            {[1, 2, 3, 4, "5+"].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
       <div>
         <label className={labelClass}>Current Rental Income (Optional)</label>
-        <input name="currentRent" value={formData.currentRent} onChange={handleChange} placeholder="e.g. £1,800 / pcm or 'Currently vacant'" className={inputClass} />
+        <input
+          name="currentRent"
+          value={formData.currentRent}
+          onChange={handleChange}
+          placeholder="e.g. £1,800 / pcm or 'Currently vacant'"
+          className={inputClass}
+        />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div>
           <label className={labelClass}>Your Full Name *</label>
-          <input name="ownerName" value={formData.ownerName} onChange={handleChange} required placeholder="e.g. Sarah Jones" className={inputClass} />
+          <input
+            name="ownerName"
+            value={formData.ownerName}
+            onChange={handleChange}
+            required
+            placeholder="e.g. Sarah Jones"
+            className={inputClass}
+          />
         </div>
         <div>
           <label className={labelClass}>Phone Number *</label>
-          <input name="phone" type="tel" value={formData.phone} onChange={handleChange} required placeholder="e.g. 07700 123456" className={inputClass} />
+          <input
+            name="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            placeholder="e.g. 07700 123456"
+            className={inputClass}
+          />
         </div>
         <div>
           <label className={labelClass}>Email Address *</label>
-          <input name="email" type="email" value={formData.email} onChange={handleChange} required placeholder="e.g. sarah@email.com" className={inputClass} />
+          <input
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            placeholder="e.g. sarah@email.com"
+            className={inputClass}
+          />
         </div>
       </div>
 
@@ -536,9 +729,16 @@ function RentalValuationForm() {
           required
           className="mt-1 w-4 h-4 rounded border-[#D4A44A]/40 bg-[#051329] accent-[#D4A44A] cursor-pointer shrink-0"
         />
-        <label htmlFor="agreeContactLet" className="text-slate-400 text-xs leading-relaxed cursor-pointer">
-          I agree to be contacted by FK&CO Estate regarding my rental valuation request. Your data is handled in accordance with our{' '}
-          <span className="text-[#D4A44A] underline underline-offset-2">Privacy Policy</span>.
+        <label
+          htmlFor="agreeContactLet"
+          className="text-slate-400 text-xs leading-relaxed cursor-pointer"
+        >
+          I agree to be contacted by FK&CO Estate regarding my rental valuation
+          request. Your data is handled in accordance with our{" "}
+          <span className="text-[#D4A44A] underline underline-offset-2">
+            Privacy Policy
+          </span>
+          .
         </label>
       </div>
       <div className="flex flex-col sm:flex-row gap-3 pt-2">
@@ -549,9 +749,24 @@ function RentalValuationForm() {
         >
           {loading ? (
             <>
-              <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              <svg
+                className="animate-spin w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8z"
+                />
               </svg>
               Sending Request...
             </>
@@ -576,23 +791,28 @@ function RentalValuationForm() {
 
 export default function LetProperties() {
   const [savedProperties, setSavedProperties] = useState([]);
+  const [showMore, setShowMore] = useState(false);
 
   const { properties, loading, error } = useProperties();
 
   const rentalProperties = useMemo(
-    () => properties.filter(p => (p.purpose || p.status || p.type) === 'Let' || (p.purpose || p.status || p.type) === 'let'),
-    [properties]
+    () =>
+      properties.filter(
+        (p) =>
+          (p.purpose || p.status || p.type) === "Let" ||
+          (p.purpose || p.status || p.type) === "let",
+      ),
+    [properties],
   );
 
   const handleToggleSave = (id) => {
-    setSavedProperties(prev =>
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    setSavedProperties((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
   return (
     <div className="bg-[#071B35] min-h-screen">
-
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
@@ -603,13 +823,19 @@ export default function LetProperties() {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#071B35]/65 via-[#071B35]/55 to-[#071B35]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#071B35]/75 via-transparent to-[#071B35]/35" />
+
+          {/* NEW: Dynamic Blur Overlay that fades in when "See More" is active */}
+          <div
+            className={`absolute inset-0 bg-[#051329]/60 backdrop-blur-md transition-all duration-700 ease-in-out ${
+              showMore ? "opacity-100 visible" : "opacity-0 invisible"
+            }`}
+          />
         </div>
 
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#D4A44A]/8 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-28 pb-16">
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -626,18 +852,114 @@ export default function LetProperties() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="font-serif-luxury text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight tracking-tight"
           >
-            Let Your Property<br />
+            Let Your Property
+            <br />
             <span className="gold-text">with Confidence</span>
           </motion.h1>
 
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="mt-6 text-slate-200 text-base sm:text-xl max-w-2xl mx-auto leading-relaxed font-light"
+            className="mt-6 max-w-3xl mx-auto"
           >
-            We help landlords maximise rental income while providing complete property management and tenant sourcing.
-          </motion.p>
+            <p className="text-slate-200 text-base sm:text-xl leading-relaxed font-light">
+              We don't just work with landlords. We are landlords ourselves.
+              <br className="hidden sm:block" /> That experience shapes the way
+              we manage other people's properties.
+            </p>
+
+            <AnimatePresence>
+              {showMore && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-6 space-y-5 text-sm sm:text-base text-slate-300 font-light leading-relaxed text-left sm:text-left">
+                    <p>
+                      We understand what it feels like when a property is empty
+                      and costing money. We understand the importance of finding
+                      the right tenant rather than simply the fastest tenant. We
+                      understand maintenance costs, compliance responsibilities,
+                      rent collection and the importance of protecting a
+                      valuable long-term investment.
+                    </p>
+                    <p>
+                      Most importantly, we understand that when you hand an
+                      agent the keys to your property, you are placing
+                      considerable trust in them. We don't take that lightly.
+                    </p>
+                    <p>
+                      Whether you own one rental property or a growing
+                      portfolio, our objective is straightforward: help you
+                      protect your property, reduce unnecessary problems,
+                      maximise its potential and give you greater peace of mind.
+                    </p>
+
+                    <h3 className="font-serif-luxury text-xl sm:text-2xl text-[#D4A44A] font-bold pt-4 pb-2">
+                      A Different Kind of Estate Agency
+                    </h3>
+
+                    <p>
+                      We believe good estate agency should still be personal.
+                      You should be able to speak to someone who knows your
+                      property. You should receive honest advice, even when it
+                      isn't necessarily what you expected to hear. And you
+                      should never feel like your property has become another
+                      reference number in a large corporate system.
+                    </p>
+                    <p>
+                      We combine that personal approach with modern property
+                      marketing, professional presentation, strong online
+                      exposure and local market knowledge to give sellers and
+                      landlords the best possible opportunity to achieve the
+                      right result.
+                    </p>
+                    <p>
+                      We want our clients to stay with us, recommend us and come
+                      back when they need us again. That means our reputation
+                      depends on the service we provide today.
+                    </p>
+                    <p>
+                      So whether you're thinking about selling your family home,
+                      letting your first property or looking for someone to
+                      manage your portfolio, start with a conversation with
+                      FK&Co Estate.
+                    </p>
+                    <p className="font-semibold text-white">
+                      No pressure. No complicated sales pitch. Just tell us
+                      about your property and what you want to achieve, and
+                      we'll tell you honestly how we believe we can help.
+                    </p>
+                    <p className="font-bold text-[#D4A44A] pt-4 text-lg">
+                      FK&Co Estate — Trusted to Sell. Trusted to Let. <br />
+                      <span className="text-white font-medium text-base mt-1 block">
+                        Your property. Our priority.
+                      </span>
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <button
+              onClick={() => setShowMore(!showMore)}
+              className="mt-6 text-[#D4A44A] hover:text-white transition-colors text-sm font-semibold uppercase tracking-wider inline-flex items-center gap-1.5 focus:outline-none"
+            >
+              {showMore ? (
+                <>
+                  See Less <ChevronUp className="w-4 h-4" />
+                </>
+              ) : (
+                <>
+                  See More <ChevronDown className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -668,21 +990,29 @@ export default function LetProperties() {
             className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto"
           >
             {[
-              { icon: UserCheck, label: 'Tenant Screening' },
-              { icon: Banknote, label: '99% Rent On Time' },
-              { icon: ShieldCheck, label: 'Fully Compliant' },
-              { icon: Clock, label: '24hr Response' },
+              { icon: UserCheck, label: "Tenant Screening" },
+              { icon: Banknote, label: "99% Rent On Time" },
+              { icon: ShieldCheck, label: "Fully Compliant" },
+              { icon: Clock, label: "24hr Response" },
             ].map(({ icon: Icon, label }) => (
-              <div key={label} className="glass-panel rounded-xl px-3 py-3 flex items-center justify-center gap-2">
+              <div
+                key={label}
+                className="glass-panel rounded-xl px-3 py-3 flex items-center justify-center gap-2"
+              >
                 <Icon className="w-4 h-4 text-[#D4A44A] shrink-0" />
-                <span className="text-white text-[10px] sm:text-xs font-medium">{label}</span>
+                <span className="text-white text-[10px] sm:text-xs font-medium">
+                  {label}
+                </span>
               </div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      <section id="rental-valuation-form" className="py-24 bg-[#051329]/50 border-y border-[#D4A44A]/10 relative overflow-hidden">
+      <section
+        id="rental-valuation-form"
+        className="py-24 bg-[#051329]/50 border-y border-[#D4A44A]/10 relative overflow-hidden"
+      >
         <div className="absolute top-1/3 right-0 w-80 h-80 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInUp className="text-center mb-12">
@@ -691,7 +1021,8 @@ export default function LetProperties() {
               Request a <span className="gold-text">Rental Valuation</span>
             </h2>
             <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-              Complete the form and our lettings team will be in touch within 24 hours with a precise rental estimate.
+              Complete the form and our lettings team will be in touch within 24
+              hours with a precise rental estimate.
             </p>
           </FadeInUp>
 
@@ -707,7 +1038,6 @@ export default function LetProperties() {
         </div>
       </section>
 
-
       <section className="py-24 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -717,7 +1047,8 @@ export default function LetProperties() {
               Landlord <span className="gold-text">Benefits</span>
             </h2>
             <p className="mt-4 text-slate-300 text-base max-w-2xl mx-auto leading-relaxed">
-              Everything you need to maximise returns, protect your investment and enjoy true peace of mind.
+              Everything you need to maximise returns, protect your investment
+              and enjoy true peace of mind.
             </p>
           </FadeInUp>
 
@@ -737,8 +1068,12 @@ export default function LetProperties() {
                     <Icon className="w-5 h-5 text-[#071B35]" />
                   </div>
                   <div>
-                    <h3 className="font-serif-luxury text-lg font-bold text-white mb-2">{item.title}</h3>
-                    <p className="text-slate-400 text-xs leading-relaxed">{item.description}</p>
+                    <h3 className="font-serif-luxury text-lg font-bold text-white mb-2">
+                      {item.title}
+                    </h3>
+                    <p className="text-slate-400 text-xs leading-relaxed">
+                      {item.description}
+                    </p>
                   </div>
                 </motion.div>
               );
@@ -756,7 +1091,8 @@ export default function LetProperties() {
               Our <span className="gold-text">Letting Process</span>
             </h2>
             <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-              A transparent, step-by-step process designed to find quality tenants fast and manage your property with care.
+              A transparent, step-by-step process designed to find quality
+              tenants fast and manage your property with care.
             </p>
           </FadeInUp>
 
@@ -772,18 +1108,24 @@ export default function LetProperties() {
                     key={step.number}
                     initial={{ opacity: 0, x: isLeft ? -40 : 40 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: '-50px' }}
+                    viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.55, delay: i * 0.07 }}
-                    className={`flex flex-col sm:flex-row items-center gap-6 ${isLeft ? 'sm:flex-row' : 'sm:flex-row-reverse'}`}
+                    className={`flex flex-col sm:flex-row items-center gap-6 ${isLeft ? "sm:flex-row" : "sm:flex-row-reverse"}`}
                   >
                     <div className="flex-1 glass-card rounded-2xl p-6 flex items-start gap-4">
                       <div className="w-11 h-11 rounded-xl gold-bg flex items-center justify-center shrink-0 shadow-md shadow-[#D4A44A]/20">
                         <Icon className="w-5 h-5 text-[#071B35]" />
                       </div>
                       <div>
-                        <span className="text-[#D4A44A] text-xs font-bold uppercase tracking-widest">Step {step.number}</span>
-                        <h3 className="font-serif-luxury text-lg font-bold text-white mt-1 mb-2">{step.title}</h3>
-                        <p className="text-slate-400 text-sm leading-relaxed">{step.description}</p>
+                        <span className="text-[#D4A44A] text-xs font-bold uppercase tracking-widest">
+                          Step {step.number}
+                        </span>
+                        <h3 className="font-serif-luxury text-lg font-bold text-white mt-1 mb-2">
+                          {step.title}
+                        </h3>
+                        <p className="text-slate-400 text-sm leading-relaxed">
+                          {step.description}
+                        </p>
                       </div>
                     </div>
                     <div className="shrink-0 hidden sm:flex w-12 h-12 rounded-full gold-bg items-center justify-center font-serif-luxury font-bold text-[#071B35] text-sm shadow-lg shadow-[#D4A44A]/30 z-10">
@@ -807,7 +1149,8 @@ export default function LetProperties() {
               Landlord <span className="gold-text">Service Packages</span>
             </h2>
             <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-              Choose the level of service that suits your portfolio — from full management to tenant-find only.
+              Choose the level of service that suits your portfolio — from full
+              management to tenant-find only.
             </p>
           </FadeInUp>
 
@@ -821,7 +1164,7 @@ export default function LetProperties() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.07 }}
-                  className={`glass-card rounded-2xl p-6 flex flex-col gap-4 relative ${service.highlight ? 'border-[#D4A44A]/50 shadow-lg shadow-[#D4A44A]/10' : ''}`}
+                  className={`glass-card rounded-2xl p-6 flex flex-col gap-4 relative ${service.highlight ? "border-[#D4A44A]/50 shadow-lg shadow-[#D4A44A]/10" : ""}`}
                 >
                   {service.badge && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
@@ -830,12 +1173,22 @@ export default function LetProperties() {
                       </span>
                     </div>
                   )}
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-md ${service.highlight ? 'gold-bg shadow-[#D4A44A]/30' : 'bg-white/5 border border-white/10'}`}>
-                    <Icon className={`w-5 h-5 ${service.highlight ? 'text-[#071B35]' : 'text-[#D4A44A]'}`} />
+                  <div
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-md ${service.highlight ? "gold-bg shadow-[#D4A44A]/30" : "bg-white/5 border border-white/10"}`}
+                  >
+                    <Icon
+                      className={`w-5 h-5 ${service.highlight ? "text-[#071B35]" : "text-[#D4A44A]"}`}
+                    />
                   </div>
                   <div>
-                    <h3 className={`font-serif-luxury text-lg font-bold mb-2 ${service.highlight ? 'gold-text' : 'text-white'}`}>{service.title}</h3>
-                    <p className="text-slate-400 text-xs leading-relaxed">{service.description}</p>
+                    <h3
+                      className={`font-serif-luxury text-lg font-bold mb-2 ${service.highlight ? "gold-text" : "text-white"}`}
+                    >
+                      {service.title}
+                    </h3>
+                    <p className="text-slate-400 text-xs leading-relaxed">
+                      {service.description}
+                    </p>
                   </div>
                   {service.highlight && (
                     <a
@@ -852,7 +1205,6 @@ export default function LetProperties() {
         </div>
       </section>
 
-      
       <section className="py-20 bg-[#071B35]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -870,8 +1222,12 @@ export default function LetProperties() {
                   <div className="w-10 h-10 rounded-xl gold-bg flex items-center justify-center mx-auto mb-3">
                     <Icon className="w-5 h-5 text-[#071B35]" />
                   </div>
-                  <p className="font-serif-luxury text-3xl sm:text-4xl font-bold gold-text">{stat.value}</p>
-                  <p className="text-slate-400 text-xs mt-1 font-medium">{stat.label}</p>
+                  <p className="font-serif-luxury text-3xl sm:text-4xl font-bold gold-text">
+                    {stat.value}
+                  </p>
+                  <p className="text-slate-400 text-xs mt-1 font-medium">
+                    {stat.label}
+                  </p>
                 </motion.div>
               );
             })}
@@ -889,7 +1245,8 @@ export default function LetProperties() {
                 Featured <span className="gold-text">Rental Properties</span>
               </h2>
               <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-                Premium properties available to let now — professionally managed and immediately available.
+                Premium properties available to let now — professionally managed
+                and immediately available.
               </p>
             </FadeInUp>
 
@@ -898,9 +1255,7 @@ export default function LetProperties() {
                 Loading exclusive rentals...
               </div>
             ) : error ? (
-              <div className="py-12 text-center text-red-400">
-                {error}
-              </div>
+              <div className="py-12 text-center text-red-400">{error}</div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {rentalProperties.map((property, i) => (
@@ -965,11 +1320,13 @@ export default function LetProperties() {
               Stress-Free Lettings
             </div>
             <h2 className="font-serif-luxury text-4xl sm:text-6xl font-bold text-white leading-tight">
-              Looking for Stress-Free<br />
+              Looking for Stress-Free
+              <br />
               <span className="gold-text">Property Management?</span>
             </h2>
             <p className="mt-5 text-slate-300 text-lg max-w-xl mx-auto leading-relaxed">
-              Let us handle everything — from finding quality tenants to managing your property day to day. Completely stress-free.
+              Let us handle everything — from finding quality tenants to
+              managing your property day to day. Completely stress-free.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
@@ -990,7 +1347,6 @@ export default function LetProperties() {
           </FadeInUp>
         </div>
       </section>
-
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Phone, Mail, Clock } from 'lucide-react';
 import rightmoveLogo from '../assets/Rightmove.png';
 import onthemarketLogo from '../assets/Onthemarket.png';
 import { companyInfo } from '../utils/companyInfo';
+import estatelogo from '../assets/fkco-estate-logo4.png';
 
 export default function Footer({ onOpenValuationModal }) {
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -25,7 +26,7 @@ export default function Footer({ onOpenValuationModal }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <img src="/fkco-estate-logo.svg" alt="FK&CO Estate logo" className="brand-logo brand-logo-footer" />
+              <img src="/fkco-estate-logo4.png" alt="FK&CO Estate logo" className="brand-logo brand-logo-footer" />
             </div>
             <p className="text-slate-400 text-xs font-light leading-relaxed max-w-sm">
               {companyInfo.name} is a real estate agency built on transparency, deep Birmingham market intelligence, and uncompromised client dedication.
