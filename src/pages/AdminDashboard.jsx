@@ -186,7 +186,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-[#080E1E] text-slate-200 p-6 md:p-10 font-sans">
       <header className="flex flex-col md:flex-row justify-between items-center pb-6 border-b border-[#D4AF37]/20 gap-4">
         <div className="flex items-center gap-3">
-          <img src="/fkco-estate-logo.svg" alt="FK&CO Estate logo" className="brand-logo brand-logo-admin" />
+          <img src="/fkco-estate-logo4.png" alt="FK&CO Estate logo" className="brand-logo brand-logo-admin" />
         </div>
 
         <div className="flex items-center gap-4">
