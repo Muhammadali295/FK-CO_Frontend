@@ -13,7 +13,6 @@ export default function Hero({ onOpenValuationModal, onExploreClick }) {
           alt="Luxury Birmingham Property"
           className="w-full h-full object-cover scale-105 filter brightness-75"
         />
-        {/* Dark Navy Dual Gradients */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#051329]/95 via-[#071B35]/80 to-[#051329]/95" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#051329] via-transparent to-[#051329]/80" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-900/10 via-transparent to-transparent" />
