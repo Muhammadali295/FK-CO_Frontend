@@ -13,7 +13,6 @@ import tdsLogo from '../assets/tds.png'; // 🚀 NEW: TDS Logo imported here
 export default function Footer() {
   const [isPrsModalOpen, setIsPrsModalOpen] = useState(false);
 
-  // Security handler to block right click and copy
   const handleSecurity = (e) => {
     e.preventDefault();
   };
