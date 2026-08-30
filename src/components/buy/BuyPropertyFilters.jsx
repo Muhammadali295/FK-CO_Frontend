@@ -13,8 +13,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const FILTER_SELECT_CLASS =
-  'w-full bg-[#051329]/90 border border-white/15 rounded-xl px-3.5 py-3 text-sm text-slate-200 focus:outline-none focus:border-[#D4A44A] transition-colors cursor-pointer';
+const FILTER_BASE_CLASS =
+  'w-full bg-[#051329]/90 border border-white/15 rounded-xl px-3.5 py-3 text-sm text-slate-200 focus:outline-none focus:border-[#D4A44A] transition-colors placeholder:text-slate-500';
 
 const FILTER_LABEL_CLASS =
   'text-xs font-semibold text-slate-300 flex items-center gap-1.5';
@@ -22,7 +22,7 @@ const FILTER_LABEL_CLASS =
 export default function BuyPropertyFilters({ filterState, setFilterState, onSearch, onResetFilters }) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const handleSelectChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFilterState((prev) => ({ ...prev, [name]: value }));
   };
@@ -31,27 +31,20 @@ export default function BuyPropertyFilters({ filterState, setFilterState, onSear
 
   const filterFields = (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* LOCATION - Now an Input field */}
       <div className="space-y-1.5">
         <label className={FILTER_LABEL_CLASS}>
           <MapPin className="w-3.5 h-3.5 text-[#D4A44A]" />
           Location
         </label>
-        <select
+        <input
+          type="text"
           name="location"
           value={filterState.location || ''}
-          onChange={handleSelectChange}
-          className={FILTER_SELECT_CLASS}
-        >
-          <option value="">All Locations</option>
-          <option value="Edgbaston">Edgbaston</option>
-          <option value="Solihull">Solihull</option>
-          <option value="Sutton Coldfield">Sutton Coldfield</option>
-          <option value="Harborne">Harborne</option>
-          <option value="Moseley">Moseley</option>
-          <option value="Bournville">Bournville</option>
-          <option value="Kings Heath">Kings Heath</option>
-          <option value="City Centre">City Centre</option>
-        </select>
+          onChange={handleChange}
+          placeholder="e.g. Birmingham, Solihull..."
+          className={FILTER_BASE_CLASS}
+        />
       </div>
 
       <div className="space-y-1.5">
@@ -62,18 +55,19 @@ export default function BuyPropertyFilters({ filterState, setFilterState, onSear
         <select
           name="type"
           value={filterState.type || ''}
-          onChange={handleSelectChange}
-          className={FILTER_SELECT_CLASS}
+          onChange={handleChange}
+          className={`${FILTER_BASE_CLASS} cursor-pointer`}
         >
           <option value="">All Types</option>
-          <option value="Detached Villa">Detached Villa</option>
+          <option value="Country House">Terrace House</option>
+          <option value="Detached Villa">Detached House  </option>
+          <option value="Country House">Semi-Detached House</option>
           <option value="Penthouse Apartment">Penthouse Apartment</option>
-          <option value="Country House">Country House</option>
-          <option value="Period Property">Period Property</option>
+          {/* <option value="Period Property">Period Property</option> */}
           <option value="Townhouse">Townhouse</option>
-          <option value="Contemporary Home">Contemporary Home</option>
-          <option value="Heritage Home">Heritage Home</option>
-          <option value="Executive Home">Executive Home</option>
+          {/* <option value="Contemporary Home">Contemporary Home</option> */}
+          {/* <option value="Heritage Home">Heritage Home</option> */}
+          {/* <option value="Executive Home">Executive Home</option> */}
         </select>
       </div>
 
@@ -85,10 +79,13 @@ export default function BuyPropertyFilters({ filterState, setFilterState, onSear
         <select
           name="minPrice"
           value={filterState.minPrice || ''}
-          onChange={handleSelectChange}
-          className={FILTER_SELECT_CLASS}
+          onChange={handleChange}
+          className={`${FILTER_BASE_CLASS} cursor-pointer`}
         >
           <option value="">No Minimum</option>
+          <option value="50000">£50,000</option>
+          <option value="100000">£100,000</option>
+          <option value="250000">£250,000</option>
           <option value="500000">£500,000</option>
           <option value="750000">£750,000</option>
           <option value="1000000">£1,000,000</option>
@@ -105,10 +102,14 @@ export default function BuyPropertyFilters({ filterState, setFilterState, onSear
         <select
           name="maxPrice"
           value={filterState.maxPrice || ''}
-          onChange={handleSelectChange}
-          className={FILTER_SELECT_CLASS}
+          onChange={handleChange}
+          className={`${FILTER_BASE_CLASS} cursor-pointer`}
         >
           <option value="">No Maximum</option>
+          <option value="100000">£100,000</option>
+          <option value="250000">£250,000</option>
+          <option value="500000">£500,000</option>
+          <option value="750000">£750,000</option>
           <option value="1000000">£1,000,000</option>
           <option value="1500000">£1,500,000</option>
           <option value="2000000">£2,000,000</option>
@@ -125,10 +126,11 @@ export default function BuyPropertyFilters({ filterState, setFilterState, onSear
         <select
           name="bedrooms"
           value={filterState.bedrooms || ''}
-          onChange={handleSelectChange}
-          className={FILTER_SELECT_CLASS}
+          onChange={handleChange}
+          className={`${FILTER_BASE_CLASS} cursor-pointer`}
         >
           <option value="">Any Bedrooms</option>
+          <option value="1">1+ Beds</option>
           <option value="2">2+ Beds</option>
           <option value="3">3+ Beds</option>
           <option value="4">4+ Beds</option>
@@ -145,10 +147,11 @@ export default function BuyPropertyFilters({ filterState, setFilterState, onSear
         <select
           name="bathrooms"
           value={filterState.bathrooms || ''}
-          onChange={handleSelectChange}
-          className={FILTER_SELECT_CLASS}
+          onChange={handleChange}
+          className={`${FILTER_BASE_CLASS} cursor-pointer`}
         >
           <option value="">Any Bathrooms</option>
+          <option value="1">1+ Baths</option>
           <option value="2">2+ Baths</option>
           <option value="3">3+ Baths</option>
           <option value="4">4+ Baths</option>
@@ -164,13 +167,14 @@ export default function BuyPropertyFilters({ filterState, setFilterState, onSear
         <select
           name="listingStatus"
           value={filterState.listingStatus || ''}
-          onChange={handleSelectChange}
-          className={FILTER_SELECT_CLASS}
+          onChange={handleChange}
+          className={`${FILTER_BASE_CLASS} cursor-pointer`}
         >
           <option value="">All Statuses</option>
           <option value="Available">Available</option>
           <option value="Under Offer">Under Offer</option>
           <option value="Sold STC">Sold STC</option>
+          <option value="Sold">Sold</option>
         </select>
       </div>
 

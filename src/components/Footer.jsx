@@ -36,10 +36,10 @@ export default function Footer() {
                 />
               </div>
               <p className="text-slate-400 text-xs font-light leading-relaxed max-w-sm">
-                FK&COEstate<br/><br/>
-                FK & CO PROPERTY GROUP LTD Company number 17319471 <br/>
-                Registered office address C/O Bluewater Quadrant
-                Court, 49 Calthorpe Road, Birmingham, England, B15 1TH
+                FK&COEstate is a trading name of:
+                FK & CO PROPERTY GROUP LTD<br/>
+                Registered in England and Wales.  Company No. 17319471. Registerd Office address:
+                C/O Bluewater Quadrant , Court, 49 Calthorpe Road, Birmingham, England, B15 1TH
               </p>
               
               {/* Social Icons */}
