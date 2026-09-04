@@ -30,7 +30,7 @@ export default function AddProperty() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle File Selection (Max 5)
+  // Handle File Selection (Max 25)
   const handleImageChange = (e) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
@@ -216,14 +216,14 @@ export default function AddProperty() {
           {/* Image Upload & Reorder Field */}
           <div>
             <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
-              Property Images (Max 5)
+              Property Images (Max 25)
             </label>
             <input
               type="file"
               multiple
               accept="image/*"
               onChange={handleImageChange}
-              disabled={imageFiles.length >= 5}
+              disabled={imageFiles.length >= 25}
               className="w-full bg-[#132238] border border-white/10 text-slate-300 p-2.5 rounded-lg text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#D4AF37] file:text-[#080E1E] hover:file:bg-[#c5a059] cursor-pointer disabled:opacity-50"
             />
             
@@ -231,7 +231,7 @@ export default function AddProperty() {
             {imageFiles.length > 0 && (
               <div className="mt-4 space-y-3">
                 <p className="text-xs text-[#8899A6]">
-                  Drag or use arrows to set the main picture (first image). {imageFiles.length}/5 uploaded.
+                  Drag or use arrows to set the main picture (first image). {imageFiles.length}/25 uploaded.
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {imageFiles.map((img, index) => (
