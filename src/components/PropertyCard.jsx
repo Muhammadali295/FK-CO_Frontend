@@ -5,6 +5,18 @@ import { motion } from 'framer-motion';
 export default function PropertyCard({ property, viewType = 'grid', onSelect, isSaved, onToggleSave }) {
   const isList = viewType === 'list';
 
+  // 🚀 FIXED: Smart Status Handling (handles both 'status' and 'listingStatus', case-insensitive)
+  const displayStatus = property.listingStatus || property.status || 'Available';
+  const statusLower = displayStatus.toLowerCase();
+  
+  const isAvailable = statusLower === 'available';
+  const isUnderOffer = statusLower === 'under offer';
+  
+  // Format the purpose for the gold badge (e.g., 'buy' -> 'For Sale', 'rent' -> 'To Let')
+  const purposeText = property.purpose?.toLowerCase() === 'buy' ? 'For Sale' 
+                    : (property.purpose?.toLowerCase() === 'rent' || property.purpose?.toLowerCase() === 'let') ? 'To Let' 
+                    : (property.purpose || property.type || 'Property');
+
   return (
     <motion.div
       layout
@@ -30,20 +42,23 @@ export default function PropertyCard({ property, viewType = 'grid', onSelect, is
 
         {/* Status & Tag Badges */}
         <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+          
+          {/* Gold Badge: Shows "For Sale" or "To Let" */}
           <span className="px-3 py-1 rounded-full gold-bg text-[#071B35] text-xs font-bold uppercase tracking-wider shadow-lg">
-            {property.purpose || property.status}
+            {purposeText}
           </span>
-          {property.listingStatus && (
-            <span className={`px-3 py-1 rounded-full backdrop-blur-md text-xs font-semibold border ${
-              property.listingStatus === 'Available'
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                : property.listingStatus === 'Under Offer'
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                  : 'bg-slate-500/20 text-slate-300 border-slate-500/40'
-            }`}>
-              {property.listingStatus}
-            </span>
-          )}
+          
+          {/* 🚀 Green/Amber/Grey Status Badge: Shows "Available", "Under Offer" etc. */}
+          <span className={`px-3 py-1 rounded-full backdrop-blur-md text-xs font-semibold border capitalize ${
+            isAvailable
+              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' // Green for Available
+              : isUnderOffer
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' // Yellow for Under Offer
+                : 'bg-slate-500/20 text-slate-300 border-slate-500/40' // Grey for Sold/Others
+          }`}>
+            {displayStatus}
+          </span>
+
           {property.tag && (
             <span className="px-3 py-1 rounded-full bg-[#051329]/80 backdrop-blur-md text-slate-200 border border-white/20 text-xs font-medium">
               {property.tag}
