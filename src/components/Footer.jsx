@@ -14,7 +14,7 @@ export default function Footer() {
   const [isPrsModalOpen, setIsPrsModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false); // 🚀 NEW: Privacy Policy State
 
-  // Security handler to block right click copy (for PRS PDF)
+  // Security to block right click copy (for PRS PDF)
   const handleSecurity = (e) => {
     e.preventDefault();
   };
