@@ -22,7 +22,7 @@ import {
   CheckCircle2,
   MapPin,
 } from "lucide-react";
-import { Link, useOutletContext } from "react-router-dom"; // 🚀 useOutletContext imported
+import { Link, useOutletContext } from "react-router-dom";
 import Testimonials from "../components/Testimonials";
 import PropertyCard from "../components/PropertyCard";
 
@@ -585,7 +585,6 @@ function ValuationForm() {
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function SellProperties() {
-  // 🚀 FIXED: Added onSelectProperty from useOutletContext
   const { onSelectProperty } = useOutletContext(); 
   const [savedProperties, setSavedProperties] = useState([]);
   const [showMore, setShowMore] = useState(false);
@@ -790,7 +789,7 @@ export default function SellProperties() {
       {(loading || error || sellProperties.length > 0) && (
         <section className="py-24 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <FadeInUp className="text-center mb-14">
               <SectionLabel>Featured Portfolio</SectionLabel>
               <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
@@ -815,7 +814,7 @@ export default function SellProperties() {
                     key={property.id}
                     property={property}
                     viewType="grid"
-                    onSelect={() => onSelectProperty(property)} // 🚀 FIXED: Passed actual function here
+                    onSelect={onSelectProperty} // 🚀 FIXED: Passed direct reference here
                     isSaved={savedProperties.includes(property.id)}
                     onToggleSave={handleToggleSave}
                   />

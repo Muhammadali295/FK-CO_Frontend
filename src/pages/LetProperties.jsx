@@ -1105,7 +1105,7 @@ export default function LetProperties() {
                     property={property}
                     viewType="grid"
                     // 🚀 FIXED: Added onSelect function
-                    onSelect={() => onSelectProperty(property)}
+                    onSelect={onSelectProperty}
                     isSaved={savedProperties.includes(property.id)}
                     onToggleSave={handleToggleSave}
                   />
