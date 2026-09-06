@@ -5,7 +5,6 @@ import rightmoveLogo from '../assets/Rightmove.png';
 import onthemarketLogo from '../assets/Onthemarket.png';
 import { companyInfo } from '../utils/companyInfo';
 
-// Imported Files
 import prsCertificatePDF from '../assets/PRS_Membership_Certificate.pdf';
 import prsLogo from '../assets/PRS_Logo_high.png'; 
 import tdsLogo from '../assets/tds.png'; 
