@@ -1,4 +1,3 @@
-// src/pages/AddProperty.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
@@ -10,7 +9,6 @@ export default function AddProperty() {
   const [loading, setLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   
-  // Store objects { file, previewUrl, id } for sorting and previews
   const [imageFiles, setImageFiles] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -30,14 +28,13 @@ export default function AddProperty() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle File Selection (Max 5)
   const handleImageChange = (e) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
       
-      if (imageFiles.length + newFiles.length > 25) {
-        alert('You can only upload a maximum of 25 images per property.');
-        e.target.value = null; // reset input
+      if (imageFiles.length + newFiles.length > 15) {
+        alert('You can only upload a maximum of 15 images per property.');
+        e.target.value = null;
         return;
       }
 
@@ -48,7 +45,7 @@ export default function AddProperty() {
       }));
 
       setImageFiles(prev => [...prev, ...newImageObjects]);
-      e.target.value = null; // reset input to allow selecting same file again if removed
+      e.target.value = null;
     }
   };
 
@@ -67,14 +64,12 @@ export default function AddProperty() {
     setImageFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Upload Images directly to Supabase Storage Bucket ('property-images')
   const uploadImagesToSupabase = async () => {
     if (!imageFiles.length) return [];
     
     setUploadingImages(true);
     const uploadedUrls = [];
 
-    // Loop maintains the array order defined by the admin
     for (const imgObj of imageFiles) {
       const fileExt = imgObj.file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
@@ -150,7 +145,6 @@ export default function AddProperty() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Title */}
           <div>
             <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
               Property Title
@@ -165,7 +159,6 @@ export default function AddProperty() {
             />
           </div>
 
-          {/* Listing Type & Price */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
@@ -185,7 +178,6 @@ export default function AddProperty() {
             </div>
           </div>
 
-          {/* Specs */}
           <div className="grid grid-cols-3 gap-3">
             <div>
               <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-2">Bedrooms</label>
@@ -201,7 +193,6 @@ export default function AddProperty() {
             </div>
           </div>
 
-          {/* Location */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-[#D4AF37] text-xs uppercase font-semibold mb-2">City</label>
@@ -213,25 +204,23 @@ export default function AddProperty() {
             </div>
           </div>
 
-          {/* Image Upload & Reorder Field */}
           <div>
             <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
-              Property Images (Max 5)
+              Property Images (Max 15)
             </label>
             <input
               type="file"
               multiple
               accept="image/*"
               onChange={handleImageChange}
-              disabled={imageFiles.length >= 5}
+              disabled={imageFiles.length >= 15}
               className="w-full bg-[#132238] border border-white/10 text-slate-300 p-2.5 rounded-lg text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#D4AF37] file:text-[#080E1E] hover:file:bg-[#c5a059] cursor-pointer disabled:opacity-50"
             />
             
-            {/* Image Preview Grid */}
             {imageFiles.length > 0 && (
               <div className="mt-4 space-y-3">
                 <p className="text-xs text-[#8899A6]">
-                  Drag or use arrows to set the main picture (first image). {imageFiles.length}/5 uploaded.
+                  Drag or use arrows to set the main picture (first image). {imageFiles.length}/15 uploaded.
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {imageFiles.map((img, index) => (
@@ -244,7 +233,6 @@ export default function AddProperty() {
                         </span>
                       )}
 
-                      {/* Hover Controls */}
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <button type="button" onClick={() => moveImage(index, 'left')} disabled={index === 0} className="p-1.5 bg-white/20 hover:bg-[#D4AF37] hover:text-black rounded text-white disabled:opacity-30 cursor-pointer transition">
                           <ArrowLeft className="w-3.5 h-3.5" />
@@ -263,7 +251,6 @@ export default function AddProperty() {
             )}
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-[#D4AF37] text-xs uppercase tracking-widest font-semibold mb-2">
               Description
