@@ -47,94 +47,122 @@ export default function FeaturedProperties({ properties, onSelectProperty, filte
 
         {/* Properties Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {properties.map((property, index) => (
-            <motion.div
-              key={property.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="glass-card rounded-3xl overflow-hidden group flex flex-col justify-between"
-            >
-              {/* Card Image Container */}
-              <div className="relative h-64 overflow-hidden">
-                <img
-                  src={property.image}
-                  alt={property.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out filter brightness-95"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#071B35] via-transparent to-black/30" />
+          {properties.map((property, index) => {
+            // 🚀 FIXED: Smart Status Handling (handles both 'status' and 'listingStatus', case-insensitive)
+            const displayStatus = property.listingStatus || property.status || 'Available';
+            const statusLower = displayStatus.toLowerCase();
+            
+            const isAvailable = statusLower === 'available';
+            const isUnderOffer = statusLower === 'under offer';
+            
+            // Format the purpose for the gold badge
+            const purposeText = property.purpose?.toLowerCase() === 'buy' ? 'For Sale' 
+                              : (property.purpose?.toLowerCase() === 'rent' || property.purpose?.toLowerCase() === 'let') ? 'To Let' 
+                              : (property.purpose || property.type || 'Property');
 
-                {/* Status & Tag Badges */}
-                <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                  <span className="px-3 py-1 rounded-full gold-bg text-[#071B35] text-xs font-bold uppercase tracking-wider shadow-lg">
-                    {property.status}
-                  </span>
-                  {property.tag && (    
-                    <span className="px-3 py-1 rounded-full bg-[#051329]/80 backdrop-blur-md text-slate-200 border border-white/20 text-xs font-medium">
-                      {property.tag}
+            return (
+              <motion.div
+                key={property.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="glass-card rounded-3xl overflow-hidden group flex flex-col justify-between"
+              >
+                {/* Card Image Container */}
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={property.image}
+                    alt={property.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out filter brightness-95"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#071B35] via-transparent to-black/30" />
+
+                  {/* Status & Tag Badges */}
+                  <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                    
+                    {/* Gold Badge: Shows "For Sale" or "To Let" */}
+                    <span className="px-3 py-1 rounded-full gold-bg text-[#071B35] text-xs font-bold uppercase tracking-wider shadow-lg">
+                      {purposeText}
                     </span>
-                  )}
-                </div>
 
-                {/* Price Tag Overlay */}
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                  <span className="text-2xl font-serif-luxury font-bold text-white drop-shadow-md">
-                    {property.priceFormatted}
-                  </span>
-                  <span className="text-xs bg-black/50 backdrop-blur-md text-slate-300 px-2.5 py-1 rounded-lg border border-white/10">
-                    EPC: {property.epcRating}
-                  </span>
-                </div>
-              </div>
+                    {/* 🚀 Green/Amber/Grey Status Badge */}
+                    <span className={`px-3 py-1 rounded-full backdrop-blur-md text-xs font-semibold border capitalize ${
+                      isAvailable
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' // Green for Available
+                        : isUnderOffer
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' // Yellow for Under Offer
+                          : 'bg-slate-500/20 text-slate-300 border-slate-500/40' // Grey for Sold/Others
+                    }`}>
+                      {displayStatus}
+                    </span>
 
-              {/* Card Content */}
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-1.5 text-xs text-[#D4A44A] mb-2 font-medium">
-                    <MapPin className="w-3.5 h-3.5" />
-                    <span>{property.location}</span>
+                    {property.tag && (    
+                      <span className="px-3 py-1 rounded-full bg-[#051329]/80 backdrop-blur-md text-slate-200 border border-white/20 text-xs font-medium">
+                        {property.tag}
+                      </span>
+                    )}
                   </div>
 
-                  <h3 className="font-serif-luxury text-xl font-bold text-white group-hover:text-[#D4A44A] transition-colors mb-2">
-                    {property.title}
-                  </h3>
-
-                  <p className="text-slate-300 text-xs line-clamp-2 leading-relaxed font-light mb-6">
-                    {property.description}
-                  </p>
+                  {/* Price Tag Overlay */}
+                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                    <span className="text-2xl font-serif-luxury font-bold text-white drop-shadow-md">
+                      {property.priceFormatted}
+                    </span>
+                    <span className="text-xs bg-black/50 backdrop-blur-md text-slate-300 px-2.5 py-1 rounded-lg border border-white/10">
+                      EPC: {property.epcRating}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Specs Row */}
-                <div>
-                  <div className="grid grid-cols-3 gap-1 py-3 border-y border-white/10 text-slate-300 text-[10px] min-[375px]:text-xs mb-6">
-                    <div className="flex items-center gap-1">
-                      <Bed className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
-                      <span>{property.bedrooms} Beds</span>
+                {/* Card Content */}
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-1.5 text-xs text-[#D4A44A] mb-2 font-medium">
+                      <MapPin className="w-3.5 h-3.5" />
+                      <span>{property.location}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Bath className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
-                      <span>{property.bathrooms} Baths</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Maximize className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
-                      <span className="truncate">{property.areaSqFt} sq ft</span>
-                    </div>
+
+                    <h3 className="font-serif-luxury text-xl font-bold text-white group-hover:text-[#D4A44A] transition-colors mb-2">
+                      {property.title}
+                    </h3>
+
+                    <p className="text-slate-300 text-xs line-clamp-2 leading-relaxed font-light mb-6">
+                      {property.description}
+                    </p>
                   </div>
 
-                  {/* View Details Button */}
-                  <button
-                    onClick={() => onSelectProperty(property)}
-                    className="w-full py-3 rounded-xl bg-white/5 hover:bg-[#D4A44A] hover:text-[#071B35] border border-white/10 hover:border-[#D4A44A] text-slate-200 text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer group/btn"
-                  >
-                    <Eye className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                    <span>View Details</span>
-                  </button>
-                </div>
+                  {/* Specs Row */}
+                  <div>
+                    <div className="grid grid-cols-3 gap-1 py-3 border-y border-white/10 text-slate-300 text-[10px] min-[375px]:text-xs mb-6">
+                      <div className="flex items-center gap-1">
+                        <Bed className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
+                        <span>{property.bedrooms} Beds</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Bath className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
+                        <span>{property.bathrooms} Baths</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Maximize className="w-3.5 h-3.5 text-[#D4A44A] shrink-0" />
+                        <span className="truncate">{property.areaSqFt} sq ft</span>
+                      </div>
+                    </div>
 
-              </div>
-            </motion.div>
-          ))}
+                    {/* View Details Button */}
+                    <button
+                      onClick={() => onSelectProperty(property)}
+                      className="w-full py-3 rounded-xl bg-white/5 hover:bg-[#D4A44A] hover:text-[#071B35] border border-white/10 hover:border-[#D4A44A] text-slate-200 text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer group/btn"
+                    >
+                      <Eye className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                      <span>View Details</span>
+                    </button>
+                  </div>
+
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
       </div>

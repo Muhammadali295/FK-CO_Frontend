@@ -22,7 +22,7 @@ import {
   CheckCircle2,
   MapPin,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import Testimonials from "../components/Testimonials";
 import PropertyCard from "../components/PropertyCard";
 
@@ -127,13 +127,6 @@ const SELLING_STEPS = [
       "We liaise with solicitors and all parties to ensure a smooth, stress-free exchange and completion.",
   },
 ];
-
-// const STATS = [
-//   { value: "1,000+", label: "Properties Sold", icon: Home },
-//   { value: "98%", label: "Client Satisfaction", icon: Star },
-//   { value: "15+", label: "Years Experience", icon: Award },
-//   { value: "24hrs", label: "Average Response Time", icon: Clock },
-// ];
 
 const FAQ_ITEMS = [
   {
@@ -592,6 +585,7 @@ function ValuationForm() {
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function SellProperties() {
+  const { onSelectProperty } = useOutletContext(); 
   const [savedProperties, setSavedProperties] = useState([]);
   const [showMore, setShowMore] = useState(false);
 
@@ -627,12 +621,12 @@ export default function SellProperties() {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#071B35]/70 via-[#071B35]/60 to-[#071B35]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#071B35]/80 via-transparent to-[#071B35]/40" />
-
+          
           {/* Dynamic Blur Overlay */}
-          <div
+          <div 
             className={`absolute inset-0 bg-[#051329]/60 backdrop-blur-md transition-all duration-700 ease-in-out ${
               showMore ? "opacity-100 visible" : "opacity-0 invisible"
-            }`}
+            }`} 
           />
         </div>
 
@@ -682,31 +676,21 @@ export default function SellProperties() {
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   className="overflow-hidden"
                 >
-                  <div className="pt-6 space-y-5 text-sm sm:text-base text-slate-300 font-light leading-relaxed text-left sm:text-left">
+                  <div className="pt-6 space-y-5 text-sm sm:text-base text-slate-300 font-light leading-relaxed text-left sm:text-center">
                     <p>
-                      Selling your home can be one of the biggest financial and
-                      emotional decisions you will make.
+                      Selling your home can be one of the biggest financial and emotional decisions you will make.
                     </p>
                     <p>
-                      You need an agent who understands that getting the right
-                      result is not simply about putting a property online. It
-                      is about presentation, marketing, communication,
-                      negotiation and having someone beside you who genuinely
-                      takes responsibility for progressing your sale.
+                      You need an agent who understands that getting the right result is not simply about putting a property online. It is about presentation, marketing, communication, negotiation and having someone beside you who genuinely takes responsibility for progressing your sale.
                     </p>
                     <p>
-                      We take the time to understand your property, your
-                      circumstances and what you want to achieve before
-                      recommending the best way forward.
+                      We take the time to understand your property, your circumstances and what you want to achieve before recommending the best way forward.
                     </p>
                     <p>
-                      From the first valuation to handing over the keys, our aim
-                      is to make you feel informed, supported and confident that
-                      your property is receiving the attention it deserves.
+                      From the first valuation to handing over the keys, our aim is to make you feel informed, supported and confident that your property is receiving the attention it deserves.
                     </p>
                     <p className="font-bold text-[#D4A44A] pt-2 text-lg">
-                      Your home matters. Your move matters. And the result
-                      matters.
+                      Your home matters. Your move matters. And the result matters.
                     </p>
                   </div>
                 </motion.div>
@@ -718,13 +702,9 @@ export default function SellProperties() {
               className="mt-6 text-[#D4A44A] hover:text-white transition-colors text-sm font-semibold uppercase tracking-wider inline-flex items-center gap-1.5 focus:outline-none"
             >
               {showMore ? (
-                <>
-                  See Less <ChevronUp className="w-4 h-4" />
-                </>
+                <>See Less <ChevronUp className="w-4 h-4" /></>
               ) : (
-                <>
-                  See More <ChevronDown className="w-4 h-4" />
-                </>
+                <>See More <ChevronDown className="w-4 h-4" /></>
               )}
             </button>
           </motion.div>
@@ -809,15 +789,14 @@ export default function SellProperties() {
       {(loading || error || sellProperties.length > 0) && (
         <section className="py-24 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <FadeInUp className="text-center mb-14">
               <SectionLabel>Featured Portfolio</SectionLabel>
               <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
                 Properties <span className="gold-text">For Sale</span>
               </h2>
               <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-                Explore our exclusive collection of premium properties currently
-                on the market.
+                Explore our exclusive collection of premium properties currently on the market.
               </p>
             </FadeInUp>
 
@@ -835,7 +814,7 @@ export default function SellProperties() {
                     key={property.id}
                     property={property}
                     viewType="grid"
-                    onSelect={() => {}}
+                    onSelect={onSelectProperty} // 🚀 FIXED: Passed direct reference here
                     isSaved={savedProperties.includes(property.id)}
                     onToggleSave={handleToggleSave}
                   />
@@ -965,37 +944,6 @@ export default function SellProperties() {
           </div>
         </div>
       </section>
-
-      {/* ── STATS ── */}
-      {/* <section className="py-20 bg-[#051329]/60 border-y border-[#D4A44A]/10">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {STATS.map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="glass-card rounded-2xl p-6 text-center"
-                >
-                  <div className="w-10 h-10 rounded-xl gold-bg flex items-center justify-center mx-auto mb-3">
-                    <Icon className="w-5 h-5 text-[#071B35]" />
-                  </div>
-                  <p className="font-serif-luxury text-3xl sm:text-4xl font-bold gold-text">
-                    {stat.value}
-                  </p>
-                  <p className="text-slate-400 text-xs mt-1 font-medium">
-                    {stat.label}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section> */}
 
       {/* ── TESTIMONIALS ── */}
       <Testimonials />

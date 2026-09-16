@@ -9,6 +9,7 @@ export default function AddProperty() {
   const [loading, setLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   
+  // Store objects { file, previewUrl, id } for sorting and previews
   const [imageFiles, setImageFiles] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -28,13 +29,15 @@ export default function AddProperty() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle File Selection (Max 15)
   const handleImageChange = (e) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
       
+      // FIXED: Changed to 15 to allow the new limit
       if (imageFiles.length + newFiles.length > 15) {
         alert('You can only upload a maximum of 15 images per property.');
-        e.target.value = null;
+        e.target.value = null; // reset input
         return;
       }
 
@@ -45,7 +48,7 @@ export default function AddProperty() {
       }));
 
       setImageFiles(prev => [...prev, ...newImageObjects]);
-      e.target.value = null;
+      e.target.value = null; // reset input to allow selecting same file again if removed
     }
   };
 
@@ -64,12 +67,14 @@ export default function AddProperty() {
     setImageFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Upload Images directly to Supabase Storage Bucket ('property-images')
   const uploadImagesToSupabase = async () => {
     if (!imageFiles.length) return [];
     
     setUploadingImages(true);
     const uploadedUrls = [];
 
+    // Loop maintains the array order defined by the admin
     for (const imgObj of imageFiles) {
       const fileExt = imgObj.file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
@@ -216,7 +221,7 @@ export default function AddProperty() {
               disabled={imageFiles.length >= 15}
               className="w-full bg-[#132238] border border-white/10 text-slate-300 p-2.5 rounded-lg text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#D4AF37] file:text-[#080E1E] hover:file:bg-[#c5a059] cursor-pointer disabled:opacity-50"
             />
-            
+          
             {imageFiles.length > 0 && (
               <div className="mt-4 space-y-3">
                 <p className="text-xs text-[#8899A6]">
@@ -233,6 +238,7 @@ export default function AddProperty() {
                         </span>
                       )}
 
+                      {/* Hover Controls */}
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <button type="button" onClick={() => moveImage(index, 'left')} disabled={index === 0} className="p-1.5 bg-white/20 hover:bg-[#D4AF37] hover:text-black rounded text-white disabled:opacity-30 cursor-pointer transition">
                           <ArrowLeft className="w-3.5 h-3.5" />

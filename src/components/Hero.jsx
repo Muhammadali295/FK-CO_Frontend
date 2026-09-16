@@ -107,7 +107,7 @@ export default function Hero({ onOpenValuationModal, onExploreClick }) {
             </div>
             <div>
               <p className="text-white text-xs font-bold">Local Experts</p>
-              <p className="text-slate-400 text-[11px]">Birmingham & West Mids</p>
+              <p className="text-slate-400 text-[11px]">Birmingham , West Mids & Solihull</p>
             </div>
           </div>
 

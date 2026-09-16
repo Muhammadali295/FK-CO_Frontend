@@ -31,7 +31,7 @@ export default function Testimonials() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Header */}
+        {/* Section Header
         <div className="text-center max-w-2xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel border border-[#D4A44A]/30 text-[#D4A44A] text-xs font-semibold uppercase tracking-widest mb-4">
             <Sparkles className="w-3.5 h-3.5" />
@@ -43,10 +43,10 @@ export default function Testimonials() {
           <p className="mt-3 text-slate-300 text-base font-light">
             Read firsthand experiences from homeowners, buyers, and portfolio landlords in Birmingham.
           </p>
-        </div>
+        </div> */}
 
         {/* Carousel Card Box */}
-        <div className="relative max-w-4xl mx-auto">
+        {/* <div className="relative max-w-4xl mx-auto">
           
           <AnimatePresence mode="wait">
             <motion.div
@@ -57,22 +57,22 @@ export default function Testimonials() {
               transition={{ duration: 0.4 }}
               className="glass-card p-6 sm:p-12 rounded-3xl border border-[#D4A44A]/30 shadow-2xl relative"
             >
-              <Quote className="w-10 h-10 sm:w-16 sm:h-16 text-[#D4A44A]/15 absolute top-4 right-4 sm:top-6 sm:right-8 pointer-events-none" />
+              <Quote className="w-10 h-10 sm:w-16 sm:h-16 text-[#D4A44A]/15 absolute top-4 right-4 sm:top-6 sm:right-8 pointer-events-none" /> */}
 
               {/* Star Rating */}
-              <div className="flex items-center gap-1.5 mb-6">
+              {/* <div className="flex items-center gap-1.5 mb-6">
                 {[...Array(current.rating)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 fill-[#D4A44A] text-[#D4A44A]" />
                 ))}
-              </div>
+              </div> */}
 
               {/* Testimonial Quote */}
-              <p className="text-slate-200 text-lg sm:text-xl font-serif-luxury italic leading-relaxed mb-8">
+              {/* <p className="text-slate-200 text-lg sm:text-xl font-serif-luxury italic leading-relaxed mb-8">
                 "{current.text}"
-              </p>
+              </p> */}
 
               {/* Client Info */}
-              <div className="flex items-center gap-3 sm:gap-4 pt-6 border-t border-white/10">
+              {/* <div className="flex items-center gap-3 sm:gap-4 pt-6 border-t border-white/10">
                 <img
                   src={current.image}
                   alt={current.name}
@@ -88,12 +88,12 @@ export default function Testimonials() {
                 </div>
               </div>
             </motion.div>
-          </AnimatePresence>
+          </AnimatePresence> */}
 
           {/* Carousel Controls */}
-          <div className="flex items-center justify-between mt-8">
+          {/* <div className="flex items-center justify-between mt-8"> */}
             {/* Dots */}
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               {TESTIMONIALS_DATA.map((_, idx) => (
                 <button
                   key={idx}
@@ -102,12 +102,12 @@ export default function Testimonials() {
                     currentIndex === idx ? 'w-8 gold-bg' : 'w-2.5 bg-white/20 hover:bg-white/40'
                   }`}
                   aria-label={`Go to slide ${idx + 1}`}
-                />
-              ))}
-            </div>
+                /> */}
+              {/* ))}
+            </div> */}
 
             {/* Arrows */}
-            <div className="flex items-center gap-3">
+            {/* <div className="flex items-center gap-3">
               <button
                 onClick={handlePrev}
                 className="p-3 rounded-full glass-panel hover:bg-[#D4A44A] text-slate-300 hover:text-[#071B35] transition-all duration-300 cursor-pointer"
@@ -119,13 +119,13 @@ export default function Testimonials() {
                 onClick={handleNext}
                 className="p-3 rounded-full glass-panel hover:bg-[#D4A44A] text-slate-300 hover:text-[#071B35] transition-all duration-300 cursor-pointer"
                 aria-label="Next testimonial"
-              >
-                <ChevronRight className="w-5 h-5" />
+              > */}
+                {/* <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           </div>
 
-        </div>
+        </div> */}
 
       </div>
     </section>

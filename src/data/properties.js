@@ -351,7 +351,7 @@ export const TESTIMONIALS_DATA = [
 export const STATS_DATA = [
   { label: 'Properties Sold & Let', value: '1,250+', detail: 'Over £450M in overall sales value' },
   { label: 'Happy High-Net Clients', value: '650+', detail: '98.4% satisfaction rating in 2025' },
-  { label: 'Years Combined Expertise', value: '18+', detail: 'Specializing in Birmingham & West Midlands' },
+  { label: 'Years Combined Expertise', value: '18+', detail: 'Specializing in Birmingham, West Midlands & Solihull' },
   { label: 'Average Days to Sale', value: '14 Days', detail: '3x faster than traditional high-street agencies' }
 ];
 
@@ -378,7 +378,7 @@ export const WHY_CHOOSE_US_DATA = [
     id: 'why-4',
     title: 'Expert Local Knowledge',
     iconName: 'Compass',
-    description: 'Deep-rooted Birmingham and West Midlands expertise in Edgbaston, Solihull, Sutton Coldfield, Harborne, and City Centre.'
+    description: 'Deep-rooted expertise in Birmingham , Sollihull and West Midlands.'
   },
   {
     id: 'why-5',

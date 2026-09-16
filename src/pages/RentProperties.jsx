@@ -5,7 +5,8 @@ import {
   CheckCircle2, ChevronDown, ChevronUp, ArrowRight, Phone, Sparkles,
   UserCheck, Clock, ShieldCheck, Zap, Heart, LayoutGrid, List
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+// 🚀 FIXED: Added useOutletContext here
+import { Link, useOutletContext } from 'react-router-dom';
 import PropertyCard from '../components/PropertyCard';
 import PropertySearch from '../components/PropertySearch';
 import Testimonials from '../components/Testimonials';
@@ -190,6 +191,8 @@ function FAQItem({ item, index }) {
 }
 
 export default function RentProperties() {
+  // 🚀 FIXED: Added onSelectProperty from useOutletContext
+  const { onSelectProperty } = useOutletContext();
   const [savedProperties, setSavedProperties] = useState([]);
   const [viewType, setViewType] = useState('grid');
   const [sortOption, setSortOption] = useState('newest');
@@ -452,7 +455,8 @@ export default function RentProperties() {
                     key={property.id}
                     property={property}
                     viewType={viewType}
-                    onSelect={() => {}}
+                    // 🚀 FIXED: Passed direct reference here
+                    onSelect={onSelectProperty}
                     isSaved={savedProperties.includes(property.id)}
                     onToggleSave={handleToggleSave}
                   />
@@ -596,7 +600,8 @@ export default function RentProperties() {
         </div>
       </section>
 
-      <Testimonials />
+      {/* ── TESTIMONIALS ── */}
+      {/* <Testimonials /> */}
 
       <section className="py-24 bg-[#051329]/40 border-t border-[#D4A44A]/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">

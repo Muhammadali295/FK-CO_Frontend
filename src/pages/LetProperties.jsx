@@ -33,7 +33,8 @@ import {
   PieChart,
   Building2,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+// 🚀 FIXED: Added useOutletContext here
+import { Link, useOutletContext } from "react-router-dom";
 import PropertyCard from "../components/PropertyCard";
 import {
   Star as StarIcon,
@@ -790,6 +791,8 @@ function RentalValuationForm() {
 }
 
 export default function LetProperties() {
+  // 🚀 FIXED: Added onSelectProperty from useOutletContext
+  const { onSelectProperty } = useOutletContext();
   const [savedProperties, setSavedProperties] = useState([]);
   const [showMore, setShowMore] = useState(false);
 
@@ -1039,7 +1042,7 @@ export default function LetProperties() {
       </section>
 
 
-      
+
       <section className="py-20 bg-[#071B35]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -1101,7 +1104,8 @@ export default function LetProperties() {
                     key={property.id}
                     property={property}
                     viewType="grid"
-                    onSelect={() => {}}
+                    // 🚀 FIXED: Added onSelect function
+                    onSelect={onSelectProperty}
                     isSaved={savedProperties.includes(property.id)}
                     onToggleSave={handleToggleSave}
                   />
@@ -1294,8 +1298,7 @@ export default function LetProperties() {
         </div>
       </section>
 
-
-      <LandlordTestimonials />
+      {/* <LandlordTestimonials /> */}
       <section className="py-24 bg-[#051329]/40 border-t border-[#D4A44A]/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInUp className="text-center mb-14">

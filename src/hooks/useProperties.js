@@ -78,7 +78,7 @@ export const useProperties = () => {
               tag: displayTag,
               listingStatus: displayListingStatus,
               description: prop.description || 'An exceptional luxury property presented by FK&CO Estate.',
-              features: ['Premium Location', 'Luxury Finish', 'Concierge Service'] // Fallback features
+              features: ['Premium Location', 'Luxury Finish'] // Fallback features
             };
           });
 
