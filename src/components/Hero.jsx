@@ -1,8 +1,9 @@
+// src/components/Hero.jsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Award, ShieldCheck, MapPin, Sparkles } from 'lucide-react';
 
-export default function Hero({ onOpenValuationModal, onExploreClick }) {
+export default function Hero({ onExploreClick }) {
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-28 pb-32 overflow-hidden">
       
@@ -75,13 +76,16 @@ export default function Hero({ onOpenValuationModal, onExploreClick }) {
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform text-[#D4A44A]" />
           </a>
 
-          <button
-            onClick={onOpenValuationModal}
+          {/* Updated Valuation Link */}
+          <a
+            href="https://valuation.fkandcoestate.com/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-full sm:w-auto px-8 py-4 rounded-full gold-bg gold-bg-hover text-[#071B35] font-bold text-base shadow-xl shadow-[#D4A44A]/25 transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer group"
           >
             <Award className="w-5 h-5" />
-            <span>Get Free Valuation</span>
-          </button>
+            <span>Get Free Instant Valuation In 60 Seconds</span>
+          </a>
         </motion.div>
 
         {/* Floating Quick Trust Badges */}

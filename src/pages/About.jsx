@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -108,57 +108,25 @@ const team = [
     name: "Faisal Khan",
     position: "Managing Director",
     bio: "Leading FK&CO with a clear focus on trust, results and lasting client relationships.",
-    // image:
-    //   "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=85",
   },
   {
     name: "Amelia Hart",
     position: "Senior Property Consultant",
     bio: "Combining thoughtful advice with a deep understanding of Birmingham’s prime residential market.",
-    // image:
-    //   "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=85",
   },
   {
     name: "Daniel Morgan",
     position: "Head of Lettings",
     bio: "Helping landlords and tenants move forward with calm, responsive and practical support.",
-    // image:
-    //   "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=85",
   },
   {
     name: "Sophie Williams",
     position: "Client Experience Manager",
     bio: "Making every interaction feel personal, clear and carefully looked after from start to finish.",
-    // image:
-    //   "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=85",
   },
 ];
 
-// const aboutStats = [
-//   {
-//     value: "1000+",
-//     label: "Properties Sold",
-//     detail: "Successful moves across the region",
-//   },
-//   {
-//     value: "500+",
-//     label: "Properties Managed",
-//     detail: "Homes and portfolios cared for",
-//   },
-//   {
-//     value: "15+",
-//     label: "Years Experience",
-//     detail: "Trusted local market knowledge",
-//   },
-//   {
-//     value: "98%",
-//     label: "Client Satisfaction",
-//     detail: "A service built around people",
-//   },
-// ];
-
 export default function About() {
-  const { onOpenValuationModal } = useOutletContext();
   const [showMore, setShowMore] = useState(false);
 
   const contact = () =>
@@ -268,12 +236,14 @@ export default function About() {
               <MessageCircle className="w-5 h-5 text-[#D4A44A]" /> Contact Our
               Team
             </button>
-            <button
-              onClick={onOpenValuationModal}
+            <a
+              href="https://valuation.fkandcoestate.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-7 py-4 rounded-full gold-bg gold-bg-hover text-[#071B35] font-bold inline-flex items-center justify-center gap-2"
             >
-              <Sparkles className="w-5 h-5" /> Get Free Valuation
-            </button>
+              <Sparkles className="w-5 h-5" /> Get Free Instant Valuation In 60 Seconds
+            </a>
           </div>
         </motion.div>
       </section>
@@ -302,16 +272,16 @@ export default function About() {
             <h2 className="mt-3 font-serif-luxury text-3xl sm:text-5xl font-bold text-white">
               Built around <span className="gold-text">people</span>
             </h2>
-            <p className="mt-6 text-slate-300 leading-relaxed">
-                    <p>
-                      Our approach is straightforward: personal service, clear
-                      communication and no unnecessary complications. Whether
-                      you are selling your home, looking for a tenant, searching
-                      for your next property or need someone to manage your
-                      investment, you will deal with people who understand the
-                      process and take responsibility for getting things done.
-                    </p>
-            </p>
+            <div className="mt-6 text-slate-300 leading-relaxed">
+              <p>
+                Our approach is straightforward: personal service, clear
+                communication and no unnecessary complications. Whether
+                you are selling your home, looking for a tenant, searching
+                for your next property or need someone to manage your
+                investment, you will deal with people who understand the
+                process and take responsibility for getting things done.
+              </p>
+            </div>
             <p className="mt-4 text-slate-300 leading-relaxed">
               From buying and selling to letting, renting and property
               management, we give every client clear advice and dependable
@@ -473,8 +443,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* <StatsSection stats={aboutStats} /> */}
-
       <section className="py-24 bg-[#071B35]/90 border-y border-[#D4A44A]/15">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
@@ -511,67 +479,6 @@ export default function About() {
         </div>
       </section>
 
-       {/* //TEAM MEMBER IMAGES SECTION */}
-       
-      {/* <section className="py-24 bg-[#051329]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-14">
-            <div>
-              <p className="text-[#D4A44A] uppercase tracking-[0.2em] text-xs font-bold">
-                The people behind the service
-              </p>
-              <h2 className="mt-3 font-serif-luxury text-3xl sm:text-5xl font-bold text-white">
-                Meet Our <span className="gold-text">Team</span>
-              </h2>
-            </div>
-            <p className="max-w-md text-sm text-slate-400">
-              A small, experienced team with the time to make every client feel
-              properly looked after.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {team.map((member, index) => (
-              <motion.article
-                key={member.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.07 }}
-                className="glass-card rounded-2xl overflow-hidden border border-white/10"
-              >
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full aspect-[4/5] object-cover"
-                />
-                <div className="p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <h3 className="font-serif-luxury text-xl font-bold text-white">
-                        {member.name}
-                      </h3>
-                      <p className="mt-1 text-xs text-[#D4A44A] font-semibold">
-                        {member.position}
-                      </p>
-                    </div>
-                    <a
-                      href="#footer"
-                      aria-label={`Professional profile for ${member.name}`}
-                      className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-[#D4A44A] transition-colors"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                  <p className="mt-4 text-xs text-slate-400 leading-relaxed">
-                    {member.bio}
-                  </p>
-                </div>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section> */}
-
       <Testimonials />
 
       <section className="py-20 bg-[#051329]">
@@ -598,13 +505,15 @@ export default function About() {
                   <MessageCircle className="w-5 h-5 text-[#D4A44A]" />
                   <Link to="/contact">Contact Us</Link>
                 </button>
-                <button
-                  onClick={onOpenValuationModal}
+                <a
+                  href="https://valuation.fkandcoestate.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="px-7 py-4 rounded-full gold-bg gold-bg-hover text-[#071B35] font-bold inline-flex items-center justify-center gap-2"
                 >
                   <Sparkles className="w-5 h-5" />
-                  Get Free Valuation
-                </button>
+                  Get Free Instant Valuation In 60 Seconds
+                </a>
               </div>
             </div>
           </div>

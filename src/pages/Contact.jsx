@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   AlertCircle,
@@ -70,7 +70,6 @@ const socialLinks = [
 ];
 
 export default function Contact() {
-  const { onOpenValuationModal } = useOutletContext();
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("idle");
   const [openFaq, setOpenFaq] = useState(null);
@@ -166,18 +165,20 @@ export default function Contact() {
             ready to help.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <button
-              onClick={onOpenValuationModal}
-              className="px-7 py-4 rounded-full gold-bg gold-bg-hover text-[#071B35] font-bold inline-flex items-center justify-center gap-2"
-            >
-              <Sparkles className="w-5 h-5" /> Get Free Valuation
-            </button>
             <Link
               to="/buy"
               className="px-7 py-4 rounded-full bg-white/10 border border-white/25 text-white font-semibold hover:bg-white/20 transition-all inline-flex items-center justify-center gap-2"
             >
               <Home className="w-5 h-5 text-[#D4A44A]" /> Browse Properties
             </Link>
+             <a
+              href="https://valuation.fkandcoestate.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-7 py-4 rounded-full gold-bg gold-bg-hover text-[#071B35] font-bold inline-flex items-center justify-center gap-2"
+            >
+              <Sparkles className="w-5 h-5" /> Get Free Instant Valuation In 60 Seconds
+            </a>
           </div>
         </motion.div>
       </section>

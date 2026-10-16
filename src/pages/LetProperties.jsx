@@ -33,7 +33,6 @@ import {
   PieChart,
   Building2,
 } from "lucide-react";
-// 🚀 FIXED: Added useOutletContext here
 import { Link, useOutletContext } from "react-router-dom";
 import PropertyCard from "../components/PropertyCard";
 import {
@@ -44,7 +43,6 @@ import {
 } from "lucide-react";
 
 import { useProperties } from "../hooks/useProperties";
-import API_BASE_URL from "../utils/api";
 
 const LANDLORD_BENEFITS = [
   {
@@ -275,17 +273,6 @@ const LANDLORD_TESTIMONIALS = [
   },
 ];
 
-const PROPERTY_TYPES = [
-  "Detached House",
-  "Semi-Detached House",
-  "Terraced House",
-  "Flat / Apartment",
-  "Bungalow",
-  "HMO",
-  "Studio",
-  "Other",
-];
-
 const FadeInUp = ({ children, delay = 0, className = "" }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
@@ -453,345 +440,7 @@ function LandlordTestimonials() {
   );
 }
 
-function RentalValuationForm() {
-  const [formData, setFormData] = useState({
-    address: "",
-    postcode: "",
-    propertyType: "",
-    bedrooms: "",
-    bathrooms: "",
-    currentRent: "",
-    ownerName: "",
-    phone: "",
-    email: "",
-    additionalInfo: "",
-    agreeContact: false,
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleReset = () => {
-    setFormData({
-      address: "",
-      postcode: "",
-      propertyType: "",
-      bedrooms: "",
-      bathrooms: "",
-      currentRent: "",
-      ownerName: "",
-      phone: "",
-      email: "",
-      additionalInfo: "",
-      agreeContact: false,
-    });
-    setSubmitted(false);
-    setErrorMsg("");
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.agreeContact) return;
-    setLoading(true);
-    setErrorMsg("");
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/leads`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          full_name: formData.ownerName,
-          email: formData.email,
-          phone: formData.phone,
-          intent: "let",
-          lead_type: "valuation",
-          property_address: `${formData.address}, ${formData.postcode}`,
-          message: `Service: Letting | Type: ${formData.propertyType} (${formData.bedrooms} Beds, ${formData.bathrooms} Baths) | Postcode: ${formData.postcode} | Est Rent: ${formData.currentRent || "Not provided"} | Notes: ${formData.additionalInfo || "None"}`,
-        }),
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        setSubmitted(true);
-      } else {
-        setErrorMsg(
-          result.error || "Failed to submit rental valuation request.",
-        );
-      }
-    } catch (err) {
-      setErrorMsg(
-        "Server connection failed. Please ensure your backend is running.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const inputClass =
-    "w-full bg-[#051329]/80 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#D4A44A]/60 focus:ring-1 focus:ring-[#D4A44A]/30 transition-all duration-200";
-  const labelClass =
-    "block text-slate-300 text-xs font-semibold uppercase tracking-wider mb-1.5";
-
-  if (submitted) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="text-center py-16 px-6"
-      >
-        <div className="w-20 h-20 rounded-full gold-bg flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#D4A44A]/30">
-          <CheckCircle2 className="w-10 h-10 text-[#071B35]" />
-        </div>
-        <h3 className="font-serif-luxury text-2xl font-bold text-white mb-3">
-          Rental Valuation Request Received!
-        </h3>
-        <p className="text-slate-300 text-sm max-w-md mx-auto mb-8">
-          Thank you,{" "}
-          <span className="text-[#D4A44A] font-semibold">
-            {formData.ownerName || "valued landlord"}
-          </span>
-          . Our lettings team will contact you within{" "}
-          <span className="text-[#D4A44A] font-semibold">24 hours</span> to
-          arrange your free rental valuation.
-        </p>
-        <button
-          onClick={handleReset}
-          className="px-8 py-3 rounded-xl border border-[#D4A44A]/40 text-[#D4A44A] text-sm font-semibold hover:bg-[#D4A44A] hover:text-[#071B35] transition-all duration-300 cursor-pointer"
-        >
-          Submit Another Request
-        </button>
-      </motion.div>
-    );
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      {errorMsg && (
-        <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-sm font-semibold text-center mb-4">
-          {errorMsg}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
-          <label className={labelClass}>Property Address *</label>
-          <input
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-            placeholder="e.g. 14 Harborne Road"
-            className={inputClass}
-          />
-        </div>
-        <div>
-          <label className={labelClass}>Postcode *</label>
-          <input
-            name="postcode"
-            value={formData.postcode}
-            onChange={handleChange}
-            required
-            placeholder="e.g. B15 3JU"
-            className={inputClass}
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div>
-          <label className={labelClass}>Property Type *</label>
-          <select
-            name="propertyType"
-            value={formData.propertyType}
-            onChange={handleChange}
-            required
-            className={inputClass}
-          >
-            <option value="">Select type...</option>
-            {PROPERTY_TYPES.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className={labelClass}>Bedrooms *</label>
-          <select
-            name="bedrooms"
-            value={formData.bedrooms}
-            onChange={handleChange}
-            required
-            className={inputClass}
-          >
-            <option value="">Select...</option>
-            {[1, 2, 3, 4, 5, 6, 7, "8+"].map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className={labelClass}>Bathrooms *</label>
-          <select
-            name="bathrooms"
-            value={formData.bathrooms}
-            onChange={handleChange}
-            required
-            className={inputClass}
-          >
-            <option value="">Select...</option>
-            {[1, 2, 3, 4, "5+"].map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div>
-        <label className={labelClass}>Current Rental Income (Optional)</label>
-        <input
-          name="currentRent"
-          value={formData.currentRent}
-          onChange={handleChange}
-          placeholder="e.g. £1,800 / pcm or 'Currently vacant'"
-          className={inputClass}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div>
-          <label className={labelClass}>Your Full Name *</label>
-          <input
-            name="ownerName"
-            value={formData.ownerName}
-            onChange={handleChange}
-            required
-            placeholder="e.g. Sarah Jones"
-            className={inputClass}
-          />
-        </div>
-        <div>
-          <label className={labelClass}>Phone Number *</label>
-          <input
-            name="phone"
-            type="tel"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            placeholder="e.g. 07700 123456"
-            className={inputClass}
-          />
-        </div>
-        <div>
-          <label className={labelClass}>Email Address *</label>
-          <input
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            placeholder="e.g. sarah@email.com"
-            className={inputClass}
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className={labelClass}>Additional Information (Optional)</label>
-        <textarea
-          name="additionalInfo"
-          value={formData.additionalInfo}
-          onChange={handleChange}
-          placeholder="Any details about your property, current situation, or specific requirements..."
-          rows={4}
-          className={`${inputClass} resize-none`}
-        />
-      </div>
-
-      <div className="flex items-start gap-3">
-        <input
-          id="agreeContactLet"
-          name="agreeContact"
-          type="checkbox"
-          checked={formData.agreeContact}
-          onChange={handleChange}
-          required
-          className="mt-1 w-4 h-4 rounded border-[#D4A44A]/40 bg-[#051329] accent-[#D4A44A] cursor-pointer shrink-0"
-        />
-        <label
-          htmlFor="agreeContactLet"
-          className="text-slate-400 text-xs leading-relaxed cursor-pointer"
-        >
-          I agree to be contacted by FK&CO Estate regarding my rental valuation
-          request. Your data is handled in accordance with our{" "}
-          <span className="text-[#D4A44A] underline underline-offset-2">
-            Privacy Policy
-          </span>
-          .
-        </label>
-      </div>
-      <div className="flex flex-col sm:flex-row gap-3 pt-2">
-        <button
-          type="submit"
-          disabled={loading || !formData.agreeContact}
-          className="flex-1 py-4 rounded-xl gold-bg text-[#071B35] font-bold text-sm uppercase tracking-wider hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
-        >
-          {loading ? (
-            <>
-              <svg
-                className="animate-spin w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8z"
-                />
-              </svg>
-              Sending Request...
-            </>
-          ) : (
-            <>
-              <BarChart3 className="w-4 h-4" />
-              Request Rental Valuation
-            </>
-          )}
-        </button>
-        <button
-          type="button"
-          onClick={handleReset}
-          className="sm:w-auto px-8 py-4 rounded-xl border border-white/15 text-slate-300 hover:text-white hover:border-white/30 text-sm font-semibold transition-all duration-300 cursor-pointer"
-        >
-          Reset
-        </button>
-      </div>
-    </form>
-  );
-}
-
 export default function LetProperties() {
-  // 🚀 FIXED: Added onSelectProperty from useOutletContext
   const { onSelectProperty } = useOutletContext();
   const [savedProperties, setSavedProperties] = useState([]);
   const [showMore, setShowMore] = useState(false);
@@ -827,7 +476,7 @@ export default function LetProperties() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#071B35]/65 via-[#071B35]/55 to-[#071B35]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#071B35]/75 via-transparent to-[#071B35]/35" />
 
-          {/* NEW: Dynamic Blur Overlay that fades in when "See More" is active */}
+          {/* Dynamic Blur Overlay that fades in when "See More" is active */}
           <div
             className={`absolute inset-0 bg-[#051329]/60 backdrop-blur-md transition-all duration-700 ease-in-out ${
               showMore ? "opacity-100 visible" : "opacity-0 invisible"
@@ -970,19 +619,22 @@ export default function LetProperties() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <a
-              href="#rental-valuation-form"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl gold-bg text-[#071B35] font-bold text-sm uppercase tracking-wider shadow-lg shadow-[#D4A44A]/30 hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2"
-            >
-              <BarChart3 className="w-4 h-4" />
-              Get Rental Valuation
-            </a>
-            <a
+            {/* <a
               href="tel:+441216306776"
               className="w-full sm:w-auto px-8 py-4 rounded-xl glass-panel border border-white/20 text-white font-semibold text-sm uppercase tracking-wider hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <Phone className="w-4 h-4" />
               Speak to a Lettings Expert
+            </a> */}
+
+             <a
+              href="https://valuation.fkandcoestate.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl gold-bg text-[#071B35] font-bold text-sm uppercase tracking-wider shadow-lg shadow-[#D4A44A]/30 hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2"
+            >
+              <BarChart3 className="w-4 h-4" />
+              Get Free Instant Valuation In 60 Seconds
             </a>
           </motion.div>
 
@@ -1012,20 +664,20 @@ export default function LetProperties() {
         </div>
       </section>
 
+      {/* ── VALUATION CTA ── */}
       <section
-        id="rental-valuation-form"
+        id="valuation-cta"
         className="py-24 bg-[#051329]/50 border-y border-[#D4A44A]/10 relative overflow-hidden"
       >
         <div className="absolute top-1/3 right-0 w-80 h-80 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInUp className="text-center mb-12">
-            <SectionLabel>Free Rental Valuation</SectionLabel>
+            <SectionLabel>Book Your Valuation</SectionLabel>
             <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight">
-              Request a <span className="gold-text">Rental Valuation</span>
+              Request a <span className="gold-text">Free Rental Valuation</span>
             </h2>
             <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-              Complete the form and our lettings team will be in touch within 24
-              hours with a precise rental estimate.
+              Find out how much your property could achieve in the current market with our instant online valuation tool.
             </p>
           </FadeInUp>
 
@@ -1034,14 +686,27 @@ export default function LetProperties() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="glass-card rounded-3xl p-6 sm:p-10 border border-[#D4A44A]/20"
+            className="glass-card rounded-3xl p-8 sm:p-14 border border-[#D4A44A]/20 text-center flex flex-col items-center justify-center bg-gradient-to-b from-white/5 to-transparent"
           >
-            <RentalValuationForm />
+            <div className="w-16 h-16 rounded-full bg-[#D4A44A]/10 flex items-center justify-center mb-6">
+              <BarChart3 className="w-8 h-8 text-[#D4A44A]" />
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-serif-luxury text-white font-bold mb-4">Instant Rental Valuation</h3>
+            <p className="text-slate-300 max-w-md mx-auto mb-8 text-sm sm:text-base">
+              Get an immediate estimate of your property's rental value based on live data and recent lets in your area.
+            </p>
+            <a
+              href="https://valuation.fkandcoestate.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-10 py-5 rounded-full gold-bg text-[#071B35] font-extrabold text-sm uppercase tracking-wider shadow-xl shadow-[#D4A44A]/30 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+            >
+              Start Free Valuation
+              <ArrowRight className="w-5 h-5" />
+            </a>
           </motion.div>
         </div>
       </section>
-
-
 
       <section className="py-20 bg-[#071B35]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1073,9 +738,6 @@ export default function LetProperties() {
         </div>
       </section>
 
-
-      
-
       {(loading || error || rentalProperties.length > 0) && (
         <section className="py-24 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
@@ -1104,7 +766,6 @@ export default function LetProperties() {
                     key={property.id}
                     property={property}
                     viewType="grid"
-                    // 🚀 FIXED: Added onSelect function
                     onSelect={onSelectProperty}
                     isSaved={savedProperties.includes(property.id)}
                     onToggleSave={handleToggleSave}
@@ -1126,11 +787,8 @@ export default function LetProperties() {
         </section>
       )}
 
-
-      
-
       <section className="py-24 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 left-0 w-80 h-80 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInUp className="text-center mb-16">
             <SectionLabel>Why Choose Us</SectionLabel>
@@ -1172,8 +830,6 @@ export default function LetProperties() {
           </div>
         </div>
       </section>
-
-      
 
       <section className="py-24 bg-[#051329]/60 border-y border-[#D4A44A]/10 relative overflow-hidden">
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#D4A44A]/5 rounded-full blur-3xl pointer-events-none" />
@@ -1285,7 +941,9 @@ export default function LetProperties() {
                   </div>
                   {service.highlight && (
                     <a
-                      href="#rental-valuation-form"
+                      href="https://valuation.fkandcoestate.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="mt-auto pt-4 text-[#D4A44A] text-xs font-semibold flex items-center gap-1 hover:gap-2 transition-all duration-200"
                     >
                       Learn More <ArrowRight className="w-3.5 h-3.5" />
@@ -1315,7 +973,7 @@ export default function LetProperties() {
           </div>
         </div>
       </section>
-
+   
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0">
           <img
@@ -1344,7 +1002,9 @@ export default function LetProperties() {
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href="#rental-valuation-form"
+                href="https://valuation.fkandcoestate.com/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-full sm:w-auto px-8 py-4 rounded-xl gold-bg text-[#071B35] font-bold text-sm uppercase tracking-wider shadow-lg shadow-[#D4A44A]/30 hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2"
               >
                 <BarChart3 className="w-4 h-4" />

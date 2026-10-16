@@ -5,7 +5,7 @@ import { Menu, X, Phone, ChevronRight, Award } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { companyInfo } from '../utils/companyInfo';
 
-export default function Navbar({ onOpenValuationModal }) {
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -101,22 +101,28 @@ export default function Navbar({ onOpenValuationModal }) {
               <span>{companyInfo.phone}</span>
             </a>
 
-            <button
-              onClick={onOpenValuationModal}
+            {/* Updated Desktop Button */}
+            <a
+              href="https://valuation.fkandcoestate.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="gold-bg gold-bg-hover text-[#071B35] px-5 py-2.5 rounded-full font-semibold text-sm tracking-wide shadow-lg shadow-[#D4A44A]/20 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2 cursor-pointer"
             >
               <Award className="w-4 h-4" />
-              <span>Book Free Valuation</span>
-            </button>
+              <span>Free Instant Valuation</span>
+            </a>
           </div>
 
           <div className="flex lg:hidden items-center gap-3">
-            <button
-              onClick={onOpenValuationModal}
+            {/* Updated Tablet Button */}
+            <a
+              href="https://valuation.fkandcoestate.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="gold-bg text-[#071B35] px-3 py-1.5 rounded-full text-xs font-bold hidden sm:block lg:hidden"
             >
               Valuation
-            </button>
+            </a>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -166,16 +172,17 @@ export default function Navbar({ onOpenValuationModal }) {
                   <span>Call {companyInfo.phone}</span>
                 </a>
 
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenValuationModal();
-                  }}
+                {/* Updated Mobile Menu Button */}
+                <a
+                  href="https://valuation.fkandcoestate.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileMenuOpen(false)}
                   className="w-full gold-bg text-[#071B35] font-semibold py-3 rounded-xl shadow-lg text-sm flex items-center justify-center gap-2"
                 >
                   <Award className="w-4 h-4" />
-                  <span>Book Free Valuation</span>
-                </button>
+                  <span>Free Instant Valuation</span>
+                </a>
               </div>
             </div>
           </motion.div>

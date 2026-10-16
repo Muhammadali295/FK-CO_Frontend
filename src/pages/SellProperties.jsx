@@ -8,18 +8,15 @@ import {
   TrendingUp,
   ShieldCheck,
   BadgePercent,
-  Home,
   Eye,
   Handshake,
   FileText,
   Clock,
-  Star,
   ChevronDown,
   ChevronUp,
   ArrowRight,
   Phone,
   Sparkles,
-  CheckCircle2,
   MapPin,
 } from "lucide-react";
 import { Link, useOutletContext } from "react-router-dom";
@@ -28,7 +25,6 @@ import PropertyCard from "../components/PropertyCard";
 
 // 1. Import the custom hook
 import { useProperties } from "../hooks/useProperties";
-import API_BASE_URL from "../utils/api";
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
 
@@ -230,358 +226,6 @@ function FAQItem({ item, index }) {
   );
 }
 
-// ─── Valuation Form ──────────────────────────────────────────────────────────
-
-const PROPERTY_TYPES = [
-  "Detached House",
-  "Semi-Detached House",
-  "Terraced House",
-  "Flat / Apartment",
-  "Bungalow",
-  "Period Property",
-  "Penthouse",
-  "Other",
-];
-
-function ValuationForm() {
-  const [formData, setFormData] = useState({
-    address: "",
-    postcode: "",
-    propertyType: "",
-    bedrooms: "",
-    bathrooms: "",
-    estimatedValue: "",
-    ownerName: "",
-    phone: "",
-    email: "",
-    additionalInfo: "",
-    agreeContact: false,
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleReset = () => {
-    setFormData({
-      address: "",
-      postcode: "",
-      propertyType: "",
-      bedrooms: "",
-      bathrooms: "",
-      estimatedValue: "",
-      ownerName: "",
-      phone: "",
-      email: "",
-      additionalInfo: "",
-      agreeContact: false,
-    });
-    setSubmitted(false);
-    setErrorMsg("");
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.agreeContact) return;
-    setLoading(true);
-    setErrorMsg("");
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/leads`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          full_name: formData.ownerName,
-          email: formData.email,
-          phone: formData.phone,
-          intent: "sell",
-          lead_type: "valuation",
-          property_address: `${formData.address}, ${formData.postcode}`,
-          message: `Service: Selling | Type: ${formData.propertyType} (${formData.bedrooms} Beds, ${formData.bathrooms} Baths) | Postcode: ${formData.postcode} | Est Value: ${formData.estimatedValue || "Not provided"} | Notes: ${formData.additionalInfo || "None"}`,
-        }),
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        setSubmitted(true);
-      } else {
-        setErrorMsg(result.error || "Failed to submit valuation request.");
-      }
-    } catch (err) {
-      setErrorMsg(
-        "Server connection failed. Please ensure your backend is running.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const inputClass =
-    "w-full bg-[#051329]/80 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#D4A44A]/60 focus:ring-1 focus:ring-[#D4A44A]/30 transition-all duration-200";
-  const labelClass =
-    "block text-slate-300 text-xs font-semibold uppercase tracking-wider mb-1.5";
-
-  if (submitted) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="text-center py-16 px-6"
-      >
-        <div className="w-20 h-20 rounded-full gold-bg flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#D4A44A]/30">
-          <CheckCircle2 className="w-10 h-10 text-[#071B35]" />
-        </div>
-        <h3 className="font-serif-luxury text-2xl font-bold text-white mb-3">
-          Valuation Request Received!
-        </h3>
-        <p className="text-slate-300 text-sm max-w-md mx-auto mb-8">
-          Thank you,{" "}
-          <span className="text-[#D4A44A] font-semibold">
-            {formData.ownerName || "valued client"}
-          </span>
-          . One of our local experts will be in touch within{" "}
-          <span className="text-[#D4A44A] font-semibold">24 hours</span> to
-          arrange your free property valuation.
-        </p>
-        <button
-          onClick={handleReset}
-          className="px-8 py-3 rounded-xl border border-[#D4A44A]/40 text-[#D4A44A] text-sm font-semibold hover:bg-[#D4A44A] hover:text-[#071B35] transition-all duration-300 cursor-pointer"
-        >
-          Submit Another Request
-        </button>
-      </motion.div>
-    );
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      {errorMsg && (
-        <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-sm font-semibold text-center mb-4">
-          {errorMsg}
-        </div>
-      )}
-
-      {/* Row 1 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
-          <label className={labelClass}>Property Address *</label>
-          <input
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-            placeholder="e.g. 12 Wellington Road"
-            className={inputClass}
-          />
-        </div>
-        <div>
-          <label className={labelClass}>Postcode *</label>
-          <input
-            name="postcode"
-            value={formData.postcode}
-            onChange={handleChange}
-            required
-            placeholder="e.g. B15 2TT"
-            className={inputClass}
-          />
-        </div>
-      </div>
-      {/* Row 2 */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div>
-          <label className={labelClass}>Property Type *</label>
-          <select
-            name="propertyType"
-            value={formData.propertyType}
-            onChange={handleChange}
-            required
-            className={inputClass}
-          >
-            <option value="">Select type...</option>
-            {PROPERTY_TYPES.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className={labelClass}>Bedrooms *</label>
-          <select
-            name="bedrooms"
-            value={formData.bedrooms}
-            onChange={handleChange}
-            required
-            className={inputClass}
-          >
-            <option value="">Select...</option>
-            {[1, 2, 3, 4, 5, 6, 7, "8+"].map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className={labelClass}>Bathrooms *</label>
-          <select
-            name="bathrooms"
-            value={formData.bathrooms}
-            onChange={handleChange}
-            required
-            className={inputClass}
-          >
-            <option value="">Select...</option>
-            {[1, 2, 3, 4, 5, "6+"].map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      {/* Row 3 */}
-      <div>
-        <label className={labelClass}>
-          Estimated Property Value (Optional)
-        </label>
-        <input
-          name="estimatedValue"
-          value={formData.estimatedValue}
-          onChange={handleChange}
-          placeholder="e.g. £450,000"
-          className={inputClass}
-        />
-      </div>
-      {/* Row 4 */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div>
-          <label className={labelClass}>Your Full Name *</label>
-          <input
-            name="ownerName"
-            value={formData.ownerName}
-            onChange={handleChange}
-            required
-            placeholder="e.g. James Smith"
-            className={inputClass}
-          />
-        </div>
-        <div>
-          <label className={labelClass}>Phone Number *</label>
-          <input
-            name="phone"
-            type="tel"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            placeholder="e.g. 07700 123456"
-            className={inputClass}
-          />
-        </div>
-        <div>
-          <label className={labelClass}>Email Address *</label>
-          <input
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            placeholder="e.g. james@email.com"
-            className={inputClass}
-          />
-        </div>
-      </div>
-      {/* Row 5 */}
-      <div>
-        <label className={labelClass}>Additional Information (Optional)</label>
-        <textarea
-          name="additionalInfo"
-          value={formData.additionalInfo}
-          onChange={handleChange}
-          placeholder="Any details about your property or circumstances that may be helpful..."
-          rows={4}
-          className={`${inputClass} resize-none`}
-        />
-      </div>
-      {/* Consent */}
-      <div className="flex items-start gap-3">
-        <input
-          id="agreeContact"
-          name="agreeContact"
-          type="checkbox"
-          checked={formData.agreeContact}
-          onChange={handleChange}
-          className="mt-1 w-4 h-4 rounded border-[#D4A44A]/40 bg-[#051329] accent-[#D4A44A] cursor-pointer shrink-0"
-          required
-        />
-        <label
-          htmlFor="agreeContact"
-          className="text-slate-400 text-xs leading-relaxed cursor-pointer select-none"
-        >
-          I agree to be contacted by FK&CO Estate regarding my property
-          valuation request. Your data is handled in accordance with our{" "}
-          <span className="text-[#D4A44A] underline underline-offset-2">
-            Privacy Policy
-          </span>
-          .
-        </label>
-      </div>
-      {/* Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-2">
-        <button
-          type="submit"
-          disabled={loading || !formData.agreeContact}
-          className="flex-1 py-4 rounded-xl gold-bg text-[#071B35] font-bold text-sm uppercase tracking-wider hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
-        >
-          {loading ? (
-            <>
-              <svg
-                className="animate-spin w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8z"
-                />
-              </svg>
-              Sending Request...
-            </>
-          ) : (
-            <>
-              <Award className="w-4 h-4" />
-              Request Free Valuation
-            </>
-          )}
-        </button>
-        <button
-          type="button"
-          onClick={handleReset}
-          className="sm:w-auto px-8 py-4 rounded-xl border border-white/15 text-slate-300 hover:text-white hover:border-white/30 text-sm font-semibold transition-all duration-300 cursor-pointer"
-        >
-          Reset
-        </button>
-      </div>
-    </form>
-  );
-}
-
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function SellProperties() {
@@ -676,7 +320,7 @@ export default function SellProperties() {
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   className="overflow-hidden"
                 >
-                  <div className="pt-6 space-y-5 text-sm sm:text-base text-slate-300 font-light leading-relaxed text-left sm:text-center">
+                  <div className="pt-6 space-y-5 text-sm sm:text-base text-slate-300 font-light leading-relaxed text-left sm:text-left">
                     <p>
                       Selling your home can be one of the biggest financial and emotional decisions you will make.
                     </p>
@@ -713,21 +357,23 @@ export default function SellProperties() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3"
           >
-            <a
-              href="#valuation-form"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl gold-bg text-[#071B35] font-bold text-sm uppercase tracking-wider shadow-lg shadow-[#D4A44A]/30 hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2"
-            >
-              <Award className="w-4 h-4" />
-              Get Free Valuation
-            </a>
-            <a
+            {/* <a
               href="tel:+441216306776"
               className="w-full sm:w-auto px-8 py-4 rounded-xl glass-panel border border-white/20 text-white font-semibold text-sm uppercase tracking-wider hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <Phone className="w-4 h-4" />
               Speak to an Expert
+            </a> */}
+             <a
+              href="https://valuation.fkandcoestate.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl gold-bg text-[#071B35] font-bold text-sm uppercase tracking-wider shadow-lg shadow-[#D4A44A]/30 hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2"
+            >
+              <Award className="w-4 h-4" />
+              Get Free Instant Valuation In 60 Seconds
             </a>
           </motion.div>
 
@@ -758,7 +404,7 @@ export default function SellProperties() {
         </div>
       </section>
 
-      {/* ── VALUATION FORM ── */}
+      {/* ── VALUATION CTA ── */}
       <section id="valuation-form" className="py-24 relative overflow-hidden">
         <div className="absolute top-1/3 right-0 w-80 h-80 bg-[#D4A44A]/6 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -768,8 +414,7 @@ export default function SellProperties() {
               Request a <span className="gold-text">Free Sell Valuation</span>
             </h2>
             <p className="mt-4 text-slate-300 text-base max-w-xl mx-auto">
-              Complete the form below and one of our local property experts will
-              be in touch within 24 hours.
+              Find out how much your property is worth in 60 seconds with our instant online valuation tool.
             </p>
           </FadeInUp>
 
@@ -778,9 +423,24 @@ export default function SellProperties() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="glass-card rounded-3xl p-6 sm:p-10 border border-[#D4A44A]/20"
+            className="glass-card rounded-3xl p-8 sm:p-14 border border-[#D4A44A]/20 text-center flex flex-col items-center justify-center bg-gradient-to-b from-white/5 to-transparent"
           >
-            <ValuationForm />
+            <div className="w-16 h-16 rounded-full bg-[#D4A44A]/10 flex items-center justify-center mb-6">
+              <Award className="w-8 h-8 text-[#D4A44A]" />
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-serif-luxury text-white font-bold mb-4">Instant Property Valuation</h3>
+            <p className="text-slate-300 max-w-md mx-auto mb-8 text-sm sm:text-base">
+              Get an immediate estimate of your home's current market value based on live data and recent sales in your area.
+            </p>
+            <a
+              href="https://valuation.fkandcoestate.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-10 py-5 rounded-full gold-bg text-[#071B35] font-extrabold text-sm uppercase tracking-wider shadow-xl shadow-[#D4A44A]/30 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+            >
+              Start Free Valuation
+              <ArrowRight className="w-5 h-5" />
+            </a>
           </motion.div>
         </div>
       </section>
@@ -814,7 +474,7 @@ export default function SellProperties() {
                     key={property.id}
                     property={property}
                     viewType="grid"
-                    onSelect={onSelectProperty} // 🚀 FIXED: Passed direct reference here
+                    onSelect={onSelectProperty}
                     isSaved={savedProperties.includes(property.id)}
                     onToggleSave={handleToggleSave}
                   />
@@ -993,7 +653,9 @@ export default function SellProperties() {
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href="#valuation-form"
+                href="https://valuation.fkandcoestate.com/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-full sm:w-auto px-8 py-4 rounded-xl gold-bg text-[#071B35] font-bold text-sm uppercase tracking-wider shadow-lg shadow-[#D4A44A]/30 hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2"
               >
                 <Award className="w-4 h-4" />
