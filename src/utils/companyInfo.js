@@ -8,7 +8,7 @@ export const companyInfo = {
   websiteHref: 'https://www.fkandcoestate.com',
   tagline: 'SALES • LETTINGS • PROPERTY MANAGEMENT',
 };
-// hello
+
 export const companyInfoDisplay = {
   phoneDisplay: '0121 630 6776',
   emailDisplay: 'info@fkandcoestate.com',
